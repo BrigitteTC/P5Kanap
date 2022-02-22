@@ -47,8 +47,8 @@ var getProducts = async function (server) {
         let newp = document.createElement("p");
         let newa = document.createElement("a");
 
-        eltSection.appendChild(newa);
-        newa.appendChild(newArticle);
+        eltSection.appendChild(newArticle);
+        //newa.appendChild(newArticle);
 
         newArticle.appendChild(newImg);
         newArticle.appendChild(newh3);
@@ -59,16 +59,24 @@ var getProducts = async function (server) {
 
         //h3
         newh3.classList.add("productName");
-        newh3.innerText = product.name;
+        newh3.innerHTML = product.name;
         //newh3.innerText = "titre h3";
         //p
         newp.classList.add("productDescription");
-        newp.innerText = product.description;
+        newp.innerHTML = product.description;
         //newp.innerText = "paragraphe p";
 
         //img
         //newImg.innerHTML="src=" + products[0].imageUrl + "alt=" + products[0].altTxt"
-        newImg.innerHTML = "src=" + product.imageUrl + "alt=" + product.altTxt;
+        //newImg.innerHTML = `src ="${product.imageUrl}" alt="${product.altTxt}"`;
+        newImg.src = product.imageUrl;
+        newImg.alt = product.altTxt;
+
+        //DEBUG: affichage des variables sur la console
+
+        console.log(newImg);
+        console.log(newp);
+        console.log(newh3);
       }
       return data;
     } else {
