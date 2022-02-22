@@ -51,16 +51,17 @@ var getProducts = async function (server) {
         let newh3 = document.createElement("h3");
         let newp = document.createElement("p");
 
-        //article enfant de items
+        //article enfant de la section avec id=items
 
         eltSection.appendChild(newArticle);
-        //rattachement du lien "a" qui est un enfant de item
-        //  ?????  eltSection.appendChild(newa);
+
+        //rattachement du lien "a" qui est un enfant de la section
+        eltSection.appendChild(newa);
+
         //article est un enfant du lien "a"
+        newa.appendChild(newArticle);
 
-        //  ?????  newa.appendChild(newArticle);
-
-        //Rattachement des enfants de l'article
+        //Rattachement des 3 enfants de l'article (img, h3 et p)
         newArticle.appendChild(newImg);
         newArticle.appendChild(newh3);
         newArticle.appendChild(newp);
