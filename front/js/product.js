@@ -14,7 +14,7 @@ Script pour mettre à jour la page du canapé sur la page html correspondante
 //retour: id
 //------------------------------------------------
 
-var id = function () {
+function getId() {
   var str = window.location.href;
   console.log(str);
   var url = new URL(str);
@@ -24,4 +24,8 @@ var id = function () {
     console.log(id);
     return id;
   }
-};
+}
+
+//On récupère l'id de la page
+var id = getId;
+console.log(id);
