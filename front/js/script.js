@@ -15,12 +15,22 @@ et taper la commande >node server
 //server avec la liste des produits
 var serverGET = "http://localhost:3000/api/products";
 
-//Creation de la ft getProducts
-const getProducts = async function () {
+//--------------------------------------------------------------
+// ft getProducts
+// nom: getProduct
+// Paramètres:
+//  server: adresse duserveur avec les données à récupérer
+// retour: data: données récupérées
+//
+// algo:
+//  lit les données du serveur
+//-------------------------------------------------------------
+var getProducts = async function (server) {
+  let data; //données récupérées par la ft
   try {
-    let response = await fetch(serverGET);
+    let response = await fetch(server);
     if (response.ok) {
-      let data = await response.json();
+      data = await response.json();
       console.log(data);
     } else {
       console.error("Retour du serveur:", response.status);
@@ -28,10 +38,12 @@ const getProducts = async function () {
   } catch (e) {
     console.log(e);
   }
+  return data;
 };
 
 // Appel de la ft pour mise à jour produits
 
-getProducts();
+var products = getProducts(serverGET);
+console.log(products);
 
 // Mise à jour du code HTML avec les produits
