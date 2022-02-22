@@ -24,6 +24,7 @@ var serverGET = "http://localhost:3000/api/products";
 //
 // algo:
 //  lit les données du serveur
+// await: attend le retour de la promese
 //-------------------------------------------------------------
 var getProducts = async function (server) {
   let data; //données récupérées par la ft
@@ -32,50 +33,52 @@ var getProducts = async function (server) {
     if (response.ok) {
       data = await response.json();
       console.log(data);
+      console.log(data[0].name);
+      console.log(data[0].imageUrl);
+      console.log(data[0]._id);
+
+      //boucle sur les produits pour les aficher dans le html
+      for (let product of data) {
+        let newArticle = document.createElement("article");
+        let eltSection = document.getElementById("items");
+
+        let newImg = document.createElement("img");
+        let newh3 = document.createElement("h3");
+        let newp = document.createElement("p");
+        let newa = document.createElement("a");
+
+        eltSection.appendChild(newa);
+        newa.appendChild(newArticle);
+
+        newArticle.appendChild(newImg);
+        newArticle.appendChild(newh3);
+        newArticle.appendChild(newp);
+
+        //ma j contenu des elt crees
+        newa.innerHTML = product._id;
+
+        //h3
+        newh3.classList.add("productName");
+        newh3.innerText = product.name;
+        //newh3.innerText = "titre h3";
+        //p
+        newp.classList.add("productDescription");
+        newp.innerText = product.description;
+        //newp.innerText = "paragraphe p";
+
+        //img
+        //newImg.innerHTML="src=" + products[0].imageUrl + "alt=" + products[0].altTxt"
+        newImg.innerHTML = "src=" + product.imageUrl + "alt=" + product.altTxt;
+      }
+      return data;
     } else {
       console.error("Retour du serveur:", response.status);
     }
   } catch (e) {
     console.log(e);
   }
-  return data;
 };
 
 // Appel de la ft pour récupérer les produits
 
 var products = getProducts(serverGET);
-console.log(products);
-
-console.log(products[0]);
-
-// Mise à jour du code HTML avec les produits
-
-//essai avec 1ier produit
-
-let newArticle = document.createElement("article");
-let eltSection = document.getElementById("items");
-
-let newImg = document.createElement("img");
-let newh3 = document.createElement("h3");
-let newp = document.createElement("p");
-let newa = document.createElement("a");
-
-eltSection.appendChild(newa);
-newa.appendChild(newArticle);
-
-newArticle.appendChild(newImg);
-newArticle.appendChild(newh3);
-newArticle.appendChild(newp);
-
-//ma j contenu des elt crees
-//newa.innerHTML = products[0]._id;
-newh3.classList.add("productName");
-//newh3.innerText = products[0].name;
-newh3.innerText = "titre h3";
-
-newp.classList.add("productDescription");
-//newp.innerText = products[0].description;
-newp.innerText = "paragraphe p";
-
-//newImg.innerHTML="src=" + products[0].imageUrl + "alt=" + products[0].altTxt"
-newImg.innerHTML = "src='http://localhost:3000/images/kanap01.jpeg'";
