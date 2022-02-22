@@ -33,42 +33,52 @@ var getProducts = async function (server) {
     if (response.ok) {
       data = await response.json();
       console.log(data);
-      console.log(data[0].name);
-      console.log(data[0].imageUrl);
-      console.log(data[0]._id);
 
       //boucle sur les produits pour les aficher dans le html
       for (let product of data) {
-        let newArticle = document.createElement("article");
+        // creation des elts du html
+        //on recupere le id items qui contiendra les articles des canapés
         let eltSection = document.getElementById("items");
 
+        //creation du lien a
+        let newa = document.createElement("a");
+
+        //creation de l'elt article
+        let newArticle = document.createElement("article");
+
+        //creation des elts img, h3, p
         let newImg = document.createElement("img");
         let newh3 = document.createElement("h3");
         let newp = document.createElement("p");
-        let newa = document.createElement("a");
+
+        //article enfant de items
 
         eltSection.appendChild(newArticle);
-        //newa.appendChild(newArticle);
+        //rattachement du lien "a" qui est un enfant de item
+        //  ?????  eltSection.appendChild(newa);
+        //article est un enfant du lien "a"
 
+        //  ?????  newa.appendChild(newArticle);
+
+        //Rattachement des enfants de l'article
         newArticle.appendChild(newImg);
         newArticle.appendChild(newh3);
         newArticle.appendChild(newp);
 
         //ma j contenu des elt crees
-        newa.innerHTML = product._id;
+        // lien a
+        newa.href = "./product.html?id=" + product._id;
 
         //h3
         newh3.classList.add("productName");
         newh3.innerHTML = product.name;
-        //newh3.innerText = "titre h3";
+
         //p
         newp.classList.add("productDescription");
         newp.innerHTML = product.description;
         //newp.innerText = "paragraphe p";
 
         //img
-        //newImg.innerHTML="src=" + products[0].imageUrl + "alt=" + products[0].altTxt"
-        //newImg.innerHTML = `src ="${product.imageUrl}" alt="${product.altTxt}"`;
         newImg.src = product.imageUrl;
         newImg.alt = product.altTxt;
 
@@ -77,8 +87,8 @@ var getProducts = async function (server) {
         console.log(newImg);
         console.log(newp);
         console.log(newh3);
+        console.log(newa);
       }
-      return data;
     } else {
       console.error("Retour du serveur:", response.status);
     }
@@ -89,4 +99,4 @@ var getProducts = async function (server) {
 
 // Appel de la ft pour récupérer les produits
 
-var products = getProducts(serverGET);
+getProducts(serverGET);
