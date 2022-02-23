@@ -105,14 +105,15 @@ var getProductById = async function (server) {
       // on recupere l'elt avec id "colors"
       let eltOptions = document.getElementById("colors");
       //boucle sur les options de couleur pour crer les enfants correspondants
-      for (couleur in Product.colors) {
+      let numCouleur = 0; //numero de couleur
+      for (numCouleur in Product.colors) {
         //creation elt
         let newOption = document.createElement("option");
         //ajout de l'enfant 'option'
         eltOptions.appendChild(newOption);
         //maj option
-        newOption.innerHTML = "value=" + couleur.colors;
-        console.log(couleur.colors);
+        newOption.innerHTML = Product.colors[numCouleur];
+        console.log(Product.colors[numCouleur]);
       }
 
       //DEBUG: affichage elts
