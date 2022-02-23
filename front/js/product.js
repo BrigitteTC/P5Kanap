@@ -52,6 +52,7 @@ var getProductById = async function (server) {
       data = await response.json();
       console.log(data);
 
+      //on récupère l'id du produit
       var str = window.location.href;
       console.log(str);
       var url = new URL(str);
@@ -66,9 +67,10 @@ var getProductById = async function (server) {
       LoopIndex = 0; /*index de boucle pour parcourir les produits*/
       while (LoopIndex < data.length && FoundProduct === false) {
         if (data[LoopIndex]._id === ProductId) {
-          FoundProduct = true;
+          FoundProduct = true; /*on a trouvé le produit*/
+        } else {
+          LoopIndex++; /* pas trouvé on incrémente d'index*/
         }
-        LoopIndex++;
       }
 
       //le produit à afficher
