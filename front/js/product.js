@@ -83,9 +83,17 @@ var getProductById = async function (server) {
       document.getElementById("price").innerHTML = Product.price;
 
       //Maj image  class= 'item__img'
-      document.getElementsByClassName("item__img").src = Product.imageUrl;
+      //creation elt img
+      let newImg = document.createElement("img");
+      //recuperation elt de la class item_img
+      let newItem = document.getElementsByClassName("item__img");
+      //ajout de l'enfant img a l'elt de class Item_img.
+      newItem.appendChild(newImg);
 
-      document.getElementsByClassName("item__img").alt = Product.altTxt;
+      //maj img
+      newImg.src = Product.imageUrl;
+
+      newImg.alt = Product.altTxt;
 
       //maj description  id="description"
       document.getElementById("description").innerHTML = Product.description;
