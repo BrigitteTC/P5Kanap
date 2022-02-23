@@ -71,25 +71,38 @@ var getProductById = async function (server) {
         LoopIndex++;
       }
 
+      //le produit à afficher
+      let Product = data[LoopIndex];
+
       //Affichage du résultat dans le HTML
 
       //Maj titre  id='title'
-      document.getElementById("title").innerHTML = data[LoopIndex].name;
+      document.getElementById("title").innerHTML = Product.name;
 
       // maj prix id='price'
-      document.getElementById("price").innerHTML = data[LoopIndex].price;
+      document.getElementById("price").innerHTML = Product.price;
 
       //Maj image  class= 'item__img'
-      document.getElementsByClassName("item__img").src =
-        data[LoopIndex].imageUrl;
+      document.getElementsByClassName("item__img").src = Product.imageUrl;
 
-      document.getElementsByClassName("item__img").alt = data[LoopIndex].altTxt;
+      document.getElementsByClassName("item__img").alt = Product.altTxt;
 
       //maj description  id="description"
-      document.getElementById("description").innerHTML =
-        data[LoopIndex].description;
+      document.getElementById("description").innerHTML = Product.description;
 
       //maj options  id="colors"
+      // on recupere l'elt avec id "colors"
+      let eltOptions = document.getElementById("colors");
+      //boucle sur les options de couleur pour crer les enfants correspondants
+      for (couleur in Product.colors) {
+        //creation elt
+        let newOption = document.createElement("option");
+        //ajout de l'enfant 'option'
+        eltOptions.appendChild(newOption);
+        //maj option
+        newOption.innerHTML = "value=" + couleur.colors;
+        console.log(couleur.colors);
+      }
 
       //DEBUG: affichage elts
       console.log(LoopIndex);
