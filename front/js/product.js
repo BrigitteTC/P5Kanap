@@ -88,7 +88,8 @@ var getProductById = async function (server) {
       //recuperation elt de la class item_img
       let newItem = document.getElementsByClassName("item__img");
       //ajout de l'enfant img a l'elt de class Item_img.
-      newItem.appendChild(newImg);
+      // attention on recupere un tableau dont il faut prendre le 1ier elt
+      newItem[0].appendChild(newImg);
 
       //maj img
       newImg.src = Product.imageUrl;
