@@ -73,19 +73,29 @@ var getProductById = async function (server) {
 
       //Affichage du résultat dans le HTML
 
-      // creation des elts du html
       //Maj titre  id='title'
       document.getElementById("title").innerHTML = data[LoopIndex].name;
 
-      //Maj image  class= item__img"
+      // maj prix id='price'
+      document.getElementById("price").innerHTML = data[LoopIndex].price;
+
+      //Maj image  class= 'item__img'
+      document.getElementsByClassName("item__img").src =
+        data[LoopIndex].imageUrl;
+
+      document.getElementsByClassName("item__img").alt = data[LoopIndex].altTxt;
 
       //maj description  id="description"
+      document.getElementById("description").innerHTML =
+        data[LoopIndex].description;
 
       //maj options  id="colors"
 
       //DEBUG: affichage elts
       console.log(LoopIndex);
       console.log(data[LoopIndex].name);
+      console.log(data[LoopIndex].imageUrl);
+      console.log(data[LoopIndex].altTxt);
     } else {
       console.error("Retour du serveur:", response.status);
     }
