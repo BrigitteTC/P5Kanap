@@ -116,6 +116,12 @@ var getProductById = async function (server) {
         console.log(Product.colors[numCouleur]);
       }
 
+      //le bouton
+      let eltButton = document.getElementById("addToCart");
+      let newa = document.createElement("a"); //lien du bouton
+      eltButton.appendChild(newa);
+      newa.href = "./cart.html?id=" + Product._id;
+
       //DEBUG: affichage elts
       console.log(LoopIndex);
       console.log(data[LoopIndex].name);
