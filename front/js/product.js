@@ -85,7 +85,7 @@ function getCouleur() {
 
   //test 1 valeur a été choisie
   if (Couleur === "Undefined") {
-    //alerte: choisizzez une couleur
+    //alerte: choisissez une couleur
   }
   return Couleur;
 }
@@ -94,7 +94,7 @@ function getCouleur() {
 // ft getProducts
 // nom: getProduct
 // Paramètres:
-//  server: adresse duserveur avec les données à récupérer
+//  server: adresse du serveur avec les données à récupérer
 // retour: data: données récupérées
 //
 // algo:
@@ -104,34 +104,26 @@ function getCouleur() {
 var getProductById = async function (server) {
   let data; //données récupérées par la ft
   try {
+    //on récupère l'id du produit passé dans l'URL
+    var str = window.location.href;
+    console.log(str);
+    var url = new URL(str);
+    var search_params = new URLSearchParams(url.search);
+    if (search_params.has("id")) {
+      var ProductId = search_params.get("id");
+      console.log(ProductId);
+    }
+
+    //Construction de la route du produit
+    server = server + "/" + ProductId;
+    console.log(server);
+
+    // Recherche data du produit sur le serveur
     let response = await fetch(server);
     if (response.ok) {
-      data = await response.json();
-      console.log(data);
-
-      //on récupère l'id du produit
-      var str = window.location.href;
-      console.log(str);
-      var url = new URL(str);
-      var search_params = new URLSearchParams(url.search);
-      if (search_params.has("id")) {
-        var ProductId = search_params.get("id");
-        console.log(ProductId);
-      }
-
-      //recherche de l'Id
-      let FoundProduct = false; /*init boolean à false Sera true quand on aura trouve*/
-      LoopIndex = 0; /*index de boucle pour parcourir les produits*/
-      while (LoopIndex < data.length && FoundProduct === false) {
-        if (data[LoopIndex]._id === ProductId) {
-          FoundProduct = true; /*on a trouvé le produit*/
-        } else {
-          LoopIndex++; /* pas trouvé on incrémente d'index*/
-        }
-      }
-
       //le produit à afficher
-      let Product = data[LoopIndex];
+      let Product = await response.json();
+      console.log(Product);
 
       //Affichage du résultat dans le HTML
 
@@ -196,10 +188,10 @@ var getProductById = async function (server) {
       });
 
       //DEBUG: affichage elts
-      console.log(LoopIndex);
-      console.log(data[LoopIndex].name);
-      console.log(data[LoopIndex].imageUrl);
-      console.log(data[LoopIndex].altTxt);
+      console.log(Product);
+      console.log(Product.name);
+      console.log(Product.imageUrl);
+      console.log(Product.altTxt);
     } else {
       console.error("Retour du serveur:", response.status);
     }
