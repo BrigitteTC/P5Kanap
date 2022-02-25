@@ -116,11 +116,16 @@ var getProductById = async function (server) {
         console.log(Product.colors[numCouleur]);
       }
 
-      //le bouton
+      //le boutton
       let eltButton = document.getElementById("addToCart");
-      let newa = document.createElement("a"); //lien du bouton
-      eltButton.appendChild(newa);
-      newa.href = "./cart.html?id=" + Product._id;
+
+      // Traitement du click sur le bouton
+      eltButton.addEventListener("click", function () {
+        console.log("on a cliqué");
+        // go vers la page panier
+        window.location.href = "../html/cart.html?id=" + Product._id;
+      });
+      //<input type=button onclick=window.location.href='http://monsite.fr'; value = Aller sur mon site />
 
       //DEBUG: affichage elts
       console.log(LoopIndex);
