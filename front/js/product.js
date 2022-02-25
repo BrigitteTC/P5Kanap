@@ -33,6 +33,35 @@ function getId() {
 var productId = getId;
 console.log(productId);
 
+//----------------------------------------------------
+// getNbProduct();
+// fonction: retourne le nombre de produits sélectionnés
+// paramètre entrée: rien
+// paramètre de sortie: nombre de produits
+//
+// algo: vérifie nb min et max selectionné
+// retourne le nombre select
+// message d'alerte su la quantité est 0 ou > 1000
+//---------------------------------------------
+function getNbProduct() {
+  // A completer
+  return 10;
+}
+
+//----------------------------------------------------
+// getCouleur();
+// fonction: retourne la couleur sélectionnée
+// paramètre entrée: rien
+// paramètre de sortie: couleur
+//
+// algo:
+//
+//---------------------------------------------
+function getCouleur() {
+  // A completer
+  return "black";
+}
+
 //--------------------------------------------------------------
 // ft getProducts
 // nom: getProduct
@@ -122,10 +151,19 @@ var getProductById = async function (server) {
       // Traitement du click sur le bouton
       eltButton.addEventListener("click", function () {
         console.log("on a cliqué");
-        // go vers la page panier
-        window.location.href = "../html/cart.html?id=" + Product._id;
+        // Verif nb de canapes choisis
+        let nbProduct = getNbProduct();
+        //Verif option couleur choisie
+        let couleur = getCouleur();
+        // go vers la page panier avec l'id et la couleur choisie
+        window.location.href =
+          "../html/cart.html?id=" +
+          Product._id +
+          "?color=" +
+          couleur +
+          "?nb=" +
+          nbProduct;
       });
-      //<input type=button onclick=window.location.href='http://monsite.fr'; value = Aller sur mon site />
 
       //DEBUG: affichage elts
       console.log(LoopIndex);
