@@ -29,10 +29,6 @@ function getId() {
   }
 }
 
-//On récupère l'id de la page
-var productId = getId;
-console.log(productId);
-
 //----------------------------------------------------
 // getNbProduct();
 // fonction: retourne le nombre de produits sélectionnés
@@ -91,7 +87,7 @@ function getCouleur() {
 }
 
 //--------------------------------------------------------------
-// ft getProducts
+// ft getProductById
 // nom: getProduct
 // Paramètres:
 //  server: adresse du serveur avec les données à récupérer
@@ -105,14 +101,9 @@ var getProductById = async function (server) {
   let data; //données récupérées par la ft
   try {
     //on récupère l'id du produit passé dans l'URL
-    var str = window.location.href;
-    console.log(str);
-    var url = new URL(str);
-    var search_params = new URLSearchParams(url.search);
-    if (search_params.has("id")) {
-      var ProductId = search_params.get("id");
-      console.log(ProductId);
-    }
+
+    let ProductId = getId();
+    console.log(ProductId);
 
     //Construction de la route du produit
     server = server + "/" + ProductId;
