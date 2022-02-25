@@ -50,10 +50,13 @@ function getNbProduct() {
   console.log(eltQty.max);
   //return eltQty.value;
   // test valeur comprise entre min et max
-  if (Number(eltQty.value) > Number(eltQty.max)) {
+  // et tester nombre entier
+  if (Number(eltQty.value) < 1 || Number(eltQty.value) > 100) {
     // message d'erreur
     // A voir utilisation alert
     // on efface la quantite
+
+    // tester les chiffres à virgule  .  A refuser
 
     eltQty.value = 0;
   }
@@ -71,7 +74,15 @@ function getNbProduct() {
 //---------------------------------------------
 function getCouleur() {
   // A completer
-  return "black";
+  let eltColor = document.getElementById("color");
+  let Couleur = eltColor.option; // couleur choisie
+  console.log(Couleur);
+
+  //test 1 valeur a été choisie
+  if (Couleur === "Undefined") {
+    //alerte: choisizzez une couleur
+  }
+  return Couleur;
 }
 
 //--------------------------------------------------------------
