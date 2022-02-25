@@ -46,7 +46,7 @@ function getId() {
   }
 }
 
-//----------------------------------------------------
+//----------------------------------------------------------------
 // getNbProduct();
 // fonction: retourne le nombre de produits sélectionnés
 // paramètre entrée: rien
@@ -55,9 +55,9 @@ function getId() {
 // algo: vérifie nb min et max selectionné
 // retourne le nombre select
 // message d'alerte si la quantité est <1 ou > 1000 ou nb decimal
-//---------------------------------------------
+//---------------------------------------------------------------
 function getNbProduct() {
-  // A competer: verifier que le nb rentré n'est pas decimal
+  // A completer: verifier que le nb rentré n'est pas decimal
   //
   let eltQty = document.getElementById("quantity");
   // Valeur rentrée
@@ -96,16 +96,22 @@ function getCouleur() {
   // A completer
 
   // cherche la couleur sélectionnée
+  // ajouter value
+  // récuperer option.value
   let Couleur = document.querySelector("#colors option:checked");
+  console.log(Couleur);
+
+  Couleur = Couleur.value;
   console.log(Couleur);
   //la chaine récupérée est du type:
   //<option>Grey</option>
   //test 1 valeur a été choisie
-  if (Couleur === "Undefined") {
+  if (Couleur === "--SVP, choisissez une couleur --") {
     //alerte: choisissez une couleur
-    alerteMsg("choisissez une couleur");
+    alerteMsg("choisissez une couleur"); // A mettre en constante
+    Couleur = "Undefined"; // A mettre en constante
   }
-  return "black";
+  return Couleur;
 }
 
 //--------------------------------------------------------------
@@ -173,8 +179,12 @@ var getProductById = async function (server) {
         let newOption = document.createElement("option");
         //ajout de l'enfant 'option'
         eltOptions.appendChild(newOption);
-        //maj option
-        newOption.innerHTML = Product.colors[numCouleur];
+
+        // ajout value
+        let newValue = document.createElement("value");
+        newOption.appendChild(newValue);
+        //maj value
+        newValue.innerHTML = Product.colors[numCouleur];
         console.log(Product.colors[numCouleur]);
       }
 
