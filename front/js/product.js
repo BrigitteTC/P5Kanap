@@ -44,8 +44,16 @@ console.log(productId);
 // message d'alerte su la quantité est 0 ou > 1000
 //---------------------------------------------
 function getNbProduct() {
-  // A completer
-  return 10;
+  let eltQty = document.getElementById("quantity");
+  // Valeur rentrée
+  console.log(eltQty.value);
+  return eltQty.value;
+  // test valeur comprise entre min et max
+  if (eltQty.value <= eltQty.max) {
+    return eltQty.value;
+  } else {
+    //erreur
+  }
 }
 
 //----------------------------------------------------
