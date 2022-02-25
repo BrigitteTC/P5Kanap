@@ -8,7 +8,24 @@ Script pour mettre à jour la page du canapé sur la page html correspondante
 //server avec la liste des produits
 var serverGET = "http://localhost:3000/api/products";
 
-//REcherche id passé dans la page HTML
+//---------------------------------------------------------
+// function: Alerte
+// but: affiche une alerte en cas de mauvaise saisie
+//  le message d'erreur sera affiché sous le bouton
+//
+// Param d'entrée: Id: Id où on peut rajouter le msg
+//                Message: message d'erreur
+// Param de sortie: rien
+//---------------------------------------------------------
+function alerteMsg(Message) {
+  // A compléter
+  //On récupère l'id du bouton
+  // let eltButton = document.getElementById(Id);
+  //creation p
+  //let newp = document.createElement("p");
+  // eltButton.appendChild(newp);
+  //newp.innerHTML = Message;
+}
 
 //---------------------------------------------------
 //fonction getId
@@ -37,11 +54,14 @@ function getId() {
 //
 // algo: vérifie nb min et max selectionné
 // retourne le nombre select
-// message d'alerte su la quantité est 0 ou > 1000
+// message d'alerte si la quantité est <1 ou > 1000 ou nb decimal
 //---------------------------------------------
 function getNbProduct() {
+  // A competer: verifier que le nb rentré n'est pas decimal
+  //
   let eltQty = document.getElementById("quantity");
   // Valeur rentrée
+  console.log(Number(eltQty.value));
 
   // test valeur comprise entre min et max
   // On rentre les valeurs en dur 1 et 100 pour éviter qu'un utilisateur
@@ -49,13 +69,12 @@ function getNbProduct() {
 
   // et tester nombre entier (on ne veut pas de nombre décimal)
   if (
-    !Number.isInteger(eltQty.value) ||
+    //!Number.isInteger(eltQty.value) ||
     Number(eltQty.value) < 1 ||
     Number(eltQty.value) > 100
   ) {
     // message d'erreur
-    // A voir utilisation alert
-    // on efface la quantite
+    alerteMsg("Nombre d'articles:<br> Rentrez un nombre entre 1 et 100");
 
     // tester les chiffres à virgule  .  A refuser
     //window.open("donnez un nombre entier compris entre 1 et 100");
@@ -75,15 +94,18 @@ function getNbProduct() {
 //---------------------------------------------
 function getCouleur() {
   // A completer
-  let eltColor = document.getElementById("color");
-  let Couleur = eltColor.option; // couleur choisie
-  console.log(Couleur);
 
+  // cherche la couleur sélectionnée
+  let Couleur = document.querySelector("#colors option:checked");
+  console.log(Couleur);
+  //la chaine récupérée est du type:
+  //<option>Grey</option>
   //test 1 valeur a été choisie
   if (Couleur === "Undefined") {
     //alerte: choisissez une couleur
+    alerteMsg("choisissez une couleur");
   }
-  return Couleur;
+  return "black";
 }
 
 //--------------------------------------------------------------
@@ -167,14 +189,18 @@ var getProductById = async function (server) {
         if (nbProduct > 0) {
           //Verif option couleur choisie
           let couleur = getCouleur();
-          // go vers la page panier avec l'id et la couleur choisie
-          window.location.href =
-            "../html/cart.html?id=" +
-            Product._id +
-            "?color=" +
-            couleur +
-            "?nb=" +
-            nbProduct;
+
+          // Verif couleur choisie est bien dans les options
+          if (couleur !== "Undefined") {
+            // go vers la page panier avec l'id et la couleur choisie
+            window.location.href =
+              "../html/cart.html?id=" +
+              Product._id +
+              "?color=" +
+              couleur +
+              "?nb=" +
+              nbProduct;
+          }
         }
       });
 
