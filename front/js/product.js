@@ -164,17 +164,19 @@ var getProductById = async function (server) {
       eltButton.addEventListener("click", function () {
         console.log("on a cliqué");
         // Verif nb de canapes choisis
-        let nbProduct = getNbProduct();
-        //Verif option couleur choisie
-        let couleur = getCouleur();
-        // go vers la page panier avec l'id et la couleur choisie
-        window.location.href =
-          "../html/cart.html?id=" +
-          Product._id +
-          "?color=" +
-          couleur +
-          "?nb=" +
-          nbProduct;
+        let nbProduct = getNbProduct(); //nb de canapés choisis
+        if (nbProduct > 0) {
+          //Verif option couleur choisie
+          let couleur = getCouleur();
+          // go vers la page panier avec l'id et la couleur choisie
+          window.location.href =
+            "../html/cart.html?id=" +
+            Product._id +
+            "?color=" +
+            couleur +
+            "?nb=" +
+            nbProduct;
+        }
       });
 
       //DEBUG: affichage elts
