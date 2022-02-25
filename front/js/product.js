@@ -47,13 +47,17 @@ function getNbProduct() {
   let eltQty = document.getElementById("quantity");
   // Valeur rentrée
   console.log(eltQty.value);
-  return eltQty.value;
+  console.log(eltQty.max);
+  //return eltQty.value;
   // test valeur comprise entre min et max
-  if (eltQty.value <= eltQty.max) {
-    return eltQty.value;
-  } else {
-    //erreur
+  if (Number(eltQty.value) > Number(eltQty.max)) {
+    // message d'erreur
+    // A voir utilisation alert
+    // on efface la quantite
+
+    eltQty.value = 0;
   }
+  return Number(eltQty.value);
 }
 
 //----------------------------------------------------
