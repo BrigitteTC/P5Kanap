@@ -46,18 +46,23 @@ console.log(productId);
 function getNbProduct() {
   let eltQty = document.getElementById("quantity");
   // Valeur rentrée
-  console.log(eltQty.value);
-  console.log(eltQty.max);
-  //return eltQty.value;
+
   // test valeur comprise entre min et max
-  // et tester nombre entier
-  if (Number(eltQty.value) < 1 || Number(eltQty.value) > 100) {
+  // On rentre les valeurs en dur 1 et 100 pour éviter qu'un utilisateur
+  // ne modifie le code de min et max
+
+  // et tester nombre entier (on ne veut pas de nombre décimal)
+  if (
+    !Number.isInteger(eltQty.value) ||
+    Number(eltQty.value) < 1 ||
+    Number(eltQty.value) > 100
+  ) {
     // message d'erreur
     // A voir utilisation alert
     // on efface la quantite
 
     // tester les chiffres à virgule  .  A refuser
-
+    //window.open("donnez un nombre entier compris entre 1 et 100");
     eltQty.value = 0;
   }
   return Number(eltQty.value);
