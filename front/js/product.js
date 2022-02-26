@@ -57,29 +57,36 @@ function getId() {
 //---------------------------------------------------------------
 function getNbProduct() {
   // A completer: verifier que le nb rentré n'est pas decimal
-  //
-  let eltQty = document.getElementById("quantity");
   // Valeur rentrée
-  console.log(Number(eltQty.value));
+  let eltQty = document.getElementById("quantity");
+  let qtyInteger = Number(eltQty.value); //valeur transformee en nombre
+  // Valeur rentrée
+  console.log(qtyInteger);
 
   // test valeur comprise entre min et max
   // On rentre les valeurs en dur 1 et 100 pour éviter qu'un utilisateur
   // ne modifie le code de min et max
 
   // et tester nombre entier (on ne veut pas de nombre décimal)
-  if (
-    //!Number.isInteger(eltQty.value) ||
-    Number(eltQty.value) < 1 ||
-    Number(eltQty.value) > 100
-  ) {
-    // message d'erreur
-    alerteMsg("Nombre d'articles:<br> Rentrez un nombre entier entre 1 et 100");
 
-    // tester les chiffres à virgule  .  A refuser
-    //window.open("donnez un nombre entier compris entre 1 et 100");
-    eltQty.value = 0;
+  if (Number.isInteger(qtyInteger) === false) {
+    // on remet à 0
+    qtyInteger = 0;
+    alerteMsg("Nombre d'articles: rentrez un nombre entier");
+  } else {
+    if (qtyInteger < 1) {
+      alerteMsg("Nombre d'articles: Il faut au moins 1 canapé");
+      // on remet à 0
+      qtyInteger = 0;
+    } else {
+      if (qtyInteger > 100) {
+        alerteMsg("Nombre d'articles: pas plus de 100 canapés");
+        // on remet à 0
+        qtyInteger = 0;
+      }
+    }
   }
-  return Number(eltQty.value);
+  return qtyInteger;
 }
 
 //----------------------------------------------------
