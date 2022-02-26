@@ -5,9 +5,6 @@ auteur: BTC
 Script pour mettre à jour la page du canapé sur la page html correspondante
 *******************************************************************/
 
-//server avec la liste des produits
-var serverGET = "http://localhost:3000/api/products";
-
 //---------------------------------------------------------
 // function: Alerte
 // but: affiche une alerte en cas de mauvaise saisie
