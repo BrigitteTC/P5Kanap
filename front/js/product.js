@@ -71,22 +71,22 @@ function getNbProduct() {
 
   if (Number.isInteger(qtyInteger) === false) {
     // on remet à 0
-    qtyInteger = 0;
+    eltQty.value = 0;
     alerteMsg("Nombre d'articles: rentrez un nombre entier");
   } else {
     if (qtyInteger < 1) {
       alerteMsg("Nombre d'articles: Il faut au moins 1 canapé");
       // on remet à 0
-      qtyInteger = 0;
+      eltQty.value = 0;
     } else {
       if (qtyInteger > 100) {
         alerteMsg("Nombre d'articles: pas plus de 100 canapés");
         // on remet à 0
-        qtyInteger = 0;
+        eltQty.value = 0;
       }
     }
   }
-  return qtyInteger;
+  return Number(eltQty.value);
 }
 
 //----------------------------------------------------
