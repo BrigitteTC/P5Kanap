@@ -12,9 +12,6 @@ et taper la commande >node server
  listening on port 3000
  */
 
-//server avec la liste des produits
-var serverGET = "http://localhost:3000/api/products";
-
 //--------------------------------------------------------------
 // ft getProducts
 // nom: getProduct
