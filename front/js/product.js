@@ -22,6 +22,8 @@ function alerteMsg(Message) {
   //let newp = document.createElement("p");
   // eltButton.appendChild(newp);
   //newp.innerHTML = Message;
+
+  console.log("Attention: " + Message);
 }
 
 //---------------------------------------------------
@@ -71,7 +73,7 @@ function getNbProduct() {
     Number(eltQty.value) > 100
   ) {
     // message d'erreur
-    alerteMsg("Nombre d'articles:<br> Rentrez un nombre entre 1 et 100");
+    alerteMsg("Nombre d'articles:<br> Rentrez un nombre entier entre 1 et 100");
 
     // tester les chiffres à virgule  .  A refuser
     //window.open("donnez un nombre entier compris entre 1 et 100");
@@ -86,29 +88,26 @@ function getNbProduct() {
 // paramètre entrée: rien
 // paramètre de sortie: couleur
 //
-// algo:
+// algo: Récupère l'option "checked" de l'ID colors
+// Si  vide, affiche un message d'erreur
+//  retourne la valeur sélectionnée.
 //
 //---------------------------------------------
 function getCouleur() {
-  // A completer
-
   // cherche la couleur sélectionnée
   // ajouter value
   // récuperer option.value
-  let Couleur = document.querySelector("#colors option:checked");
-  console.log(Couleur);
+  let couleur = document.querySelector("#colors option:checked");
 
-  Couleur = Couleur.value;
-  console.log(Couleur);
+  console.log(couleur.value);
   //la chaine récupérée est du type:
-  //<option>Grey</option>
+
   //test 1 valeur a été choisie
-  if (Couleur === "--SVP, choisissez une couleur --") {
+  if (couleur.value === "") {
     //alerte: choisissez une couleur
-    alerteMsg("choisissez une couleur"); // A mettre en constante
-    Couleur = "Undefined"; // A mettre en constante
+    alerteMsg("choisissez une couleur");
   }
-  return Couleur;
+  return couleur.value;
 }
 
 //--------------------------------------------------------------
@@ -198,7 +197,7 @@ var getProductById = async function (server) {
           let couleur = getCouleur();
 
           // Verif couleur choisie est bien dans les options
-          if (couleur !== "Undefined") {
+          if (couleur !== "") {
             // go vers la page panier avec l'id et la couleur choisie
             window.location.href =
               "../html/cart.html?id=" +
