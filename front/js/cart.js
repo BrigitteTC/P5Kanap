@@ -21,21 +21,37 @@ function addItemInLocalStorage(productId) {
   console.log("cle= " + cleElt);
 
   //lit le local storage pour cette cle
-  let currentPanier = localStorage.getItem(cleElt);
+  // si la cle existe, on va recuperer une valeur poru le couple canape couleur
+  // il faudra mettre à joru la quantité avec la nouvelle qute achetee
+  //verifier qu'on ne depasse pas 100
+  let currentPanierJson = localStorage.getItem(cleElt);
+  let currentPanier = JSON.parse(currentPanierJson);
 
-  //Ajoute le nouveau produit
-  //boucle sur toutes les clés du local storage
-  for (let i = 0; i < localStorage.length; i++) {
-    let key = localStorage.key(i);
-    //verif key existe deja
-    if (key === cleElt) {
-      //Ajout du produit
-    } else {
-      //Cree la nouvelle cle avec le nouveau produit
+  // mets le  nouveau produit en JSON
+  let productIdJson = JSON.stringify(productId);
+
+  //Teste local storage vide
+  if (localStorage.length === 0) {
+    //Ajout produit dans local storage
+    localStorage.setItem(cleElt, productIdJson);
+  } else {
+    //Ajoute le nouveau produit
+    //boucle sur toutes les clés du local storage
+    for (let i = 0; i < localStorage.length; i++) {
+      let key = localStorage.key(i);
+      //verif key existe deja
+      if (key === cleElt) {
+        //Maj du produit
+      } else {
+        //Cree la nouvelle cle avec le nouveau produit
+        localStorage.setItem(cleElt, productIdJson);
+      }
+      console.log("1"); //DEBUG
     }
+    console.log("2"); //DEBUG
   }
-
-  //Mise à jour du local Storage avec la clé mise à jour
+  console.log("3"); //DEBUG
+  return;
 }
 
 //--------------------------------------------------------------
