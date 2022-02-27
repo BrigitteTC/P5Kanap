@@ -55,3 +55,23 @@ function getId() {
     return id;
   }
 }
+
+//---------------------------------------------------
+//fonction getInfoInURL
+// Retourne l'id du produit de la page
+//params entrée: infoURL: info à chercher dans l'URL
+//          ex: id , nb, color
+//retour: valueInfoURL: valeur correspondant au param d'entrée
+//------------------------------------------------
+
+function getInfoInURL(infoURL) {
+  var str = window.location.href;
+  console.log(str);
+  var url = new URL(str);
+  var search_params = new URLSearchParams(url.search);
+  if (search_params.has(infoURL)) {
+    var valueInfoURL = search_params.get(infoURL);
+    console.log(valueInfoURL);
+    return valueInfoURL;
+  }
+}
