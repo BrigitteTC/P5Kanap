@@ -56,14 +56,10 @@ var getProductByIdNbColor = async function (server) {
       //Affichage du résultat dans le HTML
 
       // Traitement du click sur le bouton
+      let eltButton = document.getElementById("order");
       eltButton.addEventListener("click", function () {
-        console.log("on a cliqué");
+        console.log("on a cliqué sur le bouton order");
         // Verif nb de canapes choisis
-        let nbProduct = getNbProduct(); //nb de canapés choisis
-        if (nbProduct > 0) {
-          //Verif option couleur choisie
-          let couleur = getCouleur();
-        }
       });
 
       //DEBUG: affichage elts
