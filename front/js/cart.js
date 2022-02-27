@@ -5,29 +5,58 @@ auteur: BTC
 
 Script pour mettre à jour la page panier
 *******************************************************************/
+//----------------------------------------------------------------
+//Definition local storage
+//
+// clé:nom du canapé_couleur
+//      exemple:
+
+//----------------------------------------------------------------
+// function: addItemInLocalStorage(productId);
+//---------------------------------------------------------------
+function addItemInLocalStorage(productId) {
+  //cle correspondant au nouveau produit
+  //nom+couleur
+  let cleElt = productId.nom + productId.couleur;
+  console.log("cle= " + cleElt);
+
+  //lit le local storage pour cette cle
+  let currentPanier = localStorage.getItem(cleElt);
+
+  //Ajoute le nouveau produit
+  //boucle sur toutes les clés du local storage
+  for (let i = 0; i < localStorage.length; i++) {
+    let key = localStorage.key(i);
+    //verif key existe deja
+    if (key === cleElt) {
+      //Ajout du produit
+    } else {
+      //Cree la nouvelle cle avec le nouveau produit
+    }
+  }
+
+  //Mise à jour du local Storage avec la clé mise à jour
+}
 
 //--------------------------------------------------------------
-// ft getProductById
-// nom: getProduct
+// ft getProductByIdNbColor
+// nom: getProductByIdNbColor
 // Paramètres:
 //  server: adresse du serveur avec les données à récupérer
-// retour: data: données récupérées
+//  retour: rien
 //
 // algo:
-// Récupère l'id passé dans l'URL
-// En ft de l'ID, récupère les données du serveur pour cet ID
-//    Affiche le produit dan sle HTML
-// Attend le click sur le bouton
-//    Vérifie le nb et la couleur sélectionnés par l'utilisateur
-//    Si ces données sont valides:
-//      Envoie les infos sur la page panier
+// Récupère l'id , le nb et la couleur passés dans l'URL
+// récupère le prix dans le serveur pour cet ID
+//  Maj du local storage
+//  Si click sur le bouton: envoie le panier à la page confirmation.
 //
 // await: attend le retour de la promese
 //-------------------------------------------------------------
 var getProductByIdNbColor = async function (server) {
   let data; //données récupérées par la ft
   try {
-    //on récupère l'id du produit passé dans l'URL
+    //on récupère les infos du produit passé dans l'URL
 
     let productId = getInfoInURL();
     console.log("id produit= " + productId.id);
@@ -48,17 +77,22 @@ var getProductByIdNbColor = async function (server) {
       //prix:
 
       productId.prix = product.price;
-      console.log("prix produit=" + productId.prix);
+      productId.nom = product.name;
+
+      console.log("prix produit= " + productId.prix);
+      console.log("nom du canape= " + productId.nom);
 
       // stockage dans le local storage
+      addItemInLocalStorage(productId);
 
       //Affichage du résultat dans le HTML
+      // displayLocalStorageInHtml();
 
       // Traitement du click sur le bouton
       let eltButton = document.getElementById("order");
       eltButton.addEventListener("click", function () {
         console.log("on a cliqué sur le bouton order");
-        // Verif nb de canapes choisis
+        // Envoi des infos vers page confirmation
       });
     } else {
       console.error("Retour du serveur:", response.status);

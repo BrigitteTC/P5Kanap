@@ -17,6 +17,19 @@ const C_undefined = "undefined";
 const C_separator = "?"; //separateur params de l'URL
 const C_egal = "="; //egalité
 
+//----------------------------------------------------------------
+//Class
+//----------------------------------------------------------------
+//class pour chaque parametre du panier
+class paramPanier {
+  constructor(id, nom, nb, couleur, prix) {
+    this.id = id;
+    this.nom = nom;
+    this.nb = nb;
+    this.couleur = couleur;
+    this.prix = prix;
+  }
+}
 //----------------------------------------
 // Fonctions
 //----------------------------------------
@@ -57,16 +70,6 @@ function getId() {
     var id = search_params.get("id");
     console.log("id extraite de l'URL=" + id);
     return id;
-  }
-}
-
-//definir une class pour chaque parametre du panier
-class paramPanier {
-  constructor(id, nb, couleur, prix) {
-    this.id = id;
-    this.nb = nb;
-    this.couleur = couleur;
-    this.prix = prix;
   }
 }
 
