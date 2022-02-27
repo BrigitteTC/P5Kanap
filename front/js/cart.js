@@ -29,19 +29,15 @@ var getProductByIdNbColor = async function (server) {
   try {
     //on récupère l'id du produit passé dans l'URL
 
-    let productId = getInfoInURL("id");
-    console.log("id produit= " + productId);
+    let productId = getInfoInURL();
+    console.log("id produit= " + productId.id);
 
-    //On récupère le nb de produits
-    let productNb = getInfoInURL("color");
-    console.log("nb produits=" + productNb);
+    console.log("nb produits=" + productId.nb);
 
-    //On récupère la couleur
-    let productColor = getInfoInURL("nb");
-    console.log("couleur produit = " + productColor);
+    console.log("couleur produit = " + productId.couleur);
 
     //Construction de la route du produit
-    server = server + "/" + productId;
+    server = server + "/" + productId.id;
     console.log("route produit=" + server);
 
     // Recherche data du produit sur le serveur
@@ -49,7 +45,10 @@ var getProductByIdNbColor = async function (server) {
     if (response.ok) {
       //le produit à afficher
       let product = await response.json();
-      console.log("prix produit=" + product.price);
+      //prix:
+
+      productId.prix = product.price;
+      console.log("prix produit=" + productId.prix);
 
       // stockage dans le local storage
 
@@ -61,8 +60,6 @@ var getProductByIdNbColor = async function (server) {
         console.log("on a cliqué sur le bouton order");
         // Verif nb de canapes choisis
       });
-
-      //DEBUG: affichage elts
     } else {
       console.error("Retour du serveur:", response.status);
     }
