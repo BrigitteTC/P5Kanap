@@ -5,27 +5,6 @@ auteur: BTC
 Script pour mettre à jour la page du canapé sur la page html correspondante
 *******************************************************************/
 
-//---------------------------------------------------------
-// function: Alerte
-// but: affiche une alerte en cas de mauvaise saisie
-//  le message d'erreur sera affiché sous le bouton
-//
-// Param d'entrée: Id: Id où on peut rajouter le msg
-//                Message: message d'erreur
-// Param de sortie: rien
-//---------------------------------------------------------
-function alerteMsg(Message) {
-  // A compléter
-  //On récupère l'id du bouton
-  // let eltButton = document.getElementById(Id);
-  //creation p
-  //let newp = document.createElement("p");
-  // eltButton.appendChild(newp);
-  //newp.innerHTML = Message;
-
-  console.log("Attention: " + Message);
-}
-
 //----------------------------------------------------------------
 // getNbProduct();
 // fonction: retourne le nombre de produits sélectionnés
@@ -106,7 +85,14 @@ function getCouleur() {
 // retour: data: données récupérées
 //
 // algo:
-//  lit les données du serveur
+// Récupère l'id passé dans l'URL
+// En ft de l'ID, récupère les données du serveur pour cet ID
+//    Affiche le produit dan sle HTML
+// Attend le click sur le bouton
+//    Vérifie le nb et la couleur sélectionnés par l'utilisateur
+//    Si ces données sont valides:
+//      Envoie les infos sur la page panier
+//
 // await: attend le retour de la promese
 //-------------------------------------------------------------
 var getProductById = async function (server) {
@@ -114,27 +100,27 @@ var getProductById = async function (server) {
   try {
     //on récupère l'id du produit passé dans l'URL
 
-    let ProductId = getId();
-    console.log(ProductId);
+    let productId = getId();
+    console.log(productId);
 
     //Construction de la route du produit
-    server = server + "/" + ProductId;
+    server = server + "/" + productId;
     console.log(server);
 
     // Recherche data du produit sur le serveur
     let response = await fetch(server);
     if (response.ok) {
       //le produit à afficher
-      let Product = await response.json();
-      console.log(Product);
+      let product = await response.json();
+      console.log(product);
 
       //Affichage du résultat dans le HTML
 
       //Maj titre  id='title'
-      document.getElementById("title").innerHTML = Product.name;
+      document.getElementById("title").innerHTML = product.name;
 
       // maj prix id='price'
-      document.getElementById("price").innerHTML = Product.price;
+      document.getElementById("price").innerHTML = product.price;
 
       //Maj image  class= 'item__img'
       //creation elt img
@@ -146,19 +132,19 @@ var getProductById = async function (server) {
       newItem[0].appendChild(newImg);
 
       //maj img
-      newImg.src = Product.imageUrl;
+      newImg.src = product.imageUrl;
 
-      newImg.alt = Product.altTxt;
+      newImg.alt = product.altTxt;
 
       //maj description  id="description"
-      document.getElementById("description").innerHTML = Product.description;
+      document.getElementById("description").innerHTML = product.description;
 
       //maj options  id="colors"
       // on recupere l'elt avec id "colors"
       let eltOptions = document.getElementById("colors");
       //boucle sur les options de couleur pour crer les enfants correspondants
       let numCouleur = 0; //numero de couleur
-      for (numCouleur in Product.colors) {
+      for (numCouleur in product.colors) {
         //creation elt
         let newOption = document.createElement("option");
         //ajout de l'enfant 'option'
@@ -168,8 +154,8 @@ var getProductById = async function (server) {
         let newValue = document.createElement("value");
         newOption.appendChild(newValue);
         //maj value
-        newValue.innerHTML = Product.colors[numCouleur];
-        console.log(Product.colors[numCouleur]);
+        newValue.innerHTML = product.colors[numCouleur];
+        console.log(product.colors[numCouleur]);
       }
 
       //le boutton
@@ -189,7 +175,7 @@ var getProductById = async function (server) {
             // go vers la page panier avec l'id et la couleur choisie
             window.location.href =
               "../html/cart.html?id=" +
-              Product._id +
+              product._id +
               "?color=" +
               couleur +
               "?nb=" +
@@ -199,10 +185,10 @@ var getProductById = async function (server) {
       });
 
       //DEBUG: affichage elts
-      console.log(Product);
-      console.log(Product.name);
-      console.log(Product.imageUrl);
-      console.log(Product.altTxt);
+      console.log(product);
+      console.log(product.name);
+      console.log(product.imageUrl);
+      console.log(product.altTxt);
     } else {
       console.error("Retour du serveur:", response.status);
     }
