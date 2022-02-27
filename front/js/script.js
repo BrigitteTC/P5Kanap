@@ -97,4 +97,4 @@ var getProducts = async function (server) {
 
 // Appel de la ft pour récupérer les produits
 
-getProducts(serverGET);
+getProducts(C_serverGET);
