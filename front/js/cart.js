@@ -29,27 +29,27 @@ var getProductByIdNbColor = async function (server) {
   try {
     //on récupère l'id du produit passé dans l'URL
 
-    let productId = getInfoInURL(id);
-    console.log(productId);
+    let productId = getInfoInURL("id");
+    console.log("id produit= " + productId);
 
     //On récupère le nb de produits
-    let productNb = getInfoInURL(color);
-    console.log(productNb);
+    let productNb = getInfoInURL("color");
+    console.log("nb produits=" + productNb);
 
     //On récupère la couleur
-    let productColor = getColorinURL(nb);
-    console.log(productColor);
+    let productColor = getInfoInURL("nb");
+    console.log("couleur produit = " + productColor);
 
     //Construction de la route du produit
     server = server + "/" + productId;
-    console.log(server);
+    console.log("route produit=" + server);
 
     // Recherche data du produit sur le serveur
     let response = await fetch(server);
     if (response.ok) {
       //le produit à afficher
       let product = await response.json();
-      console.log(product.price);
+      console.log("prix produit=" + product.price);
 
       // stockage dans le local storage
 
