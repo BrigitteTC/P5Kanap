@@ -16,6 +16,26 @@ const C_undefined = "undefined";
 //----------------------------------------
 // Fonctions
 //----------------------------------------
+//---------------------------------------------------------
+// function: Alerte
+// but: affiche une alerte en cas de mauvaise saisie
+//  le message d'erreur sera affiché sous forme de popup
+//
+// Param d'entrée:
+//                Message: message d'erreur
+// Param de sortie: rien
+//---------------------------------------------------------
+function alerteMsg(Message) {
+  // A compléter
+  //On récupère l'id du bouton
+  // let eltButton = document.getElementById(Id);
+  //creation p
+  //let newp = document.createElement("p");
+  // eltButton.appendChild(newp);
+  //newp.innerHTML = Message;
+
+  console.log("Attention: " + Message);
+}
 
 //---------------------------------------------------
 //fonction getId
