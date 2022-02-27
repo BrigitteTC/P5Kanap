@@ -13,6 +13,10 @@ const C_serverGET = "http://localhost:3000/api/products";
 const C_choixOption = "--SVP, choisissez une couleur --";
 const C_undefined = "undefined";
 
+//Construction de l'URL
+const C_separator = "?"; //separateur params de l'URL
+const C_egal = "="; //egalité
+
 //----------------------------------------
 // Fonctions
 //----------------------------------------
@@ -93,8 +97,6 @@ function OldgetInfoInURL(infoURL) {
 //          ex: id , nb, color
 //retour: newParamPanier: class params avec id, couleur et nb
 //------------------------------------------------
-const C_separator = "?";
-const C_egal = "=";
 
 function getInfoInURL() {
   //Récupère la chaine de caracteres après le ?
