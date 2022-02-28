@@ -152,6 +152,23 @@ function displayItemInHtml(itemPanier) {
     newDiv31Input.classList.add("itemQuantity");
     newDiv32.classList.add("cart__item__content__settings__delete");
     newDiv32p.classList.add("deleteItem");
+
+    //maj contenu elts:
+    newDiv1Img.src = itemPanier.imageUrl;
+    newDiv1Img.altTxt = itemPanier.altTxt;
+
+    newDiv21h2.innerHTML = itemPanier.nom;
+    newDiv21p1 = itemPanier.couleur;
+    newDiv21p2 = itemPanier.prix;
+
+    newDiv31p = "Qté";
+    newDiv31Input.type = "number";
+    newDiv31Input.name = itemPanier.nb;
+    newDiv31Input.min = "1";
+    newDiv31Input.max = "100";
+    newDiv31Input.mvalue = Number(itemPanier.prix) * Number(itemPanier.nb);
+
+    newDiv32p.innerHTML = "Supprimer";
   } catch (e) {
     console.log("displayItemInHtml" + e);
   }
