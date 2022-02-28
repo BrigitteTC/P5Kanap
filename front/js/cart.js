@@ -13,45 +13,53 @@ Script pour mettre à jour la page panier
 
 //----------------------------------------------------------------
 // function: addItemInLocalStorage(productId);
+//Objet:
+//Parametres:
+//  Entrée: ProductId: produit à ajouter
+//  Sortie
+// Algo
 //---------------------------------------------------------------
 function addItemInLocalStorage(productId) {
   //cle correspondant au nouveau produit
   //nom+couleur
-  let cleElt = productId.nom + productId.couleur;
-  console.log("cle= " + cleElt);
+  try {
+    let cleElt = productId.nom + productId.couleur;
+    console.log("cle= " + cleElt);
 
-  //lit le local storage pour cette cle
-  // si la cle existe, on va recuperer une valeur poru le couple canape couleur
-  // il faudra mettre à joru la quantité avec la nouvelle qute achetee
-  //verifier qu'on ne depasse pas 100
-  let currentPanierJson = localStorage.getItem(cleElt);
-  let currentPanier = JSON.parse(currentPanierJson);
+    //lit le local storage pour cette cle
+    // si la cle existe, on va recuperer une valeur poru le couple canape couleur
+    // il faudra mettre à joru la quantité avec la nouvelle qute achetee
+    //verifier qu'on ne depasse pas 100
+    let currentPanierJson = localStorage.getItem(cleElt);
+    let currentPanier = JSON.parse(currentPanierJson);
 
-  // mets le  nouveau produit en JSON
-  let productIdJson = JSON.stringify(productId);
+    // mets le  nouveau produit en JSON
+    let productIdJson = JSON.stringify(productId);
 
-  //Teste local storage vide
-  if (localStorage.length === 0) {
-    //Ajout produit dans local storage
-    localStorage.setItem(cleElt, productIdJson);
-  } else {
-    //Ajoute le nouveau produit
-    //boucle sur toutes les clés du local storage
-    for (let i = 0; i < localStorage.length; i++) {
-      let key = localStorage.key(i);
-      //verif key existe deja
-      if (key === cleElt) {
-        //Maj du produit
-      } else {
-        //Cree la nouvelle cle avec le nouveau produit
-        localStorage.setItem(cleElt, productIdJson);
+    //Teste local storage vide
+    if (localStorage.length === 0) {
+      //Ajout produit dans local storage
+      localStorage.setItem(cleElt, productIdJson);
+    } else {
+      //Ajoute le nouveau produit
+      //boucle sur toutes les clés du local storage
+      for (let i = 0; i < localStorage.length; i++) {
+        let key = localStorage.key(i);
+        //verif key existe deja
+        if (key === cleElt) {
+          //Maj du produit
+        } else {
+          //Cree la nouvelle cle avec le nouveau produit
+          localStorage.setItem(cleElt, productIdJson);
+        }
+        console.log("1"); //DEBUG
       }
-      console.log("1"); //DEBUG
+      console.log("2"); //DEBUG
     }
-    console.log("2"); //DEBUG
+    console.log("3"); //DEBUG
+  } catch (e) {
+    console.log("addItemInLocalStorage:" + e);
   }
-  console.log("3"); //DEBUG
-  return;
 }
 
 //--------------------------------------------------------------
@@ -136,7 +144,7 @@ var getProductByIdNbColor = async function (server) {
       console.error("Retour du serveur:", response.status);
     }
   } catch (e) {
-    console.log(e);
+    console.log("getProductByIdNbColor: " + e);
   }
 };
 
