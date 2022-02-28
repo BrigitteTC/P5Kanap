@@ -85,8 +85,73 @@ function displayLocalStorageInHtml() {
 //-------------------------------------------
 // ft displayItemInHtml(itemPanier);
 //---------------------------------------------
-function displayItemInHtml(itemPanier);
+function displayItemInHtml(itemPanier) {
+  try {
+    //structure html
+    //on recupere le id items qui contiendra les articles des canapés
+    let eltSection = document.getElementById("cart__items");
+    //creation de l'elt article
+    let newArticle = document.createElement("article");
 
+    //Creation des div et leurs enfants
+    let newDiv1 = document.createElement("div");
+    let newDiv1Img = document.createElement("img");
+
+    let newDiv2 = document.createElement("div");
+    let newDiv21 = document.createElement("div");
+
+    let newDiv21h2 = document.createElement("h2");
+    let newDiv21p1 = document.createElement("p");
+    let newDiv21p2 = document.createElement("p");
+
+    let newDiv3 = document.createElement("div");
+    let newDiv31 = document.createElement("div");
+    let newDiv31p = document.createElement("p");
+    let newDiv31Input = document.createElement("input");
+
+    let newDiv32 = document.createElement("div");
+    let newDiv32p = document.createElement("p");
+
+    //article =enfant de section
+    eltSection.appendChild(newArticle);
+
+    //Div1
+    newArticle.appendChild(newDiv1);
+    newDiv1.appendChild(newDiv1Img);
+
+    //nouvelle div div2
+    newArticle.appendChild(newDiv2);
+    newDiv2.appendChild(newDiv21);
+    newDiv21.appendChild(newDiv21h2);
+    newDiv21.appendChild(newDiv21p1);
+    newDiv21.appendChild(newDiv21p2);
+
+    //nouvelle div div3
+    newArticle.appendChild(newDiv3);
+
+    //div31 enfant de div3
+    newDiv3.appendChild(newDiv31);
+    newDiv31.appendChild(newDiv31p);
+    newDiv31.appendChild(newDiv31Input);
+
+    //div32 enfant de div3
+    newDiv3.appendChild(newDiv32);
+    newDiv32.appendChild(newDiv32p);
+
+    //Maj classes
+    newArticle.classList.add("cart__item");
+    newDiv1.classList.add("cart__item__img");
+    newDiv2.classList.add("cart__item__content");
+    newDiv21.classList.add("cart__item__content__description");
+    newDiv3.classList.add("cart__item__content__settings");
+    newDiv31.classList.add("cart__item__content__settings__quantity");
+    newDiv31Input.classList.add("itemQuantity");
+    newDiv32.classList.add("cart__item__content__settings__delete");
+    newDiv32p.classList.add("deleteItem");
+  } catch (e) {
+    console.log("displayItemInHtml" + e);
+  }
+}
 //----------------------------------------------------------------
 // ft getProductByIdNbColor
 // nom: getProductByIdNbColor
