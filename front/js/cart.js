@@ -72,13 +72,17 @@ function addItemInLocalStorage(productId) {
 //
 //--------------------------------------------------------------
 function displayLocalStorageInHtml() {
-  //Parcours de toutes les clés du local storage
-  for (let i = 0; i < localStorage.length; i++) {
-    console.log("cle " + i + " " + localStorage.key(i));
-    let itemPanierJSON = localStorage.getItem(localStorage.key(i));
-    let itemPanier = parse(itemPanierJSON);
-    //Affiche l'item
-    displayItemInHtml(itemPanier);
+  try {
+    //Parcours de toutes les clés du local storage
+    for (let i = 0; i < localStorage.length; i++) {
+      console.log("cle " + i + " " + localStorage.key(i));
+      let itemPanierJSON = localStorage.getItem(localStorage.key(i));
+      let itemPanier = JSON.parse(itemPanierJSON);
+      //Affiche l'item
+      displayItemInHtml(itemPanier);
+    }
+  } catch (e) {
+    console.log("displayLocalStorageInHtml " + e);
   }
 }
 
@@ -198,6 +202,7 @@ var getProductByIdNbColor = async function (server) {
       productId.nom = product.name; //nom
       productId.imageUrl = product.imageUrl;
       productId.altTxt = product.altTxt;
+      productId.description = product.description;
 
       console.log("prix produit= " + productId.prix);
       console.log("nom du canape= " + productId.nom);

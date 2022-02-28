@@ -103,7 +103,7 @@ function getInfoInURL() {
   //maj avec  le tableau récupéré
   newParamPanier.id = parameters[0];
   newParamPanier.couleur = parameters[1].split(C_egal)[1];
-  newParamPanier.nb = parameters[2].split(C_egal)[1];
+  newParamPanier.nb = Number(parameters[2].split(C_egal)[1]); //nombre forcé en entier
 
   return newParamPanier;
 }
