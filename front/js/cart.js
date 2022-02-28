@@ -166,7 +166,7 @@ function displayItemInHtml(itemPanier) {
     newDiv31Input.name = itemPanier.nb;
     newDiv31Input.min = "1";
     newDiv31Input.max = "100";
-    newDiv31Input.mvalue = Number(itemPanier.prix) * Number(itemPanier.nb);
+    newDiv31Input.mvalue = itemPanier.nb;
 
     newDiv32p.innerHTML = "Supprimer";
   } catch (e) {

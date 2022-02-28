@@ -24,6 +24,10 @@ et taper la commande >node server
 // await: attend le retour de la promese
 //-------------------------------------------------------------
 var getProducts = async function (server) {
+  //clear local storage
+  localStorage.clear;
+
+  //
   let data; //données récupérées par la ft
   try {
     let response = await fetch(server);
@@ -65,7 +69,7 @@ var getProducts = async function (server) {
 
         //ma j contenu des elt crees
         // lien a
-        newa.href = "./product.html?id=" + product._id;
+        newa.href = "./product.html" + C_separator + "id=" + product._id;
 
         //h3
         newh3.classList.add("productName");
