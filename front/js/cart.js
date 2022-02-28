@@ -75,6 +75,7 @@ function displayLocalStorageInHtml() {
   try {
     //init prix total à 0
     let prixTotal = 0;
+    let qtyTotal = 0;
 
     //Parcours de toutes les clés du local storage
     for (let i = 0; i < localStorage.length; i++) {
@@ -86,10 +87,13 @@ function displayLocalStorageInHtml() {
 
       //calcule prix item
       prixTotal += Number(itemPanier.nb) * Number(itemPanier.prix);
+
+      //calcule quantité:
+      qtyTotal += Number(itemPanier.nb);
     }
 
     //Affiche le prix dans l'ecran
-    displayPrixTotal(prixTotal);
+    displayPrixTotal(prixTotal, qtyTotal);
   } catch (e) {
     console.log("displayLocalStorageInHtml " + e);
   }
@@ -189,16 +193,22 @@ function displayItemInHtml(itemPanier) {
 //
 // Parametres:
 //  Entree: prixTotal: prix à afficher
+//          qtyTotal: quantité totale d'articles
 //  Sortie: rien
 //
 // Algo:
 //  maj "span" avec le prix passé en param
+//    + maj quantité
 //------------------------------------------------------------
-function displayPrixTotal(prixTotal) {
+function displayPrixTotal(prixTotal, qtyTotal) {
   try {
-    let eltSpan = document.getElementById("totalPrice");
+    // affichage quantité:
+    let eltSpanQty = document.getElementById("totalQuantity");
+    eltSpanQty.innerHTML = qtyTotal;
+    //Affiche prix total
+    let eltSpanPrix = document.getElementById("totalPrice");
     //creation de l'elt article
-    eltSpan.innerHTML = prixTotal;
+    eltSpanPrix.innerHTML = prixTotal;
   } catch (e) {
     console.log("displayPrixTotal" + e);
   }
