@@ -73,6 +73,9 @@ function addItemInLocalStorage(productId) {
 //--------------------------------------------------------------
 function displayLocalStorageInHtml() {
   try {
+    //init prix total à 0
+    let prixTotal = 0;
+
     //Parcours de toutes les clés du local storage
     for (let i = 0; i < localStorage.length; i++) {
       console.log("cle " + i + " " + localStorage.key(i));
@@ -80,7 +83,13 @@ function displayLocalStorageInHtml() {
       let itemPanier = JSON.parse(itemPanierJSON);
       //Affiche l'item
       displayItemInHtml(itemPanier);
+
+      //calcule prix item
+      prixTotal += Number(itemPanier.nb) * Number(itemPanier.prix);
     }
+
+    //Affiche le prix dans l'ecran
+    displayPrixTotal(prixTotal);
   } catch (e) {
     console.log("displayLocalStorageInHtml " + e);
   }
@@ -171,6 +180,27 @@ function displayItemInHtml(itemPanier) {
     newDiv32p.innerHTML = "Supprimer";
   } catch (e) {
     console.log("displayItemInHtml" + e);
+  }
+}
+
+//----------------------------------------------------------------
+//displayPrixTotal(prixTotal);
+//Objet: affiche le prix total sur l'ecran
+//
+// Parametres:
+//  Entree: prixTotal: prix à afficher
+//  Sortie: rien
+//
+// Algo:
+//  maj "span" avec le prix passé en param
+//------------------------------------------------------------
+function displayPrixTotal(prixTotal) {
+  try {
+    let eltSpan = document.getElementById("totalPrice");
+    //creation de l'elt article
+    eltSpan.innerHTML = prixTotal;
+  } catch (e) {
+    console.log("displayPrixTotal" + e);
   }
 }
 //----------------------------------------------------------------
