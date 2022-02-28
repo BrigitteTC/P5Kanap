@@ -55,10 +55,30 @@ function addItemInLocalStorage(productId) {
 }
 
 //--------------------------------------------------------------
+// ft: displayLocalStorageInHtml();
+// nom: displayLocalStorageInHtml(productId);
+// Objet: maj de la page html avec les infos de ProductId
+//
+// Parametres:
+//  Entrée: rien
+//  Sortie: rien
+//
+// algo:
+//  Parcours toutes les clés du local storage pour insérer les objets
+//  correspondants dansla page html
+//
+//--------------------------------------------------------------
+function displayLocalStorageInHtml() {}
+
+//----------------------------------------------------------------
 // ft getProductByIdNbColor
 // nom: getProductByIdNbColor
+// Objet: Récupère les infos du produit passées dans l'URL
+//    les affiche dans le panier
+//    et appelle la page confirmation si click sur le bouton.
 // Paramètres:
-//  server: adresse du serveur avec les données à récupérer
+//  entrée:
+//    server: adresse du serveur avec les données à récupérer
 //  retour: rien
 //
 // algo:
@@ -90,10 +110,12 @@ var getProductByIdNbColor = async function (server) {
     if (response.ok) {
       //le produit à afficher
       let product = await response.json();
-      //prix:
+      //On complète avec les infos du server
 
-      productId.prix = product.price;
-      productId.nom = product.name;
+      productId.prix = product.price; //prix
+      productId.nom = product.name; //nom
+      productId.imageUrl = product.imageUrl;
+      productId.altTxt = product.altTxt;
 
       console.log("prix produit= " + productId.prix);
       console.log("nom du canape= " + productId.nom);
@@ -102,7 +124,7 @@ var getProductByIdNbColor = async function (server) {
       addItemInLocalStorage(productId);
 
       //Affichage du résultat dans le HTML
-      // displayLocalStorageInHtml();
+      displayLocalStorageInHtml();
 
       // Traitement du click sur le bouton
       let eltButton = document.getElementById("order");

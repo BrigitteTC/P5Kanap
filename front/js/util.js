@@ -22,12 +22,15 @@ const C_egal = "="; //egalité
 //----------------------------------------------------------------
 //class pour chaque parametre du panier
 class paramPanier {
-  constructor(id, nom, nb, couleur, prix) {
+  constructor(id, nom, nb, couleur, prix, imageUrl, description, altTxt) {
     this.id = id;
     this.nom = nom;
     this.nb = nb;
     this.couleur = couleur;
     this.prix = prix;
+    this.imageUrl = imageUrl;
+    this.description = description;
+    this.altTxt = altTxt;
   }
 }
 //----------------------------------------
@@ -74,30 +77,10 @@ function getId() {
 }
 
 //---------------------------------------------------
-//fonction OldgetInfoInURL
-// Retourne l'id du produit de la page
-//params entrée: infoURL: info à chercher dans l'URL
-//          ex: id , nb, color
-//retour: valueInfoURL: valeur correspondant au param d'entrée
-//------------------------------------------------
-
-function OldgetInfoInURL(infoURL) {
-  var str = window.location.href; //URL passée en param
-  console.log("URL=" + str);
-  var url = new URL(str);
-  var search_params = new URLSearchParams(url.search);
-  if (search_params.has(infoURL)) {
-    var valueInfoURL = search_params.get(infoURL);
-    console.log("Valeur extraite de l'URL=" + valueInfoURL);
-    return valueInfoURL;
-  }
-}
-
-//---------------------------------------------------
 //fonction getInfoInURL
-// Retourne l'id du produit de la page
+// Retourne les infos du produit passéesdans l'URL
 //params entrée: rien
-//          ex: id , nb, color
+//
 //retour: newParamPanier: class params avec id, couleur et nb
 //------------------------------------------------
 
@@ -106,13 +89,16 @@ function getInfoInURL() {
   let productId = getId();
   console.log("Valeur extraite de l'URL=" + productId);
   //Split la chaine extraite
-  // format chaine = xxx?nb=1234?color=azert
+  // format chaine = xxx?nb=1234?color=azerty
 
-  //split par &
+  //split par separateur
+  //0: id
+  //1: nb=1234
+  //2: color=azerty
   let parameters = productId.toString(1).split(C_separator);
 
   // Variable pour stocker les params recupéres de l'URL
-  let newParamPanier = new paramPanier(0, "", 0, 0);
+  let newParamPanier = new paramPanier(0, "", 0, "", 0, "", "", "");
 
   //maj avec  le tableau récupéré
   newParamPanier.id = parameters[0];
