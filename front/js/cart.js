@@ -38,8 +38,14 @@ function addItemInLocalStorage(productId) {
       let currentPanier = JSON.parse(currentPanierJson);
 
       //complete avec le nouveau produit
-      productId.nb += currentPanier.nb;
+      productId.nb += Number(currentPanier.nb);
       //Verif nb <100
+      if (productId.nb > 100) {
+        alerteMsg(
+          "Vous ne pouvez pas acheter plus de 100 canapés de même type"
+        );
+        productId.nb = Number(currentPanier.nb); //nb remis a valeur initiale
+      }
     }
 
     //Ajoute le nouveau produit
@@ -65,7 +71,21 @@ function addItemInLocalStorage(productId) {
 //  correspondants dansla page html
 //
 //--------------------------------------------------------------
-function displayLocalStorageInHtml() {}
+function displayLocalStorageInHtml() {
+  //Parcours de toutes les clés du local storage
+  for (let i = 0; i < localStorage.length; i++) {
+    console.log("cle " + i + " " + localStorage.key(i));
+    let itemPanierJSON = localStorage.getItem(localStorage.key(i));
+    let itemPanier = parse(itemPanierJSON);
+    //Affiche l'item
+    displayItemInHtml(itemPanier);
+  }
+}
+
+//-------------------------------------------
+// ft displayItemInHtml(itemPanier);
+//---------------------------------------------
+function displayItemInHtml(itemPanier);
 
 //----------------------------------------------------------------
 // ft getProductByIdNbColor
