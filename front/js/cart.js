@@ -158,15 +158,15 @@ function displayItemInHtml(itemPanier) {
     newDiv1Img.altTxt = itemPanier.altTxt;
 
     newDiv21h2.innerHTML = itemPanier.nom;
-    newDiv21p1 = itemPanier.couleur;
-    newDiv21p2 = itemPanier.prix;
+    newDiv21p1.innerHTML = itemPanier.couleur;
+    newDiv21p2.innerHTML = itemPanier.prix + "€";
 
-    newDiv31p = "Qté";
+    newDiv31p.innerHTML = "Qté";
     newDiv31Input.type = "number";
     newDiv31Input.name = itemPanier.nb;
     newDiv31Input.min = "1";
     newDiv31Input.max = "100";
-    newDiv31Input.mvalue = itemPanier.nb;
+    newDiv31Input.value = itemPanier.nb;
 
     newDiv32p.innerHTML = "Supprimer";
   } catch (e) {

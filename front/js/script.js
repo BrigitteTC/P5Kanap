@@ -24,9 +24,6 @@ et taper la commande >node server
 // await: attend le retour de la promese
 //-------------------------------------------------------------
 var getProducts = async function (server) {
-  //clear local storage
-  localStorage.clear;
-
   //
   let data; //données récupérées par la ft
   try {
@@ -98,6 +95,9 @@ var getProducts = async function (server) {
     console.log(e);
   }
 };
+
+//clear local storage
+//localStorage.clear();
 
 // Appel de la ft pour récupérer les produits
 
