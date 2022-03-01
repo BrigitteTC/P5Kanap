@@ -4,12 +4,16 @@ date: 26/02/2022
 auteur: BTC
 
 Script pour mettre à jour la page panier
+
+Les donnees sont stockees dan sle local storage.
 *******************************************************************/
 //----------------------------------------------------------------
 //Definition local storage
 //
 // clé:nom du canapé_couleur
-//      exemple:
+//      exemple:Kanap Autonoé_Pink
+//  elt: elt de classe paramPanier
+//----------------------------------------------------------------
 
 //----------------------------------------------------------------
 // function: addItemInLocalStorage(productId);
@@ -69,6 +73,9 @@ function addItemInLocalStorage(productId) {
 // algo:
 //  Parcours toutes les clés du local storage pour insérer les objets
 //  correspondants dansla page html
+//  calcule le nombre total d'elts
+//  calcule le prix total
+//  Affiche le prix total et nb d'elt total dans la page html
 //
 //--------------------------------------------------------------
 function displayLocalStorageInHtml() {
@@ -235,14 +242,26 @@ function displayPrixTotal(prixTotal, qtyTotal) {
 //-----------------------------------------------------------
 //Fonction: waitClickOnSupprimer();
 // Objet: Attend le click sur le bouton "supprimer" d'un elt
+//
+// Parametres:
+//  entrée: rien
+//  sortie: rien
+//
+//  Algo
+//    REcherche ts les elts avec la classe "supprimer"
+//    Ecoute sur tous les elts de cette class
+//    Si click sur un elt
+//       REcherche l'id de l'Article parent
+//        Supprime cet elt dans le local stortage
+//        Supprime l'article de la page html
+//        Recalcule le nb d'elt et le prix total
 //----------------------------------------------------------------
 function waitClickOnSupprimer() {
   try {
     //recherche de ts les elts qui ont la classe deleteItem
     //à l'intérieur d'un elt ayant l'ID "cart__items"
-    let eltsSupprimer = document
-      .getElementById("cart__items")
-      .getElementsByClassName("deleteItem"); //tableau avec tous les elts de la class
+    let eltSection = document.getElementById("cart__items");
+    let eltsSupprimer = eltSection.getElementsByClassName("deleteItem"); //tableau avec tous les elts de la class
 
     for (let i = 0; i < eltsSupprimer.length; i++) {
       //Element html "supprimer" correspondant à la clé
@@ -250,17 +269,24 @@ function waitClickOnSupprimer() {
       eltsSupprimer[i].addEventListener("click", function () {
         //on a cliqué sur l'elt supprimer
         // on remonte la filiere poru avoir l'article correspondant
-        //Article est 4 niveaux au dessous du bouton supprimer
-        let eltPapa = eltsSupprimer[i].parentNode.parentNode.parentNode;
-        console.log("article clic =" + eltPapa);
+        //Article est 3 niveaux au dessous du bouton supprimer
+        let eltArticle = eltsSupprimer[i].parentNode.parentNode.parentNode;
+        console.log("article clic =" + eltArticle);
         //Supprimer la cle dans le local storage
         let cle = 0;
-        cle = eltPapa.id;
+        cle = eltArticle.id;
 
         //cle.split(C_separatorKey)[0]; 'main'
         //let itemCouleur = cle.split(C_separatorKey)[1];
+
+        //recupere les infos du local storage avant de supprimer l'elt
+        //prix et nb d'elt
         localStorage.removeItem(cle);
-        //Afficher la page html
+
+        //supprime le noeud avec l'article
+
+        eltSection.removeChild(eltArticle);
+        //Afficher la nouvelle page html
         displayLocalStorageInHtml();
       });
     }
