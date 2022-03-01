@@ -254,7 +254,7 @@ function displayPrixTotal(prixTotal, qtyTotal) {
 //       REcherche l'id de l'Article parent
 //        Supprime cet elt dans le local stortage
 //        Supprime l'article de la page html
-//        Recalcule le nb d'elt et le prix total
+//        Affiche la nouvelle page html
 //----------------------------------------------------------------
 function waitClickOnSupprimer() {
   try {
@@ -283,11 +283,11 @@ function waitClickOnSupprimer() {
         //prix et nb d'elt
         localStorage.removeItem(cle);
 
-        //supprime le noeud avec l'article
+        //supprime le noeud avec l'article supprimé
 
         eltSection.removeChild(eltArticle);
         //Afficher la nouvelle page html
-        displayLocalStorageInHtml();
+        //displayLocalStorageInHtml();
       });
     }
   } catch (e) {
