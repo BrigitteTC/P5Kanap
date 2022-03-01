@@ -14,8 +14,12 @@ const C_choixOption = "--SVP, choisissez une couleur --";
 const C_undefined = "undefined";
 
 //Construction de l'URL
-const C_separator = "?"; //separateur params de l'URL
+const C_separatorURL = "?"; //separateur params de l'URL
 const C_egal = "="; //egalité
+
+//Construction de la clé du local storage
+// cle= nom_couleur
+const C_separatorKey = "_";
 
 //----------------------------------------------------------------
 //Class
@@ -95,7 +99,7 @@ function getInfoInURL() {
   //0: id
   //1: nb=1234
   //2: color=azerty
-  let parameters = productId.toString(1).split(C_separator);
+  let parameters = productId.toString(1).split(C_separatorURL);
 
   // Variable pour stocker les params recupéres de l'URL
   let newParamPanier = new paramPanier(0, "", 0, "", 0, "", "", "");

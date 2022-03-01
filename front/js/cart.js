@@ -29,7 +29,7 @@ function addItemInLocalStorage(productId) {
     //cle correspondant au nouveau produit
     //nom+couleur
     let cleElt = productId.nom + productId.couleur;
-    console.log("cle= " + cleElt);
+    console.log("cle= " + C_separatorKey + cleElt);
 
     //teste clé existe déja ds le local storage
     if (cleElt in localStorage) {

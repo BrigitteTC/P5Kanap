@@ -66,7 +66,7 @@ var getProducts = async function (server) {
 
         //ma j contenu des elt crees
         // lien a
-        newa.href = "./product.html" + C_separator + "id=" + product._id;
+        newa.href = "./product.html" + C_separatorURL + "id=" + product._id;
 
         //h3
         newh3.classList.add("productName");
