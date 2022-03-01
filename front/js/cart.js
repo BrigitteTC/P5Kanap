@@ -73,7 +73,7 @@ function addItemInLocalStorage(productId) {
 //--------------------------------------------------------------
 function displayLocalStorageInHtml() {
   try {
-    //init prix total à 0
+    //init prix et auantité total à 0
     let prixTotal = 0;
     let qtyTotal = 0;
 
@@ -85,10 +85,10 @@ function displayLocalStorageInHtml() {
       //Affiche l'item
       displayItemInHtml(itemPanier);
 
-      //calcule prix item
+      //calcule prix total
       prixTotal += Number(itemPanier.nb) * Number(itemPanier.prix);
 
-      //calcule quantité:
+      //calcule quantité totale:
       qtyTotal += Number(itemPanier.nb);
     }
 
@@ -101,6 +101,16 @@ function displayLocalStorageInHtml() {
 
 //-------------------------------------------
 // ft displayItemInHtml(itemPanier);
+// Objet: construit la structure html pour l'affichage du produit
+//  mets à jour les balises avec le param
+//parametres:
+//  Entrée: itemPanier: article à ajouter dans le html
+//  Sortie: rien
+//
+// Algo:
+//  Cree tous les elts du html
+//  Ajoute les enfants en ft de la structure demandée
+//  Mets à jour le contenu HTML
 //---------------------------------------------
 function displayItemInHtml(itemPanier) {
   try {
@@ -132,11 +142,11 @@ function displayItemInHtml(itemPanier) {
     //article =enfant de section
     eltSection.appendChild(newArticle);
 
-    //Div1
+    //Div1 avec l'image
     newArticle.appendChild(newDiv1);
     newDiv1.appendChild(newDiv1Img);
 
-    //nouvelle div div2
+    //nouvelle div div2 avec nom couleur et prix
     newArticle.appendChild(newDiv2);
     newDiv2.appendChild(newDiv21);
     newDiv21.appendChild(newDiv21h2);
@@ -146,16 +156,16 @@ function displayItemInHtml(itemPanier) {
     //nouvelle div div3
     newArticle.appendChild(newDiv3);
 
-    //div31 enfant de div3
+    //div31 enfant de div3 avec quantité et input
     newDiv3.appendChild(newDiv31);
     newDiv31.appendChild(newDiv31p);
     newDiv31.appendChild(newDiv31Input);
 
-    //div32 enfant de div3
+    //div32 enfant de div3 avec bouton supprimer
     newDiv3.appendChild(newDiv32);
     newDiv32.appendChild(newDiv32p);
 
-    //Maj classes
+    //Maj classes des balises
     newArticle.classList.add("cart__item");
     newDiv1.classList.add("cart__item__img");
     newDiv2.classList.add("cart__item__content");
@@ -167,6 +177,9 @@ function displayItemInHtml(itemPanier) {
     newDiv32p.classList.add("deleteItem");
 
     //maj contenu elts:
+    newArticle.setAttribute("data-id", itemPanier.nom);
+    newArticle.setAttribute("data-color", itemPanier.couleur);
+
     newDiv1Img.src = itemPanier.imageUrl;
     newDiv1Img.altTxt = itemPanier.altTxt;
 

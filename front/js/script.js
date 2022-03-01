@@ -97,7 +97,7 @@ var getProducts = async function (server) {
 };
 
 //clear local storage
-localStorage.clear();
+//localStorage.clear();
 
 // Appel de la ft pour récupérer les produits
 
