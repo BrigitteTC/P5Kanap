@@ -10,9 +10,14 @@ Les donnees sont stockees dan sle local storage.
 //----------------------------------------------------------------
 //Definition local storage
 //
+//  "totaItems", nombre total d'items
+//  ""prixTotal", Prix total
+// tous les articles de même modele et même couleur
+//  "cle", elt
+//avec:
 // clé:nom du canapé_couleur
 //      exemple:Kanap Autonoé_Pink
-//  elt: elt de classe paramPanier
+//  elt: elt de classe paramPanier avec tous les parametres du canapé
 //----------------------------------------------------------------
 
 //----------------------------------------------------------------
@@ -30,6 +35,12 @@ Les donnees sont stockees dan sle local storage.
 //---------------------------------------------------------------
 function addItemInLocalStorage(productId) {
   try {
+    //init nb total d'elt à 0
+    let totalElt = 0;
+
+    //init prix total à 0
+    let totalPrix = 0;
+
     //cle correspondant au nouveau produit
     //nom+couleur
     let cleElt = productId.nom + C_separatorKey + productId.couleur;
@@ -43,19 +54,43 @@ function addItemInLocalStorage(productId) {
 
       //complete avec le nouveau produit
       productId.nb += Number(currentPanier.nb);
-      //Verif nb <100
+      //Verif nb <=100
       if (productId.nb > 100) {
         alerteMsg(
           "Vous ne pouvez pas acheter plus de 100 canapés de même type"
+
+          // ATTENTION il faut faire ici la verif nb total <=100 pour ne pas ajouter le prosuit
         );
         productId.nb = Number(currentPanier.nb); //nb remis a valeur initiale
       }
     }
 
     //Ajoute le nouveau produit
-    // mets le  nouveau produit en JSON
+    // mets le  nouveau produit en JSON et le range dans le local storage
     let productIdJson = JSON.stringify(productId);
     localStorage.setItem(cleElt, productIdJson);
+
+    //Mets à jour nb elt total et prix total dans le local storage
+    if (C_totalElt in localStorage) {
+      //la cle total elt existe on récupère la valeur
+      let nbEltJson = localStorage.getItem(C_totalElt);
+      totalElt = JSON.parse(nbEltJson);
+    }
+    if (C_totalPrix in localStorage) {
+      //la cle prix total existe on récupère la valeur
+      let totalPrixJson = localStorage.getItem(C_totalPrix);
+      totalPrix = JSON.parse(totalPrixJson);
+    }
+
+    //nouveau total d'elt
+    productId.nb += Number(totalElt);
+
+    //Affichage nouvelle valeur nb elt total et prix total
+    localStorage.setItem(C_totalElt, JSON.stringify(productId.nb));
+    localStorage.setItem(
+      C_totalPrix,
+      JSON.stringify(totalPrix + Number(productId.nb)) * Number(productId.prix)
+    );
   } catch (e) {
     console.log("addItemInLocalStorage:" + e);
   }
@@ -80,23 +115,33 @@ function addItemInLocalStorage(productId) {
 //--------------------------------------------------------------
 function displayLocalStorageInHtml() {
   try {
-    //init prix et auantité total à 0
+    //init prix et quantité total à 0
     let prixTotal = 0;
     let qtyTotal = 0;
 
     //Parcours de toutes les clés du local storage
+    // on commence la boucle à 0
+    // Attention ne pas afficher les cles "nb elt" et "prix total"
+
     for (let i = 0; i < localStorage.length; i++) {
       console.log("cle " + i + " " + localStorage.key(i));
-      let itemPanierJSON = localStorage.getItem(localStorage.key(i));
-      let itemPanier = JSON.parse(itemPanierJSON);
-      //Affiche l'item
-      displayItemInHtml(itemPanier);
 
-      //calcule prix total
-      prixTotal += Number(itemPanier.nb) * Number(itemPanier.prix);
+      if (
+        localStorage.key(i) != C_totalElt &&
+        localStorage.key(i) != C_totalPrix
+      ) {
+        //affichage de tous les articles
+        let itemPanierJSON = localStorage.getItem(localStorage.key(i));
+        let itemPanier = JSON.parse(itemPanierJSON);
+        //Affiche l'item
+        displayItemInHtml(itemPanier);
 
-      //calcule quantité totale:
-      qtyTotal += Number(itemPanier.nb);
+        //calcule prix total
+        prixTotal += Number(itemPanier.nb) * Number(itemPanier.prix);
+
+        //calcule quantité totale:
+        qtyTotal += Number(itemPanier.nb);
+      }
     }
 
     //Affiche le prix dans l'ecran
@@ -273,21 +318,36 @@ function waitClickOnSupprimer() {
         let eltArticle = eltsSupprimer[i].parentNode.parentNode.parentNode;
         console.log("article clic =" + eltArticle);
         //Supprimer la cle dans le local storage
-        let cle = 0;
-        cle = eltArticle.id;
 
-        //cle.split(C_separatorKey)[0]; 'main'
-        //let itemCouleur = cle.split(C_separatorKey)[1];
-
-        //recupere les infos du local storage avant de supprimer l'elt
-        //prix et nb d'elt
-        localStorage.removeItem(cle);
+        let cle = eltArticle.id;
 
         //supprime le noeud avec l'article supprimé
 
         eltSection.removeChild(eltArticle);
-        //Afficher la nouvelle page html
-        //displayLocalStorageInHtml();
+
+        //msj local storage
+        //msj prix et nb elt total
+
+        //recupere les infos du local storage avant de supprimer l'elt
+        //prix et nb d'elt
+        let itemSupprime = JSON.parse(localStorage.getItem(cle)); //elt supprimé
+
+        let prixTotal = JSON.parse(localStorage.getItem(C_totalPrix));
+        let qtyTotal = JSON.parse(localStorage.getItem(C_totalElt));
+
+        prixTotal =
+          prixTotal - Number(itemSupprime.prix) * Number(itemSupprime.nb);
+        qtyTotal = qtyTotal - Number(itemSupprime.nb);
+
+        //supprime la cle dans le local storage
+        localStorage.removeItem(cle);
+
+        //maj prix et nb elt total
+        localStorage.setItem(C_totalElt, JSON.stringify(qtyTotal));
+        localStorage.setItem(C_totalPrix, JSON.stringify(prixTotal));
+
+        //Affiche nouveau prix dans l'ecran
+        displayPrixTotal(prixTotal, qtyTotal);
       });
     }
   } catch (e) {
