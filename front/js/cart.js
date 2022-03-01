@@ -180,6 +180,11 @@ function displayItemInHtml(itemPanier) {
     newArticle.setAttribute("data-id", itemPanier.nom);
     newArticle.setAttribute("data-color", itemPanier.couleur);
 
+    newArticle.setAttribute(
+      "id",
+      itemPanier.nom + C_separatorKey + itemPanier.couleur
+    ); //ajout d'un id avec la cle du local storage
+
     newDiv1Img.src = itemPanier.imageUrl;
     newDiv1Img.altTxt = itemPanier.altTxt;
 
@@ -233,24 +238,34 @@ function displayPrixTotal(prixTotal, qtyTotal) {
 //----------------------------------------------------------------
 function waitClickOnSupprimer() {
   try {
-    //boucle sur toutes les elts de la classe deleteItem
-    for (let eltSupprimer = document.getElementsByClassNameAll("deleteItem");) {
-      //Element html "supprimer" correspondant à la clé
-      //Article est 4 niveaux au dessous du bouton supprimer
-      let itemNom = cle.split(C_separatorKey)[0];
-      let itemCouleur = cle.split(C_separatorKey)[1];
+    //recherche de ts les elts qui ont la classe deleteItem
+    //à l'intérieur d'un elt ayant l'ID "cart__items"
+    let eltsSupprimer = document
+      .getElementById("cart__items")
+      .getElementsByClassName("deleteItem"); //tableau avec tous les elts de la class
 
-      let eltArticle = document.getElementsByClassName("cart__item");
-      let eltSupprimer = document.getElementsByClassName("deleteItem");
-      eltSupprimer.addEventListener("click", function () {
+    for (let i = 0; i < eltsSupprimer.length; i++) {
+      //Element html "supprimer" correspondant à la clé
+
+      eltsSupprimer[i].addEventListener("click", function () {
+        //on a cliqué sur l'elt supprimer
+        // on remonte la filiere poru avoir l'article correspondant
+        //Article est 4 niveaux au dessous du bouton supprimer
+        let eltPapa = eltsSupprimer[i].parentNode.parentNode.parentNode;
+        console.log("article clic =" + eltPapa);
         //Supprimer la cle dans le local storage
+        let cle = 0;
+        cle = eltPapa.id;
+
+        //cle.split(C_separatorKey)[0]; 'main'
+        //let itemCouleur = cle.split(C_separatorKey)[1];
         localStorage.removeItem(cle);
         //Afficher la page html
         displayLocalStorageInHtml();
       });
     }
   } catch (e) {
-    console.log("waitClickOnSupprimer" + e);
+    console.log("waitClickOnSupprimer  " + e);
   }
 }
 //----------------------------------------------------------------
@@ -316,7 +331,7 @@ var getProductByIdNbColor = async function (server) {
       // Traitement du click sur le bouton
       let eltButton = document.getElementById("order");
       eltButton.addEventListener("click", function () {
-        console.log("on a cliqué sur le bouton order");
+        console.log("on a cliqué sur le bouton commander");
         // Envoi des infos vers page confirmation
       });
     } else {
