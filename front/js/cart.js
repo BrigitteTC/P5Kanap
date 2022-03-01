@@ -226,6 +226,33 @@ function displayPrixTotal(prixTotal, qtyTotal) {
     console.log("displayPrixTotal" + e);
   }
 }
+
+//-----------------------------------------------------------
+//Fonction: waitClickOnSupprimer();
+// Objet: Attend le click sur le bouton "supprimer" d'un elt
+//----------------------------------------------------------------
+function waitClickOnSupprimer() {
+  try {
+    //boucle sur toutes les elts de la classe deleteItem
+    for (let eltSupprimer = document.getElementsByClassNameAll("deleteItem");) {
+      //Element html "supprimer" correspondant à la clé
+      //Article est 4 niveaux au dessous du bouton supprimer
+      let itemNom = cle.split(C_separatorKey)[0];
+      let itemCouleur = cle.split(C_separatorKey)[1];
+
+      let eltArticle = document.getElementsByClassName("cart__item");
+      let eltSupprimer = document.getElementsByClassName("deleteItem");
+      eltSupprimer.addEventListener("click", function () {
+        //Supprimer la cle dans le local storage
+        localStorage.removeItem(cle);
+        //Afficher la page html
+        displayLocalStorageInHtml();
+      });
+    }
+  } catch (e) {
+    console.log("waitClickOnSupprimer" + e);
+  }
+}
 //----------------------------------------------------------------
 // ft getProductByIdNbColor
 // nom: getProductByIdNbColor
@@ -282,6 +309,9 @@ var getProductByIdNbColor = async function (server) {
 
       //Affichage du résultat dans le HTML
       displayLocalStorageInHtml();
+
+      //Attente click sur les elts du panier
+      waitClickOnSupprimer();
 
       // Traitement du click sur le bouton
       let eltButton = document.getElementById("order");
