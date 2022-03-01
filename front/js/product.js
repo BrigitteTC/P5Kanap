@@ -163,7 +163,7 @@ var getProductById = async function (server) {
 
       // Traitement du click sur le bouton
       eltButton.addEventListener("click", function () {
-        console.log("on a cliqué");
+        console.log("on a cliqué sur ajouter au panier");
         // Verif nb de canapes choisis
         let nbProduct = getNbProduct(); //nb de canapés choisis
         if (nbProduct > 0) {
@@ -174,26 +174,33 @@ var getProductById = async function (server) {
           if (couleur !== "") {
             // go vers la page panier avec l'id et la couleur choisie
             window.location.href =
-              "../html/cart.html?id=" +
+              "../html/cart.html" +
+              C_separatorURL +
+              "id" +
+              C_egal +
               product._id +
-              "?color=" +
+              C_separatorURL +
+              "color" +
+              C_egal +
               couleur +
-              "?nb=" +
+              C_separatorURL +
+              "nb" +
+              C_egal +
               nbProduct;
           }
         }
       });
 
       //DEBUG: affichage elts
-      console.log(product);
-      console.log(product.name);
-      console.log(product.imageUrl);
-      console.log(product.altTxt);
+      console.log("produit=" + product);
+      console.log("nom du produit= " + product.name);
+      console.log("URL image = " + product.imageUrl);
+      console.log("alt = " + product.altTxt);
     } else {
       console.error("Retour du serveur:", response.status);
     }
   } catch (e) {
-    console.log(e);
+    console.log("getProductById " + e);
   }
 };
 
