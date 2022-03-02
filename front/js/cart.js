@@ -181,7 +181,7 @@ function displayItemInHtml(itemPanier) {
   try {
     //structure html
     //on recupere le id items qui contiendra les articles des canapés
-    let eltSection = document.getElementById("cart__items");
+    let eltSection = document.getElementById(C_cart__itemsClass);
     //creation de l'elt article
     let newArticle = document.createElement("article");
 
@@ -231,15 +231,15 @@ function displayItemInHtml(itemPanier) {
     newDiv32.appendChild(newDiv32p);
 
     //Maj classes des balises
-    newArticle.classList.add("cart__item");
+    newArticle.classList.add(C_cart__itemClass);
     newDiv1.classList.add("cart__item__img");
     newDiv2.classList.add("cart__item__content");
     newDiv21.classList.add("cart__item__content__description");
     newDiv3.classList.add("cart__item__content__settings");
     newDiv31.classList.add("cart__item__content__settings__quantity");
-    newDiv31Input.classList.add("itemQuantity");
+    newDiv31Input.classList.add(C_itemQuantityClass);
     newDiv32.classList.add("cart__item__content__settings__delete");
-    newDiv32p.classList.add("deleteItem");
+    newDiv32p.classList.add(C_deleteItemClass);
 
     //maj contenu elts:
     newArticle.setAttribute("data-id", itemPanier.nom);
@@ -318,8 +318,8 @@ function waitClickOnSupprimer() {
   try {
     //recherche de ts les elts qui ont la classe deleteItem
     //à l'intérieur d'un elt ayant l'ID "cart__items"
-    let eltSection = document.getElementById("cart__items");
-    let eltsSupprimer = eltSection.getElementsByClassName("deleteItem"); //tableau avec tous les elts de la class
+    let eltSection = document.getElementById(C_cart__itemsClass);
+    let eltsSupprimer = eltSection.getElementsByClassName(C_deleteItemClass); //tableau avec tous les elts de la class
 
     for (let i = 0; i < eltsSupprimer.length; i++) {
       //Element html "supprimer" correspondant à la clé
@@ -329,7 +329,7 @@ function waitClickOnSupprimer() {
         // on remonte la filiere poru avoir l'article correspondant
         //Article est 3 niveaux au dessous du bouton supprimer
         let eltArticle = eltsSupprimer[i].parentNode.parentNode.parentNode;
-        console.log("article clic =" + eltArticle);
+        console.log("waitClickOnSupprimer: article clic =" + eltArticle);
 
         //HTML: supprime le noeud avec l'article supprimé
         eltSection.removeChild(eltArticle);
@@ -387,57 +387,53 @@ function waitClickOnSupprimer() {
 //        Supprime l'article de la page html
 //        Affiche la nouvelle page html
 //----------------------------------------------------------------
-function waitClickOnSupprimer() {
+function waitClickOnNbElt() {
   try {
     //recherche de ts les elts qui ont la classe deleteItem
     //à l'intérieur d'un elt ayant l'ID "cart__items"
-    let eltSection = document.getElementById("cart__items");
-    let eltsSupprimer = eltSection.getElementsByClassName("deleteItem"); //tableau avec tous les elts de la class
+    let eltSection = document.getElementById(C_cart__itemsClass);
+    let eltsClass = eltSection.getElementsByClassName(C_itemQuantityClass); //tableau avec tous les elts de la class
 
-    for (let i = 0; i < eltsSupprimer.length; i++) {
-      //Element html "supprimer" correspondant à la clé
+    for (let i = 0; i < eltsClass.length; i++) {
+      //Element html  correspondant à la clé
 
-      eltsSupprimer[i].addEventListener("click", function () {
-        //on a cliqué sur l'elt supprimer
-        // on remonte la filiere poru avoir l'article correspondant
-        //Article est 3 niveaux au dessous du bouton supprimer
-        let eltArticle = eltsSupprimer[i].parentNode.parentNode.parentNode;
-        console.log("article clic =" + eltArticle);
+      eltsClass[i].addEventListener("click", function () {
+        //on a cliqué sur l'elt input de l'article
+        // on remonte la filiere pour avoir l'article correspondant
+        //Article est 3 niveaux au dessus du bouton input
+        let eltArticle = eltsClass[i].parentNode.parentNode.parentNode;
+        console.log("waitClickOnNbElt: article clic =" + eltArticle);
 
-        //HTML: supprime le noeud avec l'article supprimé
-        eltSection.removeChild(eltArticle);
-
-        //recupere les infos du local storage avant de supprimer l'elt
+        //recupere les infos du local storage de l elt
 
         let cle = eltArticle.id; //cle du local storage
 
-        let itemSupprime = JSON.parse(localStorage.getItem(cle)); //elt supprimé
+        let itemClass = JSON.parse(localStorage.getItem(cle)); //elt selectionné
+        let oldEltNb = Number(itemClass.nb); //nb d'eltactuel dans le local storage
+        let eltPrix = Number(itemClass.prix); //prix du produit selectionné
+        //nouveau nombre
+        let newEltNb = C_itemQuantityClass.value;
 
         let prixTotal = JSON.parse(localStorage.getItem(C_totalPrix)); //prix total ds localstorage
         let qtyTotal = JSON.parse(localStorage.getItem(C_totalElt)); //qty total ds localstorage
 
         //maj prix et nb total
         prixTotal =
-          Number(prixTotal) -
-          Number(itemSupprime.prix) * Number(itemSupprime.nb);
-        qtyTotal = Number(qtyTotal) - Number(itemSupprime.nb);
+          Number(prixTotal) +
+          Number(eltPrix) * (Number(newEltNb) - Number(oldEltNb));
 
-        //supprime la cle dans le local storage
-        localStorage.removeItem(cle);
+        qtyTotal = Number(qtyTotal) - Number(oldEltNb + newEltNb);
 
-        //maj prix et nb elt total
+        //maj prix et nb elt total dan slocal storage
         localStorage.setItem(C_totalElt, JSON.stringify(qtyTotal));
         localStorage.setItem(C_totalPrix, JSON.stringify(prixTotal));
 
         //Affiche nouveau prix dans l'ecran
         displayPrixTotal(prixTotal, qtyTotal);
-
-        //maj longueur lilste des boutons supprimer
-        eltsSupprimer.length--;
       });
     }
   } catch (e) {
-    console.log("waitClickOnSupprimer  " + e);
+    console.log("waitClickOnNbElt  " + e);
   }
 }
 

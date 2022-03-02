@@ -28,6 +28,12 @@ const C_totalElt = "totalElt"; // cle dans local storage pour nb elt total
 const C_totalPrix = "totalPrix"; // cle dans local storage pour prix total
 //
 
+//Const utilisées dan sles classes css
+const C_cart__itemsClass = "cart__items";
+const C_cart__itemClass = "cart__item";
+const C_itemQuantityClass = "itemQuantity";
+const C_deleteItemClass = "deleteItem";
+
 //----------------------------------------------------------------
 //Class
 //----------------------------------------------------------------
