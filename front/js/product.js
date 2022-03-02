@@ -16,10 +16,11 @@ Script pour mettre à jour la page du canapé sur la page html correspondante
 // message d'alerte si la quantité est <1 ou > 1000 ou nb decimal
 //---------------------------------------------------------------
 function getNbProduct() {
+  let eltQty = 0; //nombre de produits
   try {
     // A completer: verifier que le nb rentré n'est pas decimal
     // Valeur rentrée
-    let eltQty = document.getElementById("quantity");
+    eltQty = document.getElementById("quantity");
     let qtyInteger = Number(eltQty.value); //valeur transformee en nombre
     // Valeur rentrée
     console.log(qtyInteger);
@@ -66,12 +67,12 @@ function getNbProduct() {
 //
 //---------------------------------------------
 function getCouleur() {
+  // cherche la couleur sélectionnée
+  // ajouter value
+  // récuperer option.value
+  let couleur = "";
   try {
-    // cherche la couleur sélectionnée
-    // ajouter value
-    // récuperer option.value
-    let couleur = document.querySelector("#colors option:checked");
-
+    couleur = document.querySelector("#colors option:checked"); //couleur select par user
     console.log(couleur.value);
     //la chaine récupérée est du type:
 

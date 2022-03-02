@@ -102,6 +102,8 @@ function getId() {
 //------------------------------------------------
 
 function getInfoInURL() {
+  // Variable pour stocker les params recupéres de l'URL
+  let newParamPanier = new paramPanier(0, "", 0, "", 0, "", "", "");
   try {
     //Récupère la chaine de caracteres après le ?
     let productId = getId();
@@ -114,9 +116,6 @@ function getInfoInURL() {
     //1: nb=1234
     //2: color=azerty
     let parameters = productId.toString(1).split(C_separatorURL);
-
-    // Variable pour stocker les params recupéres de l'URL
-    let newParamPanier = new paramPanier(0, "", 0, "", 0, "", "", "");
 
     //maj avec  le tableau récupéré
     newParamPanier.id = parameters[0];
