@@ -78,13 +78,14 @@ function alerteMsg(Message) {
 //------------------------------------------------
 
 function getId() {
+  var id = 0; //id à retourner
   try {
-    var str = window.location.href;
+    let str = window.location.href;
     console.log(str);
-    var url = new URL(str);
-    var search_params = new URLSearchParams(url.search);
-    if (search_params.has("id")) {
-      var id = search_params.get("id");
+    let url = new URL(str);
+    let searchParams = new URLSearchParams(url.search);
+    if (searchParams.has("id")) {
+      id = searchParams.get("id");
       console.log("id extraite de l'URL=" + id);
     }
   } catch (e) {
@@ -103,24 +104,28 @@ function getId() {
 
 function getInfoInURL() {
   // Variable pour stocker les params recupéres de l'URL
-  let newParamPanier = new paramPanier(0, "", 0, "", 0, "", "", "");
+  var newParamPanier = new paramPanier(0, "", 0, "", 0, "", "", "");
+
   try {
     //Récupère la chaine de caracteres après le ?
-    let productId = getId();
-    console.log("Valeur extraite de l'URL=" + productId);
-    //Split la chaine extraite
-    // format chaine = xxx&nb=1234&color=azerty
 
-    //split par separateur
-    //0: id
-    //1: nb=1234
-    //2: color=azerty
-    let parameters = productId.toString(1).split(C_separatorURL);
+    let str = window.location.href;
+    console.log("URL passee en param " + str);
+    let url = new URL(str);
 
-    //maj avec  le tableau récupéré
-    newParamPanier.id = parameters[0];
-    newParamPanier.couleur = parameters[1].split(C_egal)[1];
-    newParamPanier.nb = Number(parameters[2].split(C_egal)[1]); //nombre forcé en entier
+    let searchParams = new URLSearchParams(url.search); //partie parametres de l'URL
+
+    // format chaine extraite = id=xxx&nb=1234&color=azerty
+
+    //récupération de chaque param
+
+    newParamPanier.id = searchParams.get("id");
+    newParamPanier.couleur = searchParams.get("color");
+    newParamPanier.nb = searchParams.get("nb");
+
+    console.log("id=" + newParamPanier.id);
+    console.log("couleur=" + newParamPanier.couleur);
+    console.log("nb=" + newParamPanier.nb);
   } catch (e) {
     console.log("getInfoInURL " + e);
   }
