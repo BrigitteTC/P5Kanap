@@ -329,7 +329,7 @@ function waitClickOnSupprimer() {
         // on remonte la filiere poru avoir l'article correspondant
         //Article est 3 niveaux au dessous du bouton supprimer
         let eltArticle = eltsSupprimer[i].parentNode.parentNode.parentNode;
-        console.log("waitClickOnSupprimer: article clic =" + eltArticle);
+        console.log("waitClickOnSupprimer: clic bouton supprimer =");
 
         //HTML: supprime le noeud avec l'article supprimé
         eltSection.removeChild(eltArticle);
@@ -402,7 +402,7 @@ function waitClickOnNbElt() {
         // on remonte la filiere pour avoir l'article correspondant
         //Article est 3 niveaux au dessus du bouton input
         let eltArticle = eltsClass[i].parentNode.parentNode.parentNode;
-        console.log("waitClickOnNbElt: article clic =" + eltArticle);
+        console.log("waitClickOnNbElt: clic nb elt" + eltArticle.id);
 
         //recupere les infos du local storage de l elt
 
@@ -412,7 +412,7 @@ function waitClickOnNbElt() {
         let oldEltNb = Number(itemClass.nb); //nb d'eltactuel dans le local storage
         let eltPrix = Number(itemClass.prix); //prix du produit selectionné
         //nouveau nombre
-        let newEltNb = C_itemQuantityClass.value;
+        let newEltNb = eltsClass[i].value;
 
         let prixTotal = JSON.parse(localStorage.getItem(C_totalPrix)); //prix total ds localstorage
         let qtyTotal = JSON.parse(localStorage.getItem(C_totalElt)); //qty total ds localstorage
