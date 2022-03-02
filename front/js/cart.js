@@ -367,6 +367,80 @@ function waitClickOnSupprimer() {
     console.log("waitClickOnSupprimer  " + e);
   }
 }
+
+//------------------------------------------------------------------
+// fonction: waitClickOnNbElt()
+//
+//
+// Objet: Attend le click sur le nb d'elt d'un elt du panier
+//
+// Parametres:
+//  entrée: rien
+//  sortie: rien
+//
+//  Algo
+//    REcherche ts les elts avec la classe "supprimer"
+//    Ecoute sur tous les elts de cette class
+//    Si click sur un elt
+//       REcherche l'id de l'Article parent
+//        Supprime cet elt dans le local stortage
+//        Supprime l'article de la page html
+//        Affiche la nouvelle page html
+//----------------------------------------------------------------
+function waitClickOnSupprimer() {
+  try {
+    //recherche de ts les elts qui ont la classe deleteItem
+    //à l'intérieur d'un elt ayant l'ID "cart__items"
+    let eltSection = document.getElementById("cart__items");
+    let eltsSupprimer = eltSection.getElementsByClassName("deleteItem"); //tableau avec tous les elts de la class
+
+    for (let i = 0; i < eltsSupprimer.length; i++) {
+      //Element html "supprimer" correspondant à la clé
+
+      eltsSupprimer[i].addEventListener("click", function () {
+        //on a cliqué sur l'elt supprimer
+        // on remonte la filiere poru avoir l'article correspondant
+        //Article est 3 niveaux au dessous du bouton supprimer
+        let eltArticle = eltsSupprimer[i].parentNode.parentNode.parentNode;
+        console.log("article clic =" + eltArticle);
+
+        //HTML: supprime le noeud avec l'article supprimé
+        eltSection.removeChild(eltArticle);
+
+        //recupere les infos du local storage avant de supprimer l'elt
+
+        let cle = eltArticle.id; //cle du local storage
+
+        let itemSupprime = JSON.parse(localStorage.getItem(cle)); //elt supprimé
+
+        let prixTotal = JSON.parse(localStorage.getItem(C_totalPrix)); //prix total ds localstorage
+        let qtyTotal = JSON.parse(localStorage.getItem(C_totalElt)); //qty total ds localstorage
+
+        //maj prix et nb total
+        prixTotal =
+          Number(prixTotal) -
+          Number(itemSupprime.prix) * Number(itemSupprime.nb);
+        qtyTotal = Number(qtyTotal) - Number(itemSupprime.nb);
+
+        //supprime la cle dans le local storage
+        localStorage.removeItem(cle);
+
+        //maj prix et nb elt total
+        localStorage.setItem(C_totalElt, JSON.stringify(qtyTotal));
+        localStorage.setItem(C_totalPrix, JSON.stringify(prixTotal));
+
+        //Affiche nouveau prix dans l'ecran
+        displayPrixTotal(prixTotal, qtyTotal);
+
+        //maj longueur lilste des boutons supprimer
+        eltsSupprimer.length--;
+      });
+    }
+  } catch (e) {
+    console.log("waitClickOnSupprimer  " + e);
+  }
+}
+
 //----------------------------------------------------------------
 // ft getProductByIdNbColor
 // nom: getProductByIdNbColor
@@ -424,8 +498,11 @@ var getProductByIdNbColor = async function (server) {
       //Affichage du résultat dans le HTML
       displayLocalStorageInHtml();
 
-      //Attente click sur les elts du panier
+      //Attente click sur les boutons <supprimer> des elts du panier
       waitClickOnSupprimer();
+
+      //Attente click sur le nombre d'item des elts du panier
+      waitClickOnNbElt();
 
       // Traitement du click sur le bouton
       let eltButton = document.getElementById("order");
