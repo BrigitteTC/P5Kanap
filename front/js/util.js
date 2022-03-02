@@ -3,7 +3,7 @@
 //---------------------------------------------------
 
 //------------------------------------------------------
-//Variables
+//Constantes
 //--------------------------------------------------------
 
 //server avec la liste des produits
@@ -20,6 +20,11 @@ const C_egal = "="; //egalité
 //Construction de la clé du local storage
 // cle= nom_couleur
 const C_separatorKey = "_";
+
+// cle dans local storage pour nb elt total
+const C_totalElt = "totalElt";
+const C_totalPrix = "totalPrix";
+//
 
 //----------------------------------------------------------------
 //Class
