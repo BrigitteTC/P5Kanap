@@ -14,7 +14,7 @@ const C_choixOption = "--SVP, choisissez une couleur --";
 const C_undefined = "undefined";
 
 //Construction de l'URL
-const C_separatorURL = "?"; //separateur params de l'URL
+const C_separatorURLFirst = "?"; //separateur params de l'URL
 const C_separatorURL = "&"; //separateur params de l'URL
 const C_egal = "="; //egalité
 
@@ -55,15 +55,19 @@ class paramPanier {
 // Param de sortie: rien
 //---------------------------------------------------------
 function alerteMsg(Message) {
-  // A compléter
-  //On récupère l'id du bouton
-  // let eltButton = document.getElementById(Id);
-  //creation p
-  //let newp = document.createElement("p");
-  // eltButton.appendChild(newp);
-  //newp.innerHTML = Message;
+  try {
+    // A compléter
+    //On récupère l'id du bouton
+    // let eltButton = document.getElementById(Id);
+    //creation p
+    //let newp = document.createElement("p");
+    // eltButton.appendChild(newp);
+    //newp.innerHTML = Message;
 
-  console.log("Attention: " + Message);
+    console.log("Attention: " + Message);
+  } catch (e) {
+    console.log("alerteMsg " + e);
+  }
 }
 
 //---------------------------------------------------
@@ -74,15 +78,19 @@ function alerteMsg(Message) {
 //------------------------------------------------
 
 function getId() {
-  var str = window.location.href;
-  console.log(str);
-  var url = new URL(str);
-  var search_params = new URLSearchParams(url.search);
-  if (search_params.has("id")) {
-    var id = search_params.get("id");
-    console.log("id extraite de l'URL=" + id);
-    return id;
+  try {
+    var str = window.location.href;
+    console.log(str);
+    var url = new URL(str);
+    var search_params = new URLSearchParams(url.search);
+    if (search_params.has("id")) {
+      var id = search_params.get("id");
+      console.log("id extraite de l'URL=" + id);
+    }
+  } catch (e) {
+    console.log("getId " + e);
   }
+  return id;
 }
 
 //---------------------------------------------------
@@ -94,25 +102,28 @@ function getId() {
 //------------------------------------------------
 
 function getInfoInURL() {
-  //Récupère la chaine de caracteres après le ?
-  let productId = getId();
-  console.log("Valeur extraite de l'URL=" + productId);
-  //Split la chaine extraite
-  // format chaine = xxx?nb=1234?color=azerty
+  try {
+    //Récupère la chaine de caracteres après le ?
+    let productId = getId();
+    console.log("Valeur extraite de l'URL=" + productId);
+    //Split la chaine extraite
+    // format chaine = xxx&nb=1234&color=azerty
 
-  //split par separateur
-  //0: id
-  //1: nb=1234
-  //2: color=azerty
-  let parameters = productId.toString(1).split(C_separatorURL);
+    //split par separateur
+    //0: id
+    //1: nb=1234
+    //2: color=azerty
+    let parameters = productId.toString(1).split(C_separatorURL);
 
-  // Variable pour stocker les params recupéres de l'URL
-  let newParamPanier = new paramPanier(0, "", 0, "", 0, "", "", "");
+    // Variable pour stocker les params recupéres de l'URL
+    let newParamPanier = new paramPanier(0, "", 0, "", 0, "", "", "");
 
-  //maj avec  le tableau récupéré
-  newParamPanier.id = parameters[0];
-  newParamPanier.couleur = parameters[1].split(C_egal)[1];
-  newParamPanier.nb = Number(parameters[2].split(C_egal)[1]); //nombre forcé en entier
-
+    //maj avec  le tableau récupéré
+    newParamPanier.id = parameters[0];
+    newParamPanier.couleur = parameters[1].split(C_egal)[1];
+    newParamPanier.nb = Number(parameters[2].split(C_egal)[1]); //nombre forcé en entier
+  } catch (e) {
+    console.log("getInfoInURL " + e);
+  }
   return newParamPanier;
 }

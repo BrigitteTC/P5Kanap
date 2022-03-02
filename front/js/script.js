@@ -66,7 +66,8 @@ var getProducts = async function (server) {
 
         //ma j contenu des elt crees
         // lien a
-        newa.href = "./product.html" + C_separatorURL + "id=" + product._id;
+        newa.href =
+          "./product.html" + C_separatorURLFirst + "id=" + product._id;
 
         //h3
         newh3.classList.add("productName");
@@ -92,7 +93,7 @@ var getProducts = async function (server) {
       console.error("Retour du serveur:", response.status);
     }
   } catch (e) {
-    console.log(e);
+    console.log("getProducts " + e);
   }
 };
 
