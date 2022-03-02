@@ -34,13 +34,14 @@ Les donnees sont stockees dan sle local storage.
 //    verifier qu'on ne depasse pas 100
 //---------------------------------------------------------------
 function addItemInLocalStorage(productId) {
+  //init nb total d'elt à 0
+  var totalElt = 0;
+
+  //init prix total à 0
+  var totalPrix = 0;
+
+  var currentPanier; //panier du local storage pour le produit passé en param
   try {
-    //init nb total d'elt à 0
-    let totalElt = 0;
-
-    //init prix total à 0
-    let totalPrix = 0;
-
     //cle correspondant au nouveau produit
     //nom+couleur
     let cleElt = productId.nom + C_separatorKey + productId.couleur;
@@ -50,47 +51,57 @@ function addItemInLocalStorage(productId) {
     if (cleElt in localStorage) {
       //Récupere le produit dans le local storage pour la cle donnée
       let currentPanierJson = localStorage.getItem(cleElt);
-      let currentPanier = JSON.parse(currentPanierJson);
+      currentPanier = JSON.parse(currentPanierJson);
 
       //complete avec le nouveau produit
-      productId.nb += Number(currentPanier.nb);
-      //Verif nb <=100
-      if (productId.nb > 100) {
-        alerteMsg(
-          "Vous ne pouvez pas acheter plus de 100 canapés de même type"
+      productId.nb = Number(productId.nb) + Number(currentPanier.nb);
+    }
+    //Verif nb <=100
+    if (productId.nb > 100) {
+      alerteMsg(
+        "Vous ne pouvez pas acheter plus de 100 canapés de même type"
 
-          // ATTENTION il faut faire ici la verif nb total <=100 pour ne pas ajouter le prosuit
+        // ATTENTION il faut faire ici la verif nb total <=100 pour ne pas ajouter le prosuit
+      );
+      //productId.nb = Number(currentPanier.nb); //nb remis a valeur initiale
+    } else {
+      //Mets à jour nb elt total et prix total dans le local storage
+      if (C_totalElt in localStorage) {
+        //la cle total elt existe on récupère la valeur
+        let totalEltJson = localStorage.getItem(C_totalElt);
+        totalElt = Number(JSON.parse(totalEltJson));
+      }
+
+      //nouveau total d'elt
+      totalElt = Number(productId.nb) + Number(totalElt);
+
+      //Teste total elt <100
+      if (Number(totalElt > 100)) {
+        alerteMsg("Vous ne pouvez pas acheter plus de 100 canapés ");
+      } else {
+        //Ajoute le nouveau produit
+        // mets le  nouveau produit en string et le range dans le local storage
+        let productIdString = JSON.stringify(productId);
+        localStorage.setItem(cleElt, productIdString);
+
+        // range elt total dans local storage
+        localStorage.setItem(C_totalElt, JSON.stringify(Number(totalElt)));
+
+        //maj prix total
+
+        if (C_totalPrix in localStorage) {
+          //la cle prix total existe on récupère la valeur
+          let totalPrixJson = localStorage.getItem(C_totalPrix);
+          totalPrix = Number(JSON.parse(totalPrixJson));
+        }
+        let prixNouveauPd = Number(
+          Number(productId.nb) * Number(productId.prix)
         );
-        productId.nb = Number(currentPanier.nb); //nb remis a valeur initiale
+        totalPrix = Number(totalPrix) + Number(prixNouveauPd);
+
+        localStorage.setItem(C_totalPrix, JSON.stringify(totalPrix));
       }
     }
-
-    //Ajoute le nouveau produit
-    // mets le  nouveau produit en JSON et le range dans le local storage
-    let productIdJson = JSON.stringify(productId);
-    localStorage.setItem(cleElt, productIdJson);
-
-    //Mets à jour nb elt total et prix total dans le local storage
-    if (C_totalElt in localStorage) {
-      //la cle total elt existe on récupère la valeur
-      let nbEltJson = localStorage.getItem(C_totalElt);
-      totalElt = JSON.parse(nbEltJson);
-    }
-    if (C_totalPrix in localStorage) {
-      //la cle prix total existe on récupère la valeur
-      let totalPrixJson = localStorage.getItem(C_totalPrix);
-      totalPrix = JSON.parse(totalPrixJson);
-    }
-
-    //nouveau total d'elt
-    productId.nb += Number(totalElt);
-
-    //Affichage nouvelle valeur nb elt total et prix total
-    localStorage.setItem(C_totalElt, JSON.stringify(productId.nb));
-    localStorage.setItem(
-      C_totalPrix,
-      JSON.stringify(totalPrix + Number(productId.nb)) * Number(productId.prix)
-    );
   } catch (e) {
     console.log("addItemInLocalStorage:" + e);
   }
@@ -137,10 +148,12 @@ function displayLocalStorageInHtml() {
         displayItemInHtml(itemPanier);
 
         //calcule prix total
-        prixTotal += Number(itemPanier.nb) * Number(itemPanier.prix);
+        prixTotal =
+          Number(prixTotal) +
+          Number(Number(itemPanier.nb) * Number(itemPanier.prix));
 
         //calcule quantité totale:
-        qtyTotal += Number(itemPanier.nb);
+        qtyTotal = Number(qtyTotal) + Number(itemPanier.nb);
       }
     }
 
@@ -246,7 +259,7 @@ function displayItemInHtml(itemPanier) {
 
     newDiv31p.innerHTML = "Qté";
     newDiv31Input.type = "number";
-    newDiv31Input.name = itemPanier.nb;
+    newDiv31Input.name = itemPanier.nb; //A confirmer il faut mettre le nombre ??????//
     newDiv31Input.min = "1";
     newDiv31Input.max = "100";
     newDiv31Input.value = itemPanier.nb;
@@ -317,27 +330,24 @@ function waitClickOnSupprimer() {
         //Article est 3 niveaux au dessous du bouton supprimer
         let eltArticle = eltsSupprimer[i].parentNode.parentNode.parentNode;
         console.log("article clic =" + eltArticle);
-        //Supprimer la cle dans le local storage
 
-        let cle = eltArticle.id;
-
-        //supprime le noeud avec l'article supprimé
-
+        //HTML: supprime le noeud avec l'article supprimé
         eltSection.removeChild(eltArticle);
 
-        //msj local storage
-        //msj prix et nb elt total
-
         //recupere les infos du local storage avant de supprimer l'elt
-        //prix et nb d'elt
+
+        let cle = eltArticle.id; //cle du local storage
+
         let itemSupprime = JSON.parse(localStorage.getItem(cle)); //elt supprimé
 
-        let prixTotal = JSON.parse(localStorage.getItem(C_totalPrix));
-        let qtyTotal = JSON.parse(localStorage.getItem(C_totalElt));
+        let prixTotal = JSON.parse(localStorage.getItem(C_totalPrix)); //prix total ds localstorage
+        let qtyTotal = JSON.parse(localStorage.getItem(C_totalElt)); //qty total ds localstorage
 
+        //maj prix et nb total
         prixTotal =
-          prixTotal - Number(itemSupprime.prix) * Number(itemSupprime.nb);
-        qtyTotal = qtyTotal - Number(itemSupprime.nb);
+          Number(prixTotal) -
+          Number(itemSupprime.prix) * Number(itemSupprime.nb);
+        qtyTotal = Number(qtyTotal) - Number(itemSupprime.nb);
 
         //supprime la cle dans le local storage
         localStorage.removeItem(cle);
@@ -348,6 +358,9 @@ function waitClickOnSupprimer() {
 
         //Affiche nouveau prix dans l'ecran
         displayPrixTotal(prixTotal, qtyTotal);
+
+        //maj longueur lilste des boutons supprimer
+        eltsSupprimer.length--;
       });
     }
   } catch (e) {
@@ -379,10 +392,10 @@ var getProductByIdNbColor = async function (server) {
     //on récupère les infos du produit passé dans l'URL
 
     let productId = getInfoInURL();
+
+    // DEBUG: affichage pd dans la console
     console.log("id produit= " + productId.id);
-
     console.log("nb produits=" + productId.nb);
-
     console.log("couleur produit = " + productId.couleur);
 
     //Construction de la route du produit

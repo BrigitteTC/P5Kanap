@@ -14,8 +14,10 @@ const C_choixOption = "--SVP, choisissez une couleur --";
 const C_undefined = "undefined";
 
 //Construction de l'URL
-const C_separatorURLFirst = "?"; //separateur params de l'URL
-const C_separatorURL = "&"; //separateur params de l'URL
+//  ex:
+// file:///C:/Users/xxx/P5Kanap/front/html/cart.html?id=415b7cacb65d43b2b5c1ff70f3393ad1&color=Black/Yellow&nb=2
+const C_separatorURLFirst = "?"; //separateur params de l'URL pour l'id
+const C_separatorURL = "&"; //separateur params supplementaires de l'URL
 const C_egal = "="; //egalité
 
 //Construction de la clé du local storage
