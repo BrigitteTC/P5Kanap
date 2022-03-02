@@ -408,28 +408,34 @@ function waitClickOnNbElt() {
 
         let cle = eltArticle.id; //cle du local storage
 
-        let itemClass = JSON.parse(localStorage.getItem(cle)); //elt selectionné
-        let oldEltNb = Number(itemClass.nb); //nb d'eltactuel dans le local storage
-        let eltPrix = Number(itemClass.prix); //prix du produit selectionné
+        let ProductSelected = JSON.parse(localStorage.getItem(cle)); //elt selectionné
+        let oldEltNb = Number(ProductSelected.nb); //nb d'elt actuel dans le local storage
+        let eltPrix = Number(ProductSelected.prix); //prix du produit selectionné
         //nouveau nombre
         let newEltNb = eltsClass[i].value;
 
-        let prixTotal = JSON.parse(localStorage.getItem(C_totalPrix)); //prix total ds localstorage
-        let qtyTotal = JSON.parse(localStorage.getItem(C_totalElt)); //qty total ds localstorage
+        //Teste le nouveau nombre rentré par l'utilisateur
+        if (verifNewQty(newEltNb)) {
+          let prixTotal = JSON.parse(localStorage.getItem(C_totalPrix)); //prix total ds localstorage
+          let qtyTotal = JSON.parse(localStorage.getItem(C_totalElt)); //qty total ds localstorage
 
-        //maj prix et nb total
-        prixTotal =
-          Number(prixTotal) +
-          Number(eltPrix) * (Number(newEltNb) - Number(oldEltNb));
+          //maj prix et nb total
+          prixTotal =
+            Number(prixTotal) +
+            Number(eltPrix) * (Number(newEltNb) - Number(oldEltNb));
 
-        qtyTotal = Number(qtyTotal) - Number(oldEltNb + newEltNb);
+          qtyTotal = Number(qtyTotal) - Number(oldEltNb) + Number(newEltNb);
 
-        //maj prix et nb elt total dan slocal storage
-        localStorage.setItem(C_totalElt, JSON.stringify(qtyTotal));
-        localStorage.setItem(C_totalPrix, JSON.stringify(prixTotal));
+          //maj prix et nb elt total dans local storage
+          localStorage.setItem(C_totalElt, JSON.stringify(qtyTotal));
+          localStorage.setItem(C_totalPrix, JSON.stringify(prixTotal));
 
-        //Affiche nouveau prix dans l'ecran
-        displayPrixTotal(prixTotal, qtyTotal);
+          //maj produit dans local storage
+          ProductSelected.nb = Number(newEltNb);
+          localStorage.setItem(cle, JSON.stringify(ProductSelected));
+          //Affiche nouveau prix dans l'ecran
+          displayPrixTotal(prixTotal, qtyTotal);
+        }
       });
     }
   } catch (e) {

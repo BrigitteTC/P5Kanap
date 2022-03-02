@@ -182,3 +182,15 @@ function getEltQty(cle) {
   }
   return Number(eltQty.value);
 }
+
+//----------------------------------------------------------------------------
+// function: verifNewQty(newEltNb)
+// Objet:
+//  Vérifie le nombre d'elt rentré par l'utilisateur.
+//  Parametres:
+//    Entrée: nombre d'elt
+//    Sortie: true si OK false sinon
+//---------------------------------------------------------------------------
+function verifNewQty(newEltNb) {
+  return true;
+}
