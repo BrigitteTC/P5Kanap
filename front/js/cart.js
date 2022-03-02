@@ -415,7 +415,7 @@ function waitClickOnNbElt() {
         let newEltNb = eltsClass[i].value;
 
         //Teste le nouveau nombre rentré par l'utilisateur
-        if (verifNewQty(newEltNb)) {
+        if (verifNewQty(Number(newEltNb))) {
           let prixTotal = JSON.parse(localStorage.getItem(C_totalPrix)); //prix total ds localstorage
           let qtyTotal = JSON.parse(localStorage.getItem(C_totalElt)); //qty total ds localstorage
 
@@ -505,6 +505,9 @@ var getProductByIdNbColor = async function (server) {
 
       //Attente click sur le nombre d'item des elts du panier
       waitClickOnNbElt();
+
+      //Attente changement nombre d'elts
+      // A completer
 
       // Traitement du click sur le bouton
       let eltButton = document.getElementById("order");

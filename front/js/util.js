@@ -191,6 +191,28 @@ function getEltQty(cle) {
 //    Entrée: nombre d'elt
 //    Sortie: true si OK false sinon
 //---------------------------------------------------------------------------
-function verifNewQty(newEltNb) {
-  return true;
+
+function verifNewQty(qty) {
+  var returnBool = true; //valeur de retour initialisée à true
+  try {
+    //
+
+    if (Number.isInteger(qty) === false) {
+      alerteMsg("Nombre d'articles: rentrez un nombre entier");
+      returnBool = false;
+    } else {
+      if (qty < 1) {
+        alerteMsg("Nombre d'articles: Il faut au moins 1 canapé");
+        returnBool = false;
+      } else {
+        if (qty > 100) {
+          alerteMsg("Nombre d'articles: pas plus de 100 canapés");
+          returnBool = false;
+        }
+      }
+    }
+  } catch (e) {
+    console.log("verifNewQty" + e + "qty" + qty);
+  }
+  return returnBool;
 }
