@@ -175,7 +175,7 @@ var getProductById = async function (server) {
             // go vers la page panier avec l'id et la couleur choisie
             window.location.href =
               "../html/cart.html" +
-              C_separatorURL +
+              C_separatorURLFirst +
               "id" +
               C_egal +
               product._id +

@@ -15,15 +15,15 @@ const C_undefined = "undefined";
 
 //Construction de l'URL
 const C_separatorURL = "?"; //separateur params de l'URL
+const C_separatorURL = "&"; //separateur params de l'URL
 const C_egal = "="; //egalité
 
 //Construction de la clé du local storage
 // cle= nom_couleur
 const C_separatorKey = "_";
 
-// cle dans local storage pour nb elt total
-const C_totalElt = "totalElt";
-const C_totalPrix = "totalPrix";
+const C_totalElt = "totalElt"; // cle dans local storage pour nb elt total
+const C_totalPrix = "totalPrix"; // cle dans local storage pour prix total
 //
 
 //----------------------------------------------------------------
