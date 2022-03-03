@@ -564,28 +564,53 @@ function waitChangeOnNbElt() {
 //  Affichage message d'erreur si saisie invalide
 //
 // Liste des id du formulaire:
-//    id = "firstName"
-//    id = "lastName";
-//    id = "address";
-//    id = "city";
-//    id = "email";
+//    id = "firstName"  type text
+//    id = "lastName";  type text
+//    id = "address";   type text
+//    id = "city";      type text
+//    id = "email";     type email
+//
+// format: [A-Z][A-Za-z' -]+
+// Un seul caractère en majuscules suivi par un ou plusieurs caractères en majuscules
+// ou minuscules, un tiret, une apostrophe ou une espace.
 //
 //-----------------------------------------------------------------------------
 function waitFillForm() {
   try {
-    let eltForm = document.getElementById("firstName");
-    let eltError = document.getElementById("firstNameErrorMsg");
-    eltForm.addEventListener("input", function () {
+    const regex = new RegExp("[A-Za-z]");
+    //var regexp = [A - Za - z];
+    //const regex = /[A-Za-z];
+    let firstNameForm = document.getElementById("firstName");
+    let firstNameError = document.getElementById("firstNameErrorMsg");
+    firstNameForm.addEventListener("input", function () {
       // Chaque fois que l'utilisateur saisit quelque chose
       // on vérifie la validité du champ e-mail.
-      if (eltForm.validity.valid) {
-        // S'il y a un message d'erreur affiché et que le champ
+      let entree = String(firstNameForm.value);
+      if (entree.match(regex)) {
+        // S'il y a un message [0-9a-zA-Z_]'erreur affiché et que le champ
         // est valide, on retire l'erreur
-        eltError.innerHTML = ""; // On réinitialise le contenu
+        firstNameError.innerHTML = ""; // On réinitialise le contenu
+        console.log("firstName  " + firstNameForm.value + " OK");
       } else {
-        eltError.innerHTML = "entrée invalide";
+        firstNameError.innerHTML = "entrée invalide";
+        console.log("firstName  " + firstNameForm.value + " KO");
       }
       console.log("form: firstName");
+    });
+
+    let emailForm = document.getElementById("email");
+    let emailError = document.getElementById("emailErrorMsg");
+    emailForm.addEventListener("input", function () {
+      // Chaque fois que l'utilisateur saisit quelque chose
+      // on vérifie la validité du champ e-mail.
+      if (emailForm.validity.valid) {
+        // S'il y a un message [0-9a-zA-Z_]'erreur affiché et que le champ
+        // est valide, on retire l'erreur
+        emailError.innerHTML = ""; // On réinitialise le contenu
+      } else {
+        emailError.innerHTML = "entrée invalide";
+      }
+      console.log("form: email");
     });
   } catch (e) {
     console.log("waitFillForm  " + e);
