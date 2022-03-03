@@ -368,6 +368,54 @@ function waitClickOnSupprimer() {
   }
 }
 
+//-------------------------------------------------------------------------
+// changeQtyProduct()
+//
+//Objet: Change la quantité d produit en ft de la sel utilisateur
+
+function changeQtyProduct(eltSelect) {
+  //on a cliqué sur l'elt input de l'article
+  // on remonte la filiere pour avoir l'article correspondant
+  //Article est 3 niveaux au dessus du bouton input
+  let eltArticle = eltSelect.parentNode.parentNode.parentNode;
+  console.log("waitChangeOnNbElt: change nb elt" + eltArticle.id);
+
+  //recupere les infos du local storage de l elt
+  let cle = eltArticle.id; //id de l'article = cle du local storage
+
+  let ProductSelected = JSON.parse(localStorage.getItem(cle)); //elt selectionné
+  let oldEltNb = Number(ProductSelected.nb); //nb d'elt actuel dans le local storage
+  let eltPrix = Number(ProductSelected.prix); //prix du produit selectionné
+  //nouveau nombre pour l'article selectionné
+  let newEltNb = eltSelect.value;
+
+  let qtyTotal = JSON.parse(localStorage.getItem(C_totalElt)); //qty total ds localstorage
+
+  //Teste le nouveau nombre rentré par l'utilisateur
+  if (verifNewQty(Number(newEltNb), Number(qtyTotal))) {
+    let prixTotal = JSON.parse(localStorage.getItem(C_totalPrix)); //prix total ds localstorage
+
+    //maj prix et nb total
+    prixTotal =
+      Number(prixTotal) +
+      Number(eltPrix) * (Number(newEltNb) - Number(oldEltNb));
+
+    qtyTotal = Number(qtyTotal) - Number(oldEltNb) + Number(newEltNb);
+
+    //maj prix et nb elt total dans local storage
+    localStorage.setItem(C_totalElt, JSON.stringify(qtyTotal));
+    localStorage.setItem(C_totalPrix, JSON.stringify(prixTotal));
+
+    //maj produit dans local storage
+    ProductSelected.nb = Number(newEltNb);
+    localStorage.setItem(cle, JSON.stringify(ProductSelected));
+    //Affiche nouveau prix dans l'ecran
+    displayPrixTotal(prixTotal, qtyTotal);
+  } else {
+    //on remet le nombre de produits à da  valeur initiale
+    eltSelect.value = oldEltNb;
+  }
+}
 //------------------------------------------------------------------
 // fonction: waitClickOnNbElt()
 //
@@ -474,49 +522,8 @@ function waitChangeOnNbElt() {
     for (let i = 0; i < eltsClass.length; i++) {
       //Element html  correspondant à la clé
 
-      eltsClass[i].addEventListener("input", function () {
-        //on a cliqué sur l'elt input de l'article
-        // on remonte la filiere pour avoir l'article correspondant
-        //Article est 3 niveaux au dessus du bouton input
-        let eltArticle = eltsClass[i].parentNode.parentNode.parentNode;
-        console.log("waitChangeOnNbElt: change nb elt" + eltArticle.id);
-
-        //recupere les infos du local storage de l elt
-        let cle = eltArticle.id; //id de l'article = cle du local storage
-
-        let ProductSelected = JSON.parse(localStorage.getItem(cle)); //elt selectionné
-        let oldEltNb = Number(ProductSelected.nb); //nb d'elt actuel dans le local storage
-        let eltPrix = Number(ProductSelected.prix); //prix du produit selectionné
-        //nouveau nombre pour l'article selectionné
-        let newEltNb = eltsClass[i].value;
-
-        let qtyTotal = JSON.parse(localStorage.getItem(C_totalElt)); //qty total ds localstorage
-
-        //Teste le nouveau nombre rentré par l'utilisateur
-        if (verifNewQty(Number(newEltNb), Number(qtyTotal))) {
-          let prixTotal = JSON.parse(localStorage.getItem(C_totalPrix)); //prix total ds localstorage
-
-          //maj prix et nb total
-          prixTotal =
-            Number(prixTotal) +
-            Number(eltPrix) * (Number(newEltNb) - Number(oldEltNb));
-
-          qtyTotal = Number(qtyTotal) - Number(oldEltNb) + Number(newEltNb);
-
-          //maj prix et nb elt total dans local storage
-          localStorage.setItem(C_totalElt, JSON.stringify(qtyTotal));
-          localStorage.setItem(C_totalPrix, JSON.stringify(prixTotal));
-
-          //maj produit dans local storage
-          ProductSelected.nb = Number(newEltNb);
-          localStorage.setItem(cle, JSON.stringify(ProductSelected));
-          //Affiche nouveau prix dans l'ecran
-          displayPrixTotal(prixTotal, qtyTotal);
-        } else {
-          //on remet le nombre de produits à da  valeur initiale
-          eltsClass[i].value = oldEltNb;
-        }
-      });
+      // eltsClass[i].addEventListener("input", function () {
+      eltsClass[i].addEventListener("click", changeQtyProduct(eltsClass[i]));
     }
   } catch (e) {
     console.log("waitChangeOnNbElt  " + e);
