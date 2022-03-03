@@ -65,14 +65,6 @@ class paramPanier {
 //---------------------------------------------------------
 function alerteMsg(Message) {
   try {
-    // A compléter
-    //On récupère l'id du bouton
-    // let eltButton = document.getElementById(Id);
-    //creation p
-    //let newp = document.createElement("p");
-    // eltButton.appendChild(newp);
-    //newp.innerHTML = Message;
-
     console.log("Attention: " + Message); //Affiche l'erreur sur la console
     window.alert("Attention:   " + Message); // Affiche un popup à l'écran
   } catch (e) {

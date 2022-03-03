@@ -549,6 +549,31 @@ function waitChangeOnNbElt() {
   }
 }
 
+//-------------------------------------------------------------------------------
+//function:    waitClickOrder()
+//
+//Objet: Attente click sur bouton commander et traitement correspondant
+//
+// Parametres:
+//  Entrée: rien
+//  Sortie: rien
+//
+//Algo:
+//  Ecoute sur l'elet avec id="order"
+//
+//-----------------------------------------------------------------------------
+function waitClickOrder() {
+  try {
+    let eltButton = document.getElementById("order");
+    eltButton.addEventListener("click", function () {
+      console.log("on a cliqué sur le bouton commander");
+      // Envoi des infos vers page confirmation
+    });
+  } catch (e) {
+    console.log("waitClickOrder  " + e);
+  }
+}
+
 //----------------------------------------------------------------
 // ft affichePanier
 // nom: affichePanier
@@ -628,6 +653,7 @@ var affichePanier = async function (server) {
     waitChangeOnNbElt();
 
     // Traitement du click sur le bouton commander
+    waitClickOrder(); //Attente click sur bouton commander
     let eltButton = document.getElementById("order");
     eltButton.addEventListener("click", function () {
       console.log("on a cliqué sur le bouton commander");
