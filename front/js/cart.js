@@ -524,14 +524,15 @@ function waitChangeOnNbElt() {
 }
 
 //----------------------------------------------------------------
-// ft getProductByIdNbColor
-// nom: getProductByIdNbColor
+// ft affichePanier
+// nom: affichePanier
 // Objet: Récupère les infos du produit passées dans l'URL
 //    les affiche dans le panier
-//    et appelle la page confirmation si click sur le bouton.
+//    ecoute les evennements sur les boutons "supprimer" et nb d'elts de chaque item du  panier
+//    et appelle la page confirmation si click sur le bouton commander.
 // Paramètres:
-//  entrée:
-//    server: adresse du serveur avec les données à récupérer
+//  entrée: les params sont passés par l'URL
+//
 //  retour: rien
 //
 // algo:
@@ -541,65 +542,76 @@ function waitChangeOnNbElt() {
 //  Si click sur le bouton: envoie le panier à la page confirmation.
 //
 // await: attend le retour de la promese
+//
+// REmarque:
+//    On peut arriver dans la page panier
+//  - à partir de la page d'accueil:
+//      -> Dans ce car il n'y aura pas de nouveau produit dan sl'URL
+//  - A partir de la page produit
+//    -> Dans ce cas, on aura un produit passé dans l'URL
 //-------------------------------------------------------------
-var getProductByIdNbColor = async function (server) {
+var affichePanier = async function (server) {
   let data; //données récupérées par la ft
   try {
     //on récupère les infos du produit passé dans l'URL
 
     let productId = getInfoInURL();
 
-    // DEBUG: affichage pd dans la console
     console.log("id produit= " + productId.id);
-    console.log("nb produits=" + productId.nb);
-    console.log("couleur produit = " + productId.couleur);
 
-    //Construction de la route du produit
-    server = server + "/" + productId.id;
-    console.log("route produit=" + server);
+    //Construction de la route du produit  si on a passé un nouveau produit dans le panier
+    if (productId.id !== null) {
+      // DEBUG: affichage pd dans la console
 
-    // Recherche data du produit sur le serveur
-    let response = await fetch(server);
-    if (response.ok) {
-      //le produit à afficher
-      let product = await response.json();
-      //On complète avec les infos du server
+      console.log("nb produits=" + productId.nb);
+      console.log("couleur produit = " + productId.couleur);
 
-      productId.prix = product.price; //prix
-      productId.nom = product.name; //nom
-      productId.imageUrl = product.imageUrl;
-      productId.altTxt = product.altTxt;
-      productId.description = product.description;
+      server = server + "/" + productId.id;
+      console.log("route produit=" + server);
 
-      console.log("prix produit= " + productId.prix);
-      console.log("nom du canape= " + productId.nom);
+      // Recherche data du produit sur le serveur
+      let response = await fetch(server);
+      if (response.ok) {
+        //le produit à afficher
+        let product = await response.json();
+        //On complète avec les infos du server
 
-      // stockage dans le local storage
-      addItemInLocalStorage(productId);
+        productId.prix = product.price; //prix
+        productId.nom = product.name; //nom
+        productId.imageUrl = product.imageUrl;
+        productId.altTxt = product.altTxt;
+        productId.description = product.description;
 
-      //Affichage du résultat dans le HTML
-      displayLocalStorageInHtml();
+        console.log("prix produit= " + productId.prix);
+        console.log("nom du canape= " + productId.nom);
 
-      //Attente click sur les boutons <supprimer> des elts du panier
-      waitClickOnSupprimer();
-
-      //Attente changement nombre d'elts
-      waitChangeOnNbElt();
-
-      // Traitement du click sur le bouton
-      let eltButton = document.getElementById("order");
-      eltButton.addEventListener("click", function () {
-        console.log("on a cliqué sur le bouton commander");
-        // Envoi des infos vers page confirmation
-      });
-    } else {
-      console.error("Retour du serveur:", response.status);
+        // stockage nouveau produit dans le local storage
+        addItemInLocalStorage(productId);
+      } else {
+        console.error("Retour du serveur:", response.status);
+      }
     }
+
+    //Affichage du panier dans le HTML
+    displayLocalStorageInHtml();
+
+    //Attente click sur les boutons <supprimer> des elts du panier
+    waitClickOnSupprimer();
+
+    //Attente changement nombre d'elts
+    waitChangeOnNbElt();
+
+    // Traitement du click sur le bouton commander
+    let eltButton = document.getElementById("order");
+    eltButton.addEventListener("click", function () {
+      console.log("on a cliqué sur le bouton commander");
+      // Envoi des infos vers page confirmation
+    });
   } catch (e) {
-    console.log("getProductByIdNbColor: " + e);
+    console.log("affichePanier: " + e);
   }
 };
 
-// Appel de la ft pour récupérer le produit avec le nb et sa couleur
+// Appel de la ft pour afficher le panier et récupérer le produit avec le nb et sa couleur
 
-getProductByIdNbColor(C_serverGET);
+affichePanier(C_serverGET);
