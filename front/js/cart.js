@@ -550,6 +550,49 @@ function waitChangeOnNbElt() {
 }
 
 //-------------------------------------------------------------------------------
+//function:    waitFillForm()
+//
+//Objet: Attente des entrées sur les champs du formulaire et affiche un message d'erreur
+//  si saisie invalide
+//
+// Parametres:
+//  Entrée: rien
+//  Sortie: rien
+//
+//Algo:
+//  Ecoute sur tous les champs du formulaire
+//  Affichage message d'erreur si saisie invalide
+//
+// Liste des id du formulaire:
+//    id = "firstName"
+//    id = "lastName";
+//    id = "address";
+//    id = "city";
+//    id = "email";
+//
+//-----------------------------------------------------------------------------
+function waitFillForm() {
+  try {
+    let eltForm = document.getElementById("firstName");
+    let eltError = document.getElementById("firstNameErrorMsg");
+    eltForm.addEventListener("input", function () {
+      // Chaque fois que l'utilisateur saisit quelque chose
+      // on vérifie la validité du champ e-mail.
+      if (eltForm.validity.valid) {
+        // S'il y a un message d'erreur affiché et que le champ
+        // est valide, on retire l'erreur
+        eltError.innerHTML = ""; // On réinitialise le contenu
+      } else {
+        eltError.innerHTML = "entrée invalide";
+      }
+      console.log("form: firstName");
+    });
+  } catch (e) {
+    console.log("waitFillForm  " + e);
+  }
+}
+
+//-------------------------------------------------------------------------------
 //function:    waitClickOrder()
 //
 //Objet: Attente click sur bouton commander et traitement correspondant
@@ -651,6 +694,9 @@ var affichePanier = async function (server) {
 
     //Attente changement nombre d'elts
     waitChangeOnNbElt();
+
+    //Validation des entrées dans le formulaire
+    waitFillForm();
 
     // Traitement du click sur le bouton commander
     waitClickOrder();
