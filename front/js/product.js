@@ -18,12 +18,11 @@ Script pour mettre à jour la page du canapé sur la page html correspondante
 function getNbProduct() {
   let eltQty = 0; //nombre de produits
   try {
-    // A completer: verifier que le nb rentré n'est pas decimal
     // Valeur rentrée
     eltQty = document.getElementById("quantity");
-    let qtyInteger = Number(eltQty.value); //valeur transformee en nombre
+
     // Valeur rentrée
-    console.log(qtyInteger);
+    console.log(eltQty);
 
     // test valeur comprise entre min et max
     // On rentre les valeurs en dur 1 et 100 pour éviter qu'un utilisateur
@@ -31,22 +30,11 @@ function getNbProduct() {
 
     // et tester nombre entier (on ne veut pas de nombre décimal)
 
-    if (Number.isInteger(qtyInteger) === false) {
-      // on remet à 0
+    let qtyTotal = JSON.parse(localStorage.getItem(C_totalElt)); //qty total ds localstorage
+
+    if (verifNewQty(Number(eltQty.value), Number(qtyTotal)) === false) {
+      //On remet à 0 le nombre selectionné
       eltQty.value = 0;
-      alerteMsg("Nombre d'articles: rentrez un nombre entier");
-    } else {
-      if (qtyInteger < 1) {
-        alerteMsg("Nombre d'articles: Il faut au moins 1 canapé");
-        // on remet à 0
-        eltQty.value = 0;
-      } else {
-        if (qtyInteger > 100) {
-          alerteMsg("Nombre d'articles: pas plus de 100 canapés");
-          // on remet à 0
-          eltQty.value = 0;
-        }
-      }
     }
   } catch (e) {
     console.log("getNbProduct" + e);

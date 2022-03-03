@@ -188,26 +188,39 @@ function getEltQty(cle) {
 // Objet:
 //  Vérifie le nombre d'elt rentré par l'utilisateur.
 //  Parametres:
-//    Entrée: nombre d'elt
+//    Entrée:
+//      nombre d'elt de l'article
+//      nb total d'elt dans le local storage
+//
 //    Sortie: true si OK false sinon
 //---------------------------------------------------------------------------
 
-function verifNewQty(qty) {
+function verifNewQty(eltQty, TotalQty) {
   var returnBool = true; //valeur de retour initialisée à true
   try {
     //
-
-    if (Number.isInteger(qty) === false) {
+    //teste valeur saisie est un nombre entier
+    if (Number.isInteger(eltQty) === false) {
       alerteMsg("Nombre d'articles: rentrez un nombre entier");
       returnBool = false;
-    } else {
-      if (qty < 1) {
+    }
+    //teste qty>1
+    else {
+      if (eltQty < 1) {
         alerteMsg("Nombre d'articles: Il faut au moins 1 canapé");
         returnBool = false;
-      } else {
-        if (qty > 100) {
+      }
+      //teste qté rentrée <=100
+      else {
+        if (eltQty > 100) {
           alerteMsg("Nombre d'articles: pas plus de 100 canapés");
           returnBool = false;
+        } else {
+          //Teste qty totale <=100
+          if (eltQty + TotalQty > 100) {
+            alerteMsg("La combre d'articles de votre panier dépasse 100");
+            returnBool = false;
+          }
         }
       }
     }

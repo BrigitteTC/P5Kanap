@@ -462,7 +462,7 @@ function waitClickOnNbElt() {
 //        Supprime l'article de la page html
 //        Affiche la nouvelle page html
 //
-// A completer: peut on ecouter sur 2 evennements?
+//
 //----------------------------------------------------------------
 function waitChangeOnNbElt() {
   try {
@@ -482,19 +482,19 @@ function waitChangeOnNbElt() {
         console.log("waitClickOnNbElt: change nb elt" + eltArticle.id);
 
         //recupere les infos du local storage de l elt
-
-        let cle = eltArticle.id; //cle du local storage
+        let cle = eltArticle.id; //id de l'article = cle du local storage
 
         let ProductSelected = JSON.parse(localStorage.getItem(cle)); //elt selectionné
         let oldEltNb = Number(ProductSelected.nb); //nb d'elt actuel dans le local storage
         let eltPrix = Number(ProductSelected.prix); //prix du produit selectionné
-        //nouveau nombre
+        //nouveau nombre pour l'article selectionné
         let newEltNb = eltsClass[i].value;
 
+        let qtyTotal = JSON.parse(localStorage.getItem(C_totalElt)); //qty total ds localstorage
+
         //Teste le nouveau nombre rentré par l'utilisateur
-        if (verifNewQty(Number(newEltNb))) {
+        if (verifNewQty(Number(newEltNb), Number(qtyTotal))) {
           let prixTotal = JSON.parse(localStorage.getItem(C_totalPrix)); //prix total ds localstorage
-          let qtyTotal = JSON.parse(localStorage.getItem(C_totalElt)); //qty total ds localstorage
 
           //maj prix et nb total
           prixTotal =
@@ -580,11 +580,7 @@ var getProductByIdNbColor = async function (server) {
       //Attente click sur les boutons <supprimer> des elts du panier
       waitClickOnSupprimer();
 
-      //Attente click sur le nombre d'item des elts du panier
-      waitClickOnNbElt();
-
       //Attente changement nombre d'elts
-      // A completer
       waitChangeOnNbElt();
 
       // Traitement du click sur le bouton
