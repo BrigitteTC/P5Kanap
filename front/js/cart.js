@@ -371,7 +371,21 @@ function waitClickOnSupprimer() {
 //-------------------------------------------------------------------------
 // changeQtyProduct()
 //
-//Objet: Change la quantité d produit en ft de la sel utilisateur
+//Objet: Change la quantité du produit en ft de la selection de l' utilisateur
+//
+// Params
+//  entrée: eltSelect: element cliqué par l'utilisateur
+//              = le input avec le nombre de canapés pour un produit donné
+//  sortie: rien
+//
+// Algo:
+//  Récupère le parent article de l'élement cliqué
+//  La clé de l'elt dan sle local stot=rage = l'id de l'article
+//  A partir de la clé de cet elt, récupère les infos dan sle local storage
+//  Vérifie le nouveau nombre rentré et si correct:
+//    Mets à jour le produit dan sle local storage
+//    mets à jour le nb total d'elt
+//--------------------------------------------------------------------------------
 
 function changeQtyProduct(eltSelect) {
   //on a cliqué sur l'elt input de l'article
@@ -522,7 +536,6 @@ function waitChangeOnNbElt() {
     for (let i = 0; i < eltsClass.length; i++) {
       //Element html  correspondant à la clé
 
-      // eltsClass[i].addEventListener("input", function () {
       //  eltsClass[i].addEventListener("click", function () {
       //    changeQtyProduct(eltsClass[i]);
       //  });

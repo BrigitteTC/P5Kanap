@@ -73,7 +73,8 @@ function alerteMsg(Message) {
     // eltButton.appendChild(newp);
     //newp.innerHTML = Message;
 
-    console.log("Attention: " + Message);
+    console.log("Attention: " + Message); //Affiche l'erreur sur la console
+    window.alert("Attention:   " + Message); // Affiche un popup à l'écran
   } catch (e) {
     console.log("alerteMsg " + e);
   }
