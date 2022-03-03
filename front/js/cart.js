@@ -443,6 +443,83 @@ function waitClickOnNbElt() {
   }
 }
 
+//-----------------------------------------------------------------
+// Fonction: waitChangeOnNbElt();
+//
+//
+// Objet: Attend le changement du nb d'elt d'un elt du panier
+//
+// Parametres:
+//  entrée: rien
+//  sortie: rien
+//
+//  Algo
+//    Recherche ts les elts avec la classe "supprimer"
+//    Ecoute sur tous les elts de cette class
+//    Si click sur un elt
+//       REcherche l'id de l'Article parent
+//        Supprime cet elt dans le local storage
+//        Supprime l'article de la page html
+//        Affiche la nouvelle page html
+//
+// A completer: peut on ecouter sur 2 evennements?
+//----------------------------------------------------------------
+function waitChangeOnNbElt() {
+  try {
+    //recherche de ts les elts qui ont la classe deleteItem
+    //à l'intérieur d'un elt ayant l'ID "cart__items"
+    let eltSection = document.getElementById(C_cart__itemsClass);
+    let eltsClass = eltSection.getElementsByClassName(C_itemQuantityClass); //tableau avec tous les elts de la class
+
+    for (let i = 0; i < eltsClass.length; i++) {
+      //Element html  correspondant à la clé
+
+      eltsClass[i].addEventListener("input", function () {
+        //on a cliqué sur l'elt input de l'article
+        // on remonte la filiere pour avoir l'article correspondant
+        //Article est 3 niveaux au dessus du bouton input
+        let eltArticle = eltsClass[i].parentNode.parentNode.parentNode;
+        console.log("waitClickOnNbElt: change nb elt" + eltArticle.id);
+
+        //recupere les infos du local storage de l elt
+
+        let cle = eltArticle.id; //cle du local storage
+
+        let ProductSelected = JSON.parse(localStorage.getItem(cle)); //elt selectionné
+        let oldEltNb = Number(ProductSelected.nb); //nb d'elt actuel dans le local storage
+        let eltPrix = Number(ProductSelected.prix); //prix du produit selectionné
+        //nouveau nombre
+        let newEltNb = eltsClass[i].value;
+
+        //Teste le nouveau nombre rentré par l'utilisateur
+        if (verifNewQty(Number(newEltNb))) {
+          let prixTotal = JSON.parse(localStorage.getItem(C_totalPrix)); //prix total ds localstorage
+          let qtyTotal = JSON.parse(localStorage.getItem(C_totalElt)); //qty total ds localstorage
+
+          //maj prix et nb total
+          prixTotal =
+            Number(prixTotal) +
+            Number(eltPrix) * (Number(newEltNb) - Number(oldEltNb));
+
+          qtyTotal = Number(qtyTotal) - Number(oldEltNb) + Number(newEltNb);
+
+          //maj prix et nb elt total dans local storage
+          localStorage.setItem(C_totalElt, JSON.stringify(qtyTotal));
+          localStorage.setItem(C_totalPrix, JSON.stringify(prixTotal));
+
+          //maj produit dans local storage
+          ProductSelected.nb = Number(newEltNb);
+          localStorage.setItem(cle, JSON.stringify(ProductSelected));
+          //Affiche nouveau prix dans l'ecran
+          displayPrixTotal(prixTotal, qtyTotal);
+        }
+      });
+    }
+  } catch (e) {
+    console.log("waitChangeOnNbElt  " + e);
+  }
+}
+
 //----------------------------------------------------------------
 // ft getProductByIdNbColor
 // nom: getProductByIdNbColor
@@ -508,6 +585,7 @@ var getProductByIdNbColor = async function (server) {
 
       //Attente changement nombre d'elts
       // A completer
+      waitChangeOnNbElt();
 
       // Traitement du click sur le bouton
       let eltButton = document.getElementById("order");
