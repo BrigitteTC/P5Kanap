@@ -523,7 +523,11 @@ function waitChangeOnNbElt() {
       //Element html  correspondant à la clé
 
       // eltsClass[i].addEventListener("input", function () {
-      eltsClass[i].addEventListener("click", function () {
+      //  eltsClass[i].addEventListener("click", function () {
+      //    changeQtyProduct(eltsClass[i]);
+      //  });
+
+      eltsClass[i].addEventListener("input", function () {
         changeQtyProduct(eltsClass[i]);
       });
     }
