@@ -653,12 +653,7 @@ var affichePanier = async function (server) {
     waitChangeOnNbElt();
 
     // Traitement du click sur le bouton commander
-    waitClickOrder(); //Attente click sur bouton commander
-    let eltButton = document.getElementById("order");
-    eltButton.addEventListener("click", function () {
-      console.log("on a cliqué sur le bouton commander");
-      // Envoi des infos vers page confirmation
-    });
+    waitClickOrder();
   } catch (e) {
     console.log("affichePanier: " + e);
   }
