@@ -33,6 +33,7 @@ const C_cart__itemsClass = "cart__items";
 const C_cart__itemClass = "cart__item";
 const C_itemQuantityClass = "itemQuantity";
 const C_deleteItemClass = "deleteItem";
+const C_quantityClass = "quantity";
 
 //----------------------------------------------------------------
 //Class
@@ -138,49 +139,6 @@ function getInfoInURL() {
     console.log("getInfoInURL " + e);
   }
   return newParamPanier;
-}
-
-//---------------------------------------------------------------------------
-// Fonction: getEltNb(cle);
-//---------------------------------------------------------------------------
-function getEltQty(cle) {
-  let eltQty = 0; //nombre de produits
-  try {
-    //
-    // Valeur rentrée
-    eltQty = document.getElementById("quantity");
-    let qtyInteger = Number(eltQty.value); //valeur transformee en nombre
-    // Valeur rentrée
-    console.log(qtyInteger);
-
-    // test valeur comprise entre min et max
-    // On rentre les valeurs en dur 1 et 100 pour éviter qu'un utilisateur
-    // ne modifie le code de min et max
-
-    // et tester nombre entier (on ne veut pas de nombre décimal)
-
-    if (Number.isInteger(qtyInteger) === false) {
-      // on remet à 0
-      eltQty.value = 0;
-      alerteMsg("Nombre d'articles: rentrez un nombre entier");
-    } else {
-      if (qtyInteger < 1) {
-        alerteMsg("Nombre d'articles: Il faut au moins 1 canapé");
-        // on remet à 0
-        eltQty.value = 0;
-      } else {
-        if (qtyInteger > 100) {
-          alerteMsg("Nombre d'articles: pas plus de 100 canapés");
-          // on remet à 0
-          eltQty.value = 0;
-        }
-      }
-    }
-  } catch (e) {
-    console.log("getNbProduct" + e);
-    eltQty.value = 0; // on remet à 0
-  }
-  return Number(eltQty.value);
 }
 
 //----------------------------------------------------------------------------

@@ -479,7 +479,7 @@ function waitChangeOnNbElt() {
         // on remonte la filiere pour avoir l'article correspondant
         //Article est 3 niveaux au dessus du bouton input
         let eltArticle = eltsClass[i].parentNode.parentNode.parentNode;
-        console.log("waitClickOnNbElt: change nb elt" + eltArticle.id);
+        console.log("waitChangeOnNbElt: change nb elt" + eltArticle.id);
 
         //recupere les infos du local storage de l elt
         let cle = eltArticle.id; //id de l'article = cle du local storage
@@ -512,6 +512,9 @@ function waitChangeOnNbElt() {
           localStorage.setItem(cle, JSON.stringify(ProductSelected));
           //Affiche nouveau prix dans l'ecran
           displayPrixTotal(prixTotal, qtyTotal);
+        } else {
+          //on remet le nombre de produits à da  valeur initiale
+          eltsClass[i].value = oldEltNb;
         }
       });
     }
