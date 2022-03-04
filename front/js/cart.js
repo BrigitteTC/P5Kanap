@@ -578,29 +578,46 @@ function waitFillForm() {
   try {
     //let expressionReg = /^[A-Za-z]+$/;
     //let expressionReg = [A-Za-z]+$/;
-    let expressionReg = /^[A-Za-zé'ïöëè -]+$/;
+    let expressionRegName = /^[A-Za-zé'ïöëè -]+$/;
+    let expressionEmailName = /^[A-Za-zé'ïöëè -]+$/; //A competer doit avoir un @
+
     //var regexp = [A - Za - z];
     //const regex = /[A-Za-z];
+
+    //First name
     let firstNameForm = document.getElementById("firstName");
     let firstNameError = document.getElementById("firstNameErrorMsg");
     firstNameForm.addEventListener("change", function () {
       // Chaque fois que l'utilisateur saisit quelque chose
-      verifFieldForm(firstNameForm, firstNameError, expressionReg);
+      verifFieldForm(firstNameForm, firstNameError, expressionRegName);
     });
+
+    //LastName
+    //    id = "lastName";  type text
+    let lastNameForm = document.getElementById("lastName");
+    let lastNameError = document.getElementById("lastNameErrorMsg");
+    lastNameForm.addEventListener("change", function () {
+      // Chaque fois que l'utilisateur saisit quelque chose
+      verifFieldForm(lastNameForm, lastNameError, expressionRegName);
+    });
+    //Adresse:
+    //    id = "address";   type text
+    // pour l'adresse on accepte tous les caractères.
+    //City
+    //    id = "city";      type text
+    let CityNameForm = document.getElementById("City");
+    let CityNameError = document.getElementById("CityErrorMsg");
+    lastNameForm.addEventListener("change", function () {
+      // Chaque fois que l'utilisateur saisit quelque chose
+      verifFieldForm(CityNameForm, CityNameError, expressionRegName);
+    });
+    //email
+    //    id = "email";     type email
 
     let emailForm = document.getElementById("email");
     let emailError = document.getElementById("emailErrorMsg");
-    emailForm.addEventListener("input", function () {
-      // Chaque fois que l'utilisateur saisit quelque chose
-      // on vérifie la validité du champ e-mail.
-      if (emailForm.validity.valid) {
-        // S'il y a un message [0-9a-zA-Z_]'erreur affiché et que le champ
-        // est valide, on retire l'erreur
-        emailError.innerHTML = ""; // On réinitialise le contenu
-      } else {
-        emailError.innerHTML = "entrée invalide";
-      }
-      console.log("form: email");
+    emailForm.addEventListener("change", function () {
+      verifFieldForm(CityNameForm, CityNameError, expressionEmailName);
     });
   } catch (e) {
     console.log("waitFillForm  " + e);
