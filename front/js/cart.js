@@ -459,7 +459,7 @@ function waitClickOnNbElt() {
     for (let i = 0; i < eltsClass.length; i++) {
       //Element html  correspondant à la clé
 
-      eltsClass[i].addEventListener("click", function () {
+      eltsClass[i].addEventListener(onclick, function () {
         //on a cliqué sur l'elt input de l'article
         // on remonte la filiere pour avoir l'article correspondant
         //Article est 3 niveaux au dessus du bouton input
@@ -536,9 +536,8 @@ function waitChangeOnNbElt() {
     for (let i = 0; i < eltsClass.length; i++) {
       //Element html  correspondant à la clé
 
-      //  eltsClass[i].addEventListener("click", function () {
-      //    changeQtyProduct(eltsClass[i]);
-      //  });
+      // Ecoute evt: Utilisation de input par rapport à change car le input réagit tout de suite
+      // le change ne réagit qu'après un retour chariot.
 
       eltsClass[i].addEventListener("input", function () {
         changeQtyProduct(eltsClass[i]);
@@ -571,13 +570,13 @@ function waitChangeOnNbElt() {
 //    id = "email";     type email
 //
 // format: [A-Z][A-Za-z' -]+
-// Un seul caractère en majuscules suivi par un ou plusieurs caractères en majuscules
+// Un seul caractère en maju[A-Z][A-Za-z' -]scules suivi par un ou plusieurs caractères en majuscules
 // ou minuscules, un tiret, une apostrophe ou une espace.
 //
 //-----------------------------------------------------------------------------
 function waitFillForm() {
   try {
-    const regex = new RegExp("[A-Za-z]");
+    let expressionReg = /[A-Za-z]/;
     //var regexp = [A - Za - z];
     //const regex = /[A-Za-z];
     let firstNameForm = document.getElementById("firstName");
@@ -586,7 +585,7 @@ function waitFillForm() {
       // Chaque fois que l'utilisateur saisit quelque chose
       // on vérifie la validité du champ e-mail.
       let entree = String(firstNameForm.value);
-      if (entree.match(regex)) {
+      if (entree.search([expressionReg])) {
         // S'il y a un message [0-9a-zA-Z_]'erreur affiché et que le champ
         // est valide, on retire l'erreur
         firstNameError.innerHTML = ""; // On réinitialise le contenu
