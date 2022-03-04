@@ -570,22 +570,25 @@ function waitChangeOnNbElt() {
 //    id = "email";     type email
 //
 // format: [A-Z][A-Za-z' -]+
-// Un seul caractère en maju[A-Z][A-Za-z' -]scules suivi par un ou plusieurs caractères en majuscules
+// Un seul caractère en majuscules suivi par un ou plusieurs caractères en majuscules
 // ou minuscules, un tiret, une apostrophe ou une espace.
-//
+// et aussi les e i et o accentués
 //-----------------------------------------------------------------------------
 function waitFillForm() {
   try {
-    let expressionReg = /[A-Za-z]/;
+    //let expressionReg = /^[A-Za-z]+$/;
+    //let expressionReg = [A-Za-z]+$/;
+    let expressionReg = /^[A-Za-zé'ïöëè -]+$/;
     //var regexp = [A - Za - z];
     //const regex = /[A-Za-z];
     let firstNameForm = document.getElementById("firstName");
     let firstNameError = document.getElementById("firstNameErrorMsg");
-    firstNameForm.addEventListener("input", function () {
+    firstNameForm.addEventListener("change", function () {
       // Chaque fois que l'utilisateur saisit quelque chose
       // on vérifie la validité du champ e-mail.
       let entree = String(firstNameForm.value);
-      if (entree.search([expressionReg])) {
+      //if (entree.search([expressionReg])) {
+      if (expressionReg.test(entree)) {
         // S'il y a un message [0-9a-zA-Z_]'erreur affiché et que le champ
         // est valide, on retire l'erreur
         firstNameError.innerHTML = ""; // On réinitialise le contenu
