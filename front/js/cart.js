@@ -585,19 +585,7 @@ function waitFillForm() {
     let firstNameError = document.getElementById("firstNameErrorMsg");
     firstNameForm.addEventListener("change", function () {
       // Chaque fois que l'utilisateur saisit quelque chose
-      // on vérifie la validité du champ e-mail.
-      let entree = String(firstNameForm.value);
-      //if (entree.search([expressionReg])) {
-      if (expressionReg.test(entree)) {
-        // S'il y a un message [0-9a-zA-Z_]'erreur affiché et que le champ
-        // est valide, on retire l'erreur
-        firstNameError.innerHTML = ""; // On réinitialise le contenu
-        console.log("firstName  " + firstNameForm.value + " OK");
-      } else {
-        firstNameError.innerHTML = "entrée invalide";
-        console.log("firstName  " + firstNameForm.value + " KO");
-      }
-      console.log("form: firstName");
+      verifFieldForm(firstNameForm, firstNameError, expressionReg);
     });
 
     let emailForm = document.getElementById("email");
@@ -619,6 +607,46 @@ function waitFillForm() {
   }
 }
 
+//-------------------------------------------------------------------------------
+//function:    verifFieldForm()
+//
+//Objet: Vérifie un champ de formulaire en ft d'une regex passée en param
+//
+// Parametres:
+//  Entrée:
+//    id du champ à vérifier
+//    id champ erreur correspondant
+//    regex
+//
+//  Sortie: boolean true si verif OK, false sinon
+//
+//Algo:
+//  Récupère la chaine de caracteres rentrée.
+//  la compare avec la regex
+//  retourne vrai si comparaison OK et false sinon
+//-----------------------------------------------------------------------------
+function verifFieldForm(paramIdElt, paramErrorIdElt, patern) {
+  let B_paramVerif = true; //valeur de retour vrai/false
+  try {
+    let entree = String(paramIdElt.value);
+
+    //Teste la valeur rentrée correspond à la patern
+    if (patern.test(entree)) {
+      // S'il y a un message d''erreur affiché et que le champ
+      // est valide, on retire l'erreur
+      paramErrorIdElt.innerHTML = ""; // On réinitialise le contenu
+      console.log("entrée  " + paramIdElt.value + " OK");
+    } else {
+      paramErrorIdElt.innerHTML = "entrée invalide";
+      console.log("entrée  " + paramIdElt.value + " KO");
+      B_paramVerif = false;
+    }
+  } catch (e) {
+    console.log("verifFieldForm  " + e);
+    B_paramVerif = false;
+  }
+  return B_paramVerif;
+}
 //-------------------------------------------------------------------------------
 //function:    waitClickOrder()
 //
