@@ -569,8 +569,8 @@ function waitChangeOnNbElt() {
 //    id = "city";      type text
 //    id = "email";     type email
 //
-// format: [A-Z][A-Za-z' -]+
-// Un seul caractère en majuscules suivi par un ou plusieurs caractères en majuscules
+// format: /^[A-Za-zé'ïöëè -]+$/;
+// un ou plusieurs caractères en majuscules
 // ou minuscules, un tiret, une apostrophe ou une espace.
 // et aussi les e i et o accentués
 //-----------------------------------------------------------------------------
@@ -578,11 +578,13 @@ function waitFillForm() {
   try {
     //let expressionReg = /^[A-Za-z]+$/;
     //let expressionReg = [A-Za-z]+$/;
-    let expressionRegName = /^[A-Za-zé'ïöëè -]+$/;
-    let expressionEmailName = /^[A-Za-zé'ïöëè -]+$/; //A competer doit avoir un @
-
-    //var regexp = [A - Za - z];
-    //const regex = /[A-Za-z];
+    const expressionRegName = /^[A-Za-zé'ïöëè -]+$/;
+    const expressionRegAdress = /./; //tous les caracteres
+    //const expressionEmailName = /(@)(. +)$/; //xxx@dd.xx doit avoir un @
+    const expressionEmailName =
+      /^[a-zA-Z0-9_-]+@[a-zA-Z0-9-]{2,}[.][a-zA-Z]{2,3}$/;
+    ///^[a-zA-Z0-9_-\.]+@[a-zA-Z0-9-]{2,}[.][a-zA-Z]{2,3}$/;
+    // Attention brigittetc.pub@hotmail.fr n'est pas valide.
 
     //First name
     let firstNameForm = document.getElementById("firstName");
@@ -601,8 +603,14 @@ function waitFillForm() {
       verifFieldForm(lastNameForm, lastNameError, expressionRegName);
     });
     //Adresse:
-    //    id = "address";   type text
-    // pour l'adresse on accepte tous les caractères.
+    //    id = "addres";   type text
+    // pour l'adresse on accepte tous les caractères mais on vérifie que le champ n'est pas nul
+    let addressForm = document.getElementById("address");
+    let addressError = document.getElementById("addressErrorMsg");
+    addressForm.addEventListener("change", function () {
+      // Chaque fois que l'utilisateur saisit quelque chose
+      verifFieldForm(addressForm, addressError, expressionRegAdress);
+    });
     //City
     //    id = "city";      type text
     let CityNameForm = document.getElementById("City");
@@ -617,7 +625,7 @@ function waitFillForm() {
     let emailForm = document.getElementById("email");
     let emailError = document.getElementById("emailErrorMsg");
     emailForm.addEventListener("change", function () {
-      verifFieldForm(CityNameForm, CityNameError, expressionEmailName);
+      verifFieldForm(emailForm, emailError, expressionEmailName);
     });
   } catch (e) {
     console.log("waitFillForm  " + e);
@@ -644,22 +652,28 @@ function waitFillForm() {
 //-----------------------------------------------------------------------------
 function verifFieldForm(paramIdElt, paramErrorIdElt, patern) {
   let B_paramVerif = true; //valeur de retour vrai/false
+  let entree = String(paramIdElt.value);
   try {
-    let entree = String(paramIdElt.value);
-
-    //Teste la valeur rentrée correspond à la patern
-    if (patern.test(entree)) {
-      // S'il y a un message d''erreur affiché et que le champ
-      // est valide, on retire l'erreur
-      paramErrorIdElt.innerHTML = ""; // On réinitialise le contenu
-      console.log("entrée  " + paramIdElt.value + " OK");
+    if (entree !== "") {
+      //Teste la valeur rentrée correspond à la patern
+      if (patern.test(entree)) {
+        // S'il y a un message d''erreur affiché et que le champ
+        // est valide, on retire l'erreur
+        paramErrorIdElt.innerHTML = ""; // On réinitialise le contenu
+        console.log("entrée  " + paramIdElt.value + " OK");
+      } else {
+        paramErrorIdElt.innerHTML = "entrée invalide";
+        console.log("entrée  " + paramIdElt.value + " KO");
+        B_paramVerif = false;
+      }
     } else {
-      paramErrorIdElt.innerHTML = "entrée invalide";
-      console.log("entrée  " + paramIdElt.value + " KO");
+      //entrée vide
+      paramErrorIdElt.innerHTML = "valeur obligatoire requise";
+      console.log("entrée  " + "vide");
       B_paramVerif = false;
     }
   } catch (e) {
-    console.log("verifFieldForm  " + e);
+    console.log("verifFieldForm  " + entree + e);
     B_paramVerif = false;
   }
   return B_paramVerif;
