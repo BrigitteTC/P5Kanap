@@ -579,7 +579,7 @@ function waitFillForm() {
     //let expressionReg = /^[A-Za-z]+$/;
     //let expressionReg = [A-Za-z]+$/;
     const expressionRegName = /^[A-Za-zé'ïöëè -]+$/;
-    const expressionRegAdress = /./; //tous les caracteres
+    const expressionRegAdress = /^[A-Za-z0-9é'ïöëè -]+$/; //tous les caracteres
     //const expressionEmailName = /(@)(. +)$/; //xxx@dd.xx doit avoir un @
     //const expressionEmailName =
     //  /^[a-zA-Z0-9_-]+@[a-zA-Z0-9-]{2,}[.][a-zA-Z]{2,3}$/;
@@ -622,7 +622,7 @@ function waitFillForm() {
     let CityNameError = document.getElementById("CityErrorMsg");
     lastNameForm.addEventListener("change", function () {
       // Chaque fois que l'utilisateur saisit quelque chose
-      verifFieldForm(CityNameForm, CityNameError, expressionRegName);
+      verifFieldForm(CityNameForm, CityNameError, expressionRegAdress);
     });
     //email
     //    id = "email";     type email
