@@ -144,8 +144,14 @@ function displayLocalStorageInHtml() {
         //affichage de tous les articles
         let itemPanierJSON = localStorage.getItem(localStorage.key(i));
         let itemPanier = JSON.parse(itemPanierJSON);
+
+        //cherche les infos de l'article sur le server
+        let itemPanierServer = searchPdInServer(itemPanier.id); //infos supplementaires sur le server
+
+        //complete les infos avec les infos du server(prix,image ..)
+
         //Affiche l'item
-        displayItemInHtml(itemPanier);
+        displayItemInHtml(itemPanierServer);
 
         //calcule prix total
         prixTotal =
@@ -430,6 +436,53 @@ function changeQtyProduct(eltSelect) {
     eltSelect.value = oldEltNb;
   }
 }
+
+//------------------------------------------------------------------
+// fonction: searchPdInServer
+//
+// Objet: recherche les infos du produit dans le serveur
+//
+// Parametres:
+//  Entrée: Route du produit
+//  Sortie: produit avec toutes les infos.
+//
+// Algo:
+//  Utilise fetch pour joinde le serveur et attend la promesse
+//  Mets à jour les infos du produit
+//-------------------------------------------------------------------
+function searchPdInServer(paramId) {
+  let productPanier = new paramPanier();
+  try {
+    productPanier.id = paramId;
+    serverPd = C_serverGET + "/" + paramId;
+    // Recherche data du produit sur le serveur
+    let response = await fetch(serverPd);
+    if (response.ok) {
+      //le produit à afficher
+      let product = await response.json();
+      //On complète avec les infos du server
+
+      productPanier.prix = product.price; //prix
+      productPanier.nom = product.name; //nom
+      productPanier.imageUrl = product.imageUrl;
+      productPanier.altTxt = product.altTxt;
+      productPanier.description = product.description;
+
+      console.log("prix produit= " + productPanier.prix);
+      console.log("nom du canape= " + productPanier.nom);
+
+      // stockage nouveau produit dans le local storage
+      //addItemInLocalStorage(productId);
+    } else {
+      console.error("Retour du serveur:", response.status);
+    }
+  } catch (e) {
+    console.log("searchPdInServer  " + e);
+  }
+  // retourne le produit avec les infos du serveur
+  return productPanier;
+}
+
 //------------------------------------------------------------------
 // fonction: waitClickOnNbElt()
 //
@@ -735,7 +788,7 @@ function waitClickOrder() {
 //  - A partir de la page produit
 //    -> Dans ce cas, on aura un produit passé dans l'URL
 //-------------------------------------------------------------
-var affichePanier = async function (server) {
+function affichePanier() {
   let data; //données récupérées par la ft
   try {
     //on récupère les infos du produit passé dans l'URL
@@ -745,36 +798,18 @@ var affichePanier = async function (server) {
     console.log("id produit= " + productId.id);
 
     //Construction de la route du produit  si on a passé un nouveau produit dans le panier
-    if (productId.id !== null) {
+    if (
+      productId.id !== null &&
+      productId.nb !== null &&
+      productId.couleur !== null
+    ) {
       // DEBUG: affichage pd dans la console
 
       console.log("nb produits=" + productId.nb);
       console.log("couleur produit = " + productId.couleur);
 
-      server = server + "/" + productId.id;
-      console.log("route produit=" + server);
-
-      // Recherche data du produit sur le serveur
-      let response = await fetch(server);
-      if (response.ok) {
-        //le produit à afficher
-        let product = await response.json();
-        //On complète avec les infos du server
-
-        productId.prix = product.price; //prix
-        productId.nom = product.name; //nom
-        productId.imageUrl = product.imageUrl;
-        productId.altTxt = product.altTxt;
-        productId.description = product.description;
-
-        console.log("prix produit= " + productId.prix);
-        console.log("nom du canape= " + productId.nom);
-
-        // stockage nouveau produit dans le local storage
-        addItemInLocalStorage(productId);
-      } else {
-        console.error("Retour du serveur:", response.status);
-      }
+      // stockage nouveau produit dans le local storage
+      addItemInLocalStorage(productId);
     }
 
     //Affichage du panier dans le HTML
@@ -794,8 +829,8 @@ var affichePanier = async function (server) {
   } catch (e) {
     console.log("affichePanier: " + e);
   }
-};
+}
 
 // Appel de la ft pour afficher le panier et récupérer le produit avec le nb et sa couleur
 
-affichePanier(C_serverGET);
+affichePanier();
