@@ -581,10 +581,15 @@ function waitFillForm() {
     const expressionRegName = /^[A-Za-zé'ïöëè -]+$/;
     const expressionRegAdress = /./; //tous les caracteres
     //const expressionEmailName = /(@)(. +)$/; //xxx@dd.xx doit avoir un @
-    const expressionEmailName =
-      /^[a-zA-Z0-9_-]+@[a-zA-Z0-9-]{2,}[.][a-zA-Z]{2,3}$/;
+    //const expressionEmailName =
+    //  /^[a-zA-Z0-9_-]+@[a-zA-Z0-9-]{2,}[.][a-zA-Z]{2,3}$/;
     ///^[a-zA-Z0-9_-\.]+@[a-zA-Z0-9-]{2,}[.][a-zA-Z]{2,3}$/;
     // Attention brigittetc.pub@hotmail.fr n'est pas valide.
+
+    //nouvelle regex pour le mail
+    var expressionEmailName = RegExp(
+      "^([a-zA-Z0-9_-])+([.]?[a-zA-Z0-9_-]{1,})*@([a-zA-Z0-9-_]{2,}[.])+[a-zA-Z]{2,3}$"
+    );
 
     //First name
     let firstNameForm = document.getElementById("firstName");
