@@ -288,7 +288,41 @@ function displayItemInHtml(itemPanier) {
 //  maj HTML avec prix et qty calculée
 //
 //------------------------------------------------------------
-function displayPrixTotal(newQty, oldQty, prix) {
+function displayPrixTotal(qtyTotal, prixTotal) {
+  try {
+    // quantité:
+    let qtyTotalElt = document.getElementById("totalQuantity");
+
+    //prix
+    let prixTotalElt = document.getElementById("totalPrice");
+
+    //maj elt
+    qtyTotalElt.innerHTML = qtyTotal;
+    prixTotalElt.innerHTML = prixTotal;
+  } catch (e) {
+    console.log("displayPrixTotal" + e);
+  }
+}
+
+//----------------------------------------------------------------
+//changePrixTotal(prixTotal);
+//Objet: affiche le prix total et quantité totale sur l'ecran
+//
+// Parametres:
+//  Entree:
+//    Nouvelle valeur qty produit
+//    Ancienne valeur qty produit
+//    Prix produit
+//  Sortie: rien
+//
+// Algo:
+//  REcherche prix total et qty totale avec balises HTML
+//  calcule nouvelle valeurs
+//
+//  maj HTML avec prix et qty calculée
+//
+//------------------------------------------------------------
+function changePrixTotal(newQty, oldQty, prix) {
   try {
     // quantité:
     let qtyTotalElt = document.getElementById("totalQuantity");
@@ -308,10 +342,9 @@ function displayPrixTotal(newQty, oldQty, prix) {
     qtyTotalElt.innerHTML = qtyTotal;
     prixTotalElt.innerHTML = prixTotal;
   } catch (e) {
-    console.log("displayPrixTotal" + e);
+    console.log("changePrixTotal" + e);
   }
 }
-
 //-----------------------------------------------------------
 //Fonction: waitClickOnSupprimer();
 // Objet: Attend le click sur le bouton "supprimer" d'un elt
