@@ -272,26 +272,41 @@ function displayItemInHtml(itemPanier) {
 
 //----------------------------------------------------------------
 //displayPrixTotal(prixTotal);
-//Objet: affiche le prix total sur l'ecran
+//Objet: affiche le prix total et quantité totale sur l'ecran
 //
 // Parametres:
-//  Entree: prixTotal: prix à afficher
-//          qtyTotal: quantité totale d'articles
+//  Entree:
+//    Nouvelle valeur qty produit
+//    Ancienne valeur qty produit
+//    Prix produit
 //  Sortie: rien
 //
 // Algo:
-//  maj "span" avec le prix passé en param
-//    + maj quantité
+//  REcherche prix total et qty totale avec balises HTML
+//  calcule nouvelle valeurs
+//
+//  maj HTML avec prix et qty calculée
+//
 //------------------------------------------------------------
-function displayPrixTotal(prixTotal, qtyTotal) {
+function displayPrixTotal(newQty, oldQty, prix) {
   try {
-    // affichage quantité:
-    let eltSpanQty = document.getElementById("totalQuantity");
-    eltSpanQty.innerHTML = qtyTotal;
+    // quantité:
+    let qtyTotalElt = document.getElementById("totalQuantity");
+    let qtyTotal = Number(qtyTotalElt.value);
+
+    //prix
+    let prixTotalElt = document.getElementById("totalPrice");
+    let prixTotal = Number(prixTotalElt.value);
+
     //Affiche prix total
-    let eltSpanPrix = document.getElementById("totalPrice");
+    prixTotal =
+      Number(prixTotal) + Number(prix) * (Number(newQty) - Number(oldQty));
+
+    qtyTotal = qtyTotal + newQty - oldQty;
+
     //creation de l'elt article
-    eltSpanPrix.innerHTML = prixTotal;
+    qtyTotalElt.innerHTML = qtyTotal;
+    prixTotalElt.innerHTML = prixTotal;
   } catch (e) {
     console.log("displayPrixTotal" + e);
   }
@@ -340,26 +355,13 @@ function waitClickOnSupprimer() {
 
         let itemSupprime = JSON.parse(localStorage.getItem(cle)); //elt supprimé
 
-        let prixTotal = JSON.parse(localStorage.getItem(C_totalPrix)); //prix total ds localstorage
-        let qtyTotal = JSON.parse(localStorage.getItem(C_totalElt)); //qty total ds localstorage
-
-        //maj prix et nb total
-        prixTotal =
-          Number(prixTotal) -
-          Number(itemSupprime.prix) * Number(itemSupprime.nb);
-        qtyTotal = Number(qtyTotal) - Number(itemSupprime.nb);
-
         //supprime la cle dans le local storage
         localStorage.removeItem(cle);
 
-        //maj prix et nb elt total
-        localStorage.setItem(C_totalElt, JSON.stringify(qtyTotal));
-        localStorage.setItem(C_totalPrix, JSON.stringify(prixTotal));
-
         //Affiche nouveau prix dans l'ecran
-        displayPrixTotal(prixTotal, qtyTotal);
+        // displayPrixTotal(0, itemSupprime.nb, prix);
 
-        //maj longueur lilste des boutons supprimer
+        //maj longueur liste des boutons supprimer
         eltsSupprimer.length--;
       });
     }
@@ -451,12 +453,13 @@ function changeQtyProduct(eltSelect) {
 //    Affiche prix total et quantité totale.
 //-------------------------------------------------------------------
 
-var displayLocalStorageInHtml = async function () {
+async function displayLocalStorageInHtml() {
   let qtyTotal = 0;
   let prixTotal = 0;
 
   try {
     // Boucle sur tous les produits du local storage
+    // localstorage.forEach ( element => elemnt)
     for (let i = 0; i < localStorage.length; i++) {
       console.log("cle " + i + " " + localStorage.key(i));
 
@@ -514,10 +517,10 @@ var displayLocalStorageInHtml = async function () {
           displayPrixTotal(prixTotal, qtyTotal);
 
           //Attente click sur les boutons <supprimer> des elts du panier
-          waitClickOnSupprimer();
+          //waitClickOnSupprimer();
 
           //Attente changement nombre d'elts
-          waitChangeOnNbElt();
+          //waitChangeOnNbElt();
         } //fin if (response.ok)
         else {
           console.error("Retour du serveur:", response.status);
@@ -527,7 +530,7 @@ var displayLocalStorageInHtml = async function () {
   } catch (e) {
     console.log("displayLocalStorageInHtml  " + e);
   }
-};
+}
 
 //------------------------------------------------------------------
 // fonction: waitClickOnNbElt()
@@ -558,6 +561,7 @@ function waitClickOnNbElt() {
     for (let i = 0; i < eltsClass.length; i++) {
       //Element html  correspondant à la clé
 
+      //    eltsClass[i].addEventListener(onclick, () =>
       eltsClass[i].addEventListener(onclick, function () {
         //on a cliqué sur l'elt input de l'article
         // on remonte la filiere pour avoir l'article correspondant
@@ -797,7 +801,7 @@ function verifFieldForm(paramIdElt, paramErrorIdElt, patern) {
 //-----------------------------------------------------------------------------
 function waitClickOrder() {
   try {
-    let eltButton = document.getElementById("order");
+    const eltButton = document.getElementById("order");
     eltButton.addEventListener("click", function () {
       console.log("on a cliqué sur le bouton commander");
       // Envoi des infos vers page confirmation
@@ -834,7 +838,7 @@ function waitClickOrder() {
 //  - A partir de la page produit
 //    -> Dans ce cas, on aura un produit passé dans l'URL
 //-------------------------------------------------------------
-function affichePanier() {
+async function affichePanier() {
   let data; //données récupérées par la ft
   try {
     //on récupère les infos du produit passé dans l'URL
@@ -859,13 +863,13 @@ function affichePanier() {
     }
 
     //Affichage du panier dans le HTML
-    displayLocalStorageInHtml();
+    await displayLocalStorageInHtml();
 
     //Attente click sur les boutons <supprimer> des elts du panier
-    //waitClickOnSupprimer();
+    waitClickOnSupprimer();
 
     //Attente changement nombre d'elts
-    //waitChangeOnNbElt();
+    waitChangeOnNbElt();
 
     //Validation des entrées dans le formulaire
     waitFillForm();
