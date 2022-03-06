@@ -125,7 +125,7 @@ function addItemInLocalStorage(newItemPanier) {
 //  Affiche le prix total et nb d'elt total dans la page html
 //
 //--------------------------------------------------------------
-function displayLocalStorageInHtml() {
+function OlddisplayLocalStorageInHtml() {
   try {
     //init prix et quantité total à 0
     let prixTotal = 0;
@@ -146,26 +146,19 @@ function displayLocalStorageInHtml() {
         let itemPanierJSON = localStorage.getItem(localStorage.key(i));
         let itemPanier = JSON.parse(itemPanierJSON);
 
-        //cherche les infos de l'article sur le server
-        let itemPanierServer = searchProductInServer(itemPanier.id); //infos supplementaires sur le server
-
-        //complete les infos avec les infos du server(prix,image ..)
-
-        //Affiche l'item
-        displayItemInHtml(itemPanierServer);
+        //cherche les infos de l'article sur le server et les affiche
+        searchProductInServer(itemPanier); //infos supplementaires sur le server
 
         //calcule prix total
-        prixTotal =
-          Number(prixTotal) +
-          Number(Number(itemPanier.nb) * Number(itemPanier.prix));
+        //prixTotal = Number(prixTotal) + Number(prixItemPanier);
 
         //calcule quantité totale:
-        qtyTotal = Number(qtyTotal) + Number(itemPanier.nb);
+        //qtyTotal = Number(qtyTotal) + Number(itemPanier.nb);
       }
     }
 
     //Affiche le prix dans l'ecran
-    displayPrixTotal(prixTotal, qtyTotal);
+    //displayPrixTotal(prixTotal, qtyTotal);
   } catch (e) {
     console.log("displayLocalStorageInHtml " + e);
   }
@@ -439,47 +432,95 @@ function changeQtyProduct(eltSelect) {
 }
 
 //------------------------------------------------------------------
-// fonction: searchProductInServer
+// fonction: displayLocalStorageInHtml
 //
-// Objet: recherche les infos du produit dans le serveur
+// Objet: recherche les infos du produit dans le serveur et les affiche dans le HTML
 //
 // Parametres:
-//  Entrée: Route du produit
-//  Sortie: produit avec toutes les infos.
+//  Entrée:
+//    rien
+//
+//  Sortie: rien
 //
 // Algo:
-//  Utilise fetch pour joinde le serveur et attend la promesse
-//  Mets à jour les infos du produit
+//  Boucle sur tous les elts du local serveur et pour chaque elt
+//
+//    Utilise fetch pour joinde le serveur et attend la promesse
+//    Mets à jour les infos du produit
+//    Affiche le produit dans le html
+//    Affiche prix total et quantité totale.
 //-------------------------------------------------------------------
 
-var searchProductInServer = async function (paramId) {
-  let newItemPanier = new paramPanier();
+var displayLocalStorageInHtml = async function () {
+  let qtyTotal = 0;
+  let prixTotal = 0;
+
   try {
-    newItemPanier.id = paramId;
-    serverPd = C_serverGET + "/" + paramId; //Route server du produit
-    // Recherche data du produit sur le serveur
-    let response = await fetch(serverPd);
-    if (response.ok) {
-      //le produit à afficher
-      let product = await response.json();
-      //On complète avec les infos du server
+    // Boucle sur tous les produits du local storage
+    for (let i = 0; i < localStorage.length; i++) {
+      console.log("cle " + i + " " + localStorage.key(i));
 
-      newItemPanier.prix = product.price; //prix
-      newItemPanier.nom = product.name; //nom
-      newItemPanier.imageUrl = product.imageUrl;
-      newItemPanier.altTxt = product.altTxt;
-      newItemPanier.description = product.description;
+      if (
+        localStorage.key(i) != C_totalElt &&
+        localStorage.key(i) != C_totalPrix
+      ) {
+        //recupere le produit dans le local storage
+        let itemLocalStorageJSON = localStorage.getItem(localStorage.key(i));
+        let itemLocalStorage = JSON.parse(itemLocalStorageJSON);
 
-      console.log("prix produit= " + newItemPanier.prix);
-      console.log("nom du canape= " + newItemPanier.nom);
-    } else {
-      console.error("Retour du serveur:", response.status);
-    }
+        //cherche les infos de l'article sur le server et les affiche
+        //searchProductInServer(itemPanier); //infos supplementaires sur le server
+
+        //calcule prix total
+        //prixTotal = Number(prixTotal) + Number(prixItemPanier);
+
+        //calcule quantité totale:
+        //qtyTotal = Number(qtyTotal) + Number(itemPanier.nb);
+        let newItemPanier = new paramPanier();
+        newItemPanier.id = itemLocalStorage.id;
+        serverPd = C_serverGET + "/" + itemLocalStorage.id; //Route server du produit
+        // Recherche data du produit sur le serveur
+        let response = await fetch(serverPd);
+        if (response.ok) {
+          //le produit à afficher
+          let product = await response.json();
+          //On complète avec les infos du server
+
+          newItemPanier.prix = product.price; //prix
+          newItemPanier.nom = product.name; //nom
+          newItemPanier.imageUrl = product.imageUrl;
+          newItemPanier.altTxt = product.altTxt;
+          newItemPanier.description = product.description;
+
+          // on complete avec les infos du local storage
+          newItemPanier.nb = itemLocalStorage.nb;
+          newItemPanier.couleur = itemLocalStorage.couleur;
+
+          console.log("prix produit= " + newItemPanier.prix);
+          console.log("nom du canape= " + newItemPanier.nom);
+
+          //Affiche l'item dans le HTML
+          displayItemInHtml(newItemPanier);
+
+          //calcule prix total
+          prixTotal =
+            Number(prixTotal) +
+            Number(Number(newItemPanier.prix) * Number(newItemPanier.nb));
+
+          //calcule quantité totale:
+          qtyTotal = Number(qtyTotal) + Number(newItemPanier.nb);
+
+          //Affiche le prix et qty total dans l'ecran
+          displayPrixTotal(prixTotal, qtyTotal);
+        } //fin if (response.ok)
+        else {
+          console.error("Retour du serveur:", response.status);
+        }
+      } //fin if (localStorage.key(i) != C_totalElt)
+    } // fin boucle for
   } catch (e) {
-    console.log("searchProductInServer  " + e);
+    console.log("displayLocalStorageInHtml  " + e);
   }
-  // retourne le produit avec les infos du serveur
-  return newItemPanier;
 };
 
 //------------------------------------------------------------------
