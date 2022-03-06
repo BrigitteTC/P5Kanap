@@ -512,6 +512,12 @@ var displayLocalStorageInHtml = async function () {
 
           //Affiche le prix et qty total dans l'ecran
           displayPrixTotal(prixTotal, qtyTotal);
+
+          //Attente click sur les boutons <supprimer> des elts du panier
+          waitClickOnSupprimer();
+
+          //Attente changement nombre d'elts
+          waitChangeOnNbElt();
         } //fin if (response.ok)
         else {
           console.error("Retour du serveur:", response.status);
@@ -856,10 +862,10 @@ function affichePanier() {
     displayLocalStorageInHtml();
 
     //Attente click sur les boutons <supprimer> des elts du panier
-    waitClickOnSupprimer();
+    //waitClickOnSupprimer();
 
     //Attente changement nombre d'elts
-    waitChangeOnNbElt();
+    //waitChangeOnNbElt();
 
     //Validation des entrées dans le formulaire
     waitFillForm();
