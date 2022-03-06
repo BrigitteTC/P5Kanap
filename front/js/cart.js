@@ -90,17 +90,10 @@ function addItemInLocalStorage(newItemPanier) {
 
         //maj prix total
 
-        if (C_totalPrix in localStorage) {
-          //la cle prix total existe on récupère la valeur
-          let totalPrixJson = localStorage.getItem(C_totalPrix);
-          totalPrix = Number(JSON.parse(totalPrixJson));
-        }
         let prixNouveauPd = Number(
           Number(newItemPanier.nb) * Number(newItemPanier.prix)
         );
         totalPrix = Number(totalPrix) + Number(prixNouveauPd);
-
-        localStorage.setItem(C_totalPrix, JSON.stringify(totalPrix));
       }
     }
   } catch (e) {
@@ -138,10 +131,7 @@ function OlddisplayLocalStorageInHtml() {
     for (let i = 0; i < localStorage.length; i++) {
       console.log("cle " + i + " " + localStorage.key(i));
 
-      if (
-        localStorage.key(i) != C_totalElt &&
-        localStorage.key(i) != C_totalPrix
-      ) {
+      if (localStorage.key(i) != C_totalElt) {
         //affichage de tous les articles
         let itemPanierJSON = localStorage.getItem(localStorage.key(i));
         let itemPanier = JSON.parse(itemPanierJSON);
@@ -297,8 +287,8 @@ function displayPrixTotal(qtyTotal, prixTotal) {
     let prixTotalElt = document.getElementById("totalPrice");
 
     //maj elt
-    qtyTotalElt.innerHTML = qtyTotal;
-    prixTotalElt.innerHTML = prixTotal;
+    qtyTotalElt.innerHTML = Number(qtyTotal);
+    prixTotalElt.innerHTML = Number(prixTotal);
   } catch (e) {
     console.log("displayPrixTotal" + e);
   }
@@ -362,7 +352,7 @@ function changePrixTotal(newQty, oldQty, prix) {
 //        Supprime l'article de la page html
 //        Affiche la nouvelle page html
 //----------------------------------------------------------------
-function waitClickOnSupprimer() {
+async function waitClickOnSupprimer() {
   try {
     //recherche de ts les elts qui ont la classe deleteItem
     //à l'intérieur d'un elt ayant l'ID "cart__items"
@@ -372,7 +362,7 @@ function waitClickOnSupprimer() {
     for (let i = 0; i < eltsSupprimer.length; i++) {
       //Element html "supprimer" correspondant à la clé
 
-      eltsSupprimer[i].addEventListener("click", function () {
+      eltsSupprimer[i].addEventListener("click", async function () {
         //on a cliqué sur l'elt supprimer
         // on remonte la filiere poru avoir l'article correspondant
         //Article est 3 niveaux au dessous du bouton supprimer
@@ -386,16 +376,11 @@ function waitClickOnSupprimer() {
 
         let cle = eltArticle.id; //cle du local storage
 
-        let itemSupprime = JSON.parse(localStorage.getItem(cle)); //elt supprimé
-
         //supprime la cle dans le local storage
         localStorage.removeItem(cle);
 
-        //Affiche nouveau prix dans l'ecran
-        // displayPrixTotal(0, itemSupprime.nb, prix);
-
-        //maj longueur liste des boutons supprimer
-        eltsSupprimer.length--;
+        //Calcule et affiche nouveau prix total et nb elt
+        await searchProductsInServer();
       });
     }
   } catch (e) {
@@ -442,18 +427,10 @@ function changeQtyProduct(eltSelect) {
 
   //Teste le nouveau nombre rentré par l'utilisateur
   if (verifNewQty(Number(newEltNb), Number(qtyTotal))) {
-    let prixTotal = JSON.parse(localStorage.getItem(C_totalPrix)); //prix total ds localstorage
-
-    //maj prix et nb total
-    prixTotal =
-      Number(prixTotal) +
-      Number(eltPrix) * (Number(newEltNb) - Number(oldEltNb));
-
     qtyTotal = Number(qtyTotal) - Number(oldEltNb) + Number(newEltNb);
 
     //maj prix et nb elt total dans local storage
     localStorage.setItem(C_totalElt, JSON.stringify(qtyTotal));
-    localStorage.setItem(C_totalPrix, JSON.stringify(prixTotal));
 
     //maj produit dans local storage
     ProductSelected.nb = Number(newEltNb);
@@ -496,10 +473,7 @@ async function displayLocalStorageInHtml() {
     for (let i = 0; i < localStorage.length; i++) {
       console.log("cle " + i + " " + localStorage.key(i));
 
-      if (
-        localStorage.key(i) != C_totalElt &&
-        localStorage.key(i) != C_totalPrix
-      ) {
+      if (localStorage.key(i) != C_totalElt) {
         //recupere le produit dans le local storage
         let itemLocalStorageJSON = localStorage.getItem(localStorage.key(i));
         let itemLocalStorage = JSON.parse(itemLocalStorageJSON);
@@ -550,10 +524,10 @@ async function displayLocalStorageInHtml() {
           displayPrixTotal(prixTotal, qtyTotal);
 
           //Attente click sur les boutons <supprimer> des elts du panier
-          //waitClickOnSupprimer();
+          waitClickOnSupprimer();
 
           //Attente changement nombre d'elts
-          //waitChangeOnNbElt();
+          waitChangeOnNbElt();
         } //fin if (response.ok)
         else {
           console.error("Retour du serveur:", response.status);
@@ -562,6 +536,83 @@ async function displayLocalStorageInHtml() {
     } // fin boucle for
   } catch (e) {
     console.log("displayLocalStorageInHtml  " + e);
+  }
+}
+
+//------------------------------------------------------------------
+// fonction: searchProductsInServer
+//
+// Objet: recherche les infos des produits dans le serveur
+//
+// Parametres:
+//  Entrée:
+//    rien
+//
+//  Sortie: rien
+//
+// Algo:
+//  Boucle sur tous les elts du local serveur et pour chaque elt
+//
+//    Utilise fetch pour joinde le serveur et attend la promesse
+//    Mets à jour les infos du produit
+//    Affiche prix total et quantité totale.
+//-------------------------------------------------------------------
+
+async function searchProductsInServer() {
+  let qtyTotal = 0;
+  let prixTotal = 0;
+  let newItemPanier = new paramPanier();
+
+  try {
+    // Boucle sur tous les produits du local storage
+    // localstorage.forEach ( element => elemnt)
+    for (let i = 0; i < localStorage.length; i++) {
+      let cle = localStorage.key(i);
+      console.log("cle " + cle);
+
+      if (cle != C_totalElt) {
+        //recupere le produit dans le local storage
+        let itemLocalStorageJSON = localStorage.getItem(cle);
+        let itemLocalStorage = JSON.parse(itemLocalStorageJSON);
+
+        //cherche les infos de l'article sur le server
+
+        newItemPanier.id = itemLocalStorage.id;
+        serverPd = C_serverGET + "/" + itemLocalStorage.id; //Route server du produit
+        // Recherche data du produit sur le serveur
+        let response = await fetch(serverPd);
+        if (response.ok) {
+          //le produit à afficher
+          let product = await response.json();
+          //On complète avec les infos du server
+
+          newItemPanier.prix = product.price; //prix
+          newItemPanier.nom = product.name; //nom
+          newItemPanier.imageUrl = product.imageUrl;
+          newItemPanier.altTxt = product.altTxt;
+          newItemPanier.description = product.description;
+
+          // on complete avec les infos du local storage
+          newItemPanier.nb = itemLocalStorage.nb;
+          newItemPanier.couleur = itemLocalStorage.couleur;
+        } //fin if (response.ok)
+        else {
+          console.error("Retour du serveur:", response.status);
+        }
+      } //fin if (localStorage.key(i) != C_totalElt)
+      //calcule prix total
+      prixTotal =
+        Number(prixTotal) +
+        Number(Number(newItemPanier.prix) * Number(newItemPanier.nb));
+
+      //calcule quantité totale:
+      qtyTotal = Number(qtyTotal) + Number(newItemPanier.nb);
+
+      //Affiche le prix et qty total dans l'ecran
+      displayPrixTotal(prixTotal, qtyTotal);
+    } // fin boucle for
+  } catch (e) {
+    console.log("searchProductsInServer  " + e);
   }
 }
 
@@ -614,7 +665,6 @@ function waitClickOnNbElt() {
 
         //Teste le nouveau nombre rentré par l'utilisateur
         if (verifNewQty(Number(newEltNb))) {
-          let prixTotal = JSON.parse(localStorage.getItem(C_totalPrix)); //prix total ds localstorage
           let qtyTotal = JSON.parse(localStorage.getItem(C_totalElt)); //qty total ds localstorage
 
           //maj prix et nb total
@@ -626,7 +676,6 @@ function waitClickOnNbElt() {
 
           //maj prix et nb elt total dans local storage
           localStorage.setItem(C_totalElt, JSON.stringify(qtyTotal));
-          localStorage.setItem(C_totalPrix, JSON.stringify(prixTotal));
 
           //maj produit dans local storage
           ProductSelected.nb = Number(newEltNb);
@@ -882,8 +931,8 @@ async function affichePanier() {
 
     //Construction de la route du produit  si on a passé un nouveau produit dans le panier
     if (
-      newItemPanier.id !== 0 &&
-      newItemPanier.nb !== 0 &&
+      newItemPanier.id != 0 &&
+      newItemPanier.nb != 0 &&
       newItemPanier.couleur !== ""
     ) {
       // DEBUG: affichage pd dans la console
@@ -899,10 +948,10 @@ async function affichePanier() {
     await displayLocalStorageInHtml();
 
     //Attente click sur les boutons <supprimer> des elts du panier
-    waitClickOnSupprimer();
+    //waitClickOnSupprimer();
 
     //Attente changement nombre d'elts
-    waitChangeOnNbElt();
+    //waitChangeOnNbElt();
 
     //Validation des entrées dans le formulaire
     waitFillForm();
