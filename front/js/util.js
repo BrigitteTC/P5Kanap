@@ -51,6 +51,14 @@ class paramPanier {
     this.altTxt = altTxt;
   }
 }
+//class pour chaque parametre du panier dans le local storage
+class localStoragePanier {
+  constructor(id, nb, couleur) {
+    this.id = id;
+    this.nb = nb;
+    this.couleur = couleur;
+  }
+}
 //----------------------------------------
 // Fonctions
 //----------------------------------------
@@ -98,18 +106,18 @@ function getId() {
 
 //---------------------------------------------------
 //fonction getInfoInURL
-// Retourne les infos du produit passéesdans l'URL
+// Retourne les infos du produit passées dans l'URL
 //params entrée: rien
 //
-//retour: newParamPanier: class params avec id, couleur et nb
+//retour: newItemPanier: class params avec id, couleur et nb
 //------------------------------------------------
 
 function getInfoInURL() {
   // Variable pour stocker les params recupéres de l'URL
-  var newParamPanier = new paramPanier(0, "", 0, "", 0, "", "", "");
+  var newItemPanier = new localStoragePanier(0, 0, "");
 
   try {
-    //Récupère la chaine de caracteres après le ?
+    //Récupère la chaine de caracteres après le ? dan sl'URL
 
     let str = window.location.href;
     console.log("URL passee en param " + str);
@@ -121,24 +129,24 @@ function getInfoInURL() {
 
     //récupération de chaque param
     if (searchParams.has("id")) {
-      newParamPanier.id = searchParams.get("id");
+      newItemPanier.id = searchParams.get("id");
     }
 
     if (searchParams.has("color")) {
-      newParamPanier.couleur = searchParams.get("color");
+      newItemPanier.couleur = searchParams.get("color");
     }
 
     if (searchParams.has("nb")) {
-      newParamPanier.nb = searchParams.get("nb");
+      newItemPanier.nb = searchParams.get("nb");
     }
 
-    console.log("id=" + newParamPanier.id);
-    console.log("couleur=" + newParamPanier.couleur);
-    console.log("nb=" + newParamPanier.nb);
+    console.log("id=" + newItemPanier.id);
+    console.log("couleur=" + newItemPanier.couleur);
+    console.log("nb=" + newItemPanier.nb);
   } catch (e) {
     console.log("getInfoInURL " + e);
   }
-  return newParamPanier;
+  return newItemPanier;
 }
 
 //----------------------------------------------------------------------------

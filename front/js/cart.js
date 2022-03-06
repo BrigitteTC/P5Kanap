@@ -15,25 +15,25 @@ Les donnees sont stockees dan sle local storage.
 // tous les articles de même modele et même couleur
 //  "cle", elt
 //avec:
-// clé:nom du canapé_couleur
-//      exemple:Kanap Autonoé_Pink
+// clé:id du canapé_couleur
+//      exemple:034707184e8e4eefb46400b5a3774b5f_Pink
 //  elt: elt de classe paramPanier avec tous les parametres du canapé
 //----------------------------------------------------------------
 
 //----------------------------------------------------------------
-// function: addItemInLocalStorage(productId);
+// function: addItemInLocalStorage();
 //Objet:
 //Parametres:
-//  Entrée: ProductId: produit à ajouter
+//  Entrée: newItemPanier: produit à ajouter
 //  Sortie
 // Algo
-//  construit la clé = nom+couleur
+//  construit la clé = id+couleur
 //  lit le local storage pour cette cle
-//    si la cle existe, on va recuperer une valeur poru le couple canape couleur
+//    si la cle existe, on va recuperer une valeur pour le couple canape couleur
 //    il faudra mettre à jour la quantité avec la nouvelle qte achetee
-//    verifier qu'on ne depasse pas 100
+//    verifier qu'on ne depasse pas 100 articles
 //---------------------------------------------------------------
-function addItemInLocalStorage(productId) {
+function addItemInLocalStorage(newItemPanier) {
   //init nb total d'elt à 0
   var totalElt = 0;
 
@@ -43,8 +43,9 @@ function addItemInLocalStorage(productId) {
   var currentPanier; //panier du local storage pour le produit passé en param
   try {
     //cle correspondant au nouveau produit
-    //nom+couleur
-    let cleElt = productId.nom + C_separatorKey + productId.couleur;
+    //id+couleur
+    let cleElt =
+      String(newItemPanier.id) + C_separatorKey + newItemPanier.couleur;
     console.log("cle= " + cleElt);
 
     //teste clé existe déja ds le local storage
@@ -54,10 +55,10 @@ function addItemInLocalStorage(productId) {
       currentPanier = JSON.parse(currentPanierJson);
 
       //complete avec le nouveau produit
-      productId.nb = Number(productId.nb) + Number(currentPanier.nb);
+      newItemPanier.nb = Number(newItemPanier.nb) + Number(currentPanier.nb);
     }
     //Verif nb <=100
-    if (productId.nb > 100) {
+    if (newItemPanier.nb > 100) {
       alerteMsg(
         "Vous ne pouvez pas acheter plus de 100 canapés de même type"
 
@@ -73,7 +74,7 @@ function addItemInLocalStorage(productId) {
       }
 
       //nouveau total d'elt
-      totalElt = Number(productId.nb) + Number(totalElt);
+      totalElt = Number(newItemPanier.nb) + Number(totalElt);
 
       //Teste total elt <100
       if (Number(totalElt > 100)) {
@@ -81,8 +82,8 @@ function addItemInLocalStorage(productId) {
       } else {
         //Ajoute le nouveau produit
         // mets le  nouveau produit en string et le range dans le local storage
-        let productIdString = JSON.stringify(productId);
-        localStorage.setItem(cleElt, productIdString);
+        let newItemPanierString = JSON.stringify(newItemPanier);
+        localStorage.setItem(cleElt, newItemPanierString);
 
         // range elt total dans local storage
         localStorage.setItem(C_totalElt, JSON.stringify(Number(totalElt)));
@@ -95,7 +96,7 @@ function addItemInLocalStorage(productId) {
           totalPrix = Number(JSON.parse(totalPrixJson));
         }
         let prixNouveauPd = Number(
-          Number(productId.nb) * Number(productId.prix)
+          Number(newItemPanier.nb) * Number(newItemPanier.prix)
         );
         totalPrix = Number(totalPrix) + Number(prixNouveauPd);
 
@@ -109,8 +110,8 @@ function addItemInLocalStorage(productId) {
 
 //--------------------------------------------------------------
 // ft: displayLocalStorageInHtml();
-// nom: displayLocalStorageInHtml(productId);
-// Objet: maj de la page html avec les infos de ProductId
+// nom: displayLocalStorageInHtml();
+// Objet: maj de la page html avec les infos d'un produit du panier
 //
 // Parametres:
 //  Entrée: rien
@@ -146,7 +147,7 @@ function displayLocalStorageInHtml() {
         let itemPanier = JSON.parse(itemPanierJSON);
 
         //cherche les infos de l'article sur le server
-        let itemPanierServer = searchPdInServer(itemPanier.id); //infos supplementaires sur le server
+        let itemPanierServer = searchProductInServer(itemPanier.id); //infos supplementaires sur le server
 
         //complete les infos avec les infos du server(prix,image ..)
 
@@ -253,7 +254,7 @@ function displayItemInHtml(itemPanier) {
 
     newArticle.setAttribute(
       "id",
-      itemPanier.nom + C_separatorKey + itemPanier.couleur
+      itemPanier.id + C_separatorKey + itemPanier.couleur
     ); //ajout d'un id avec la cle du local storage
 
     newDiv1Img.src = itemPanier.imageUrl;
@@ -438,7 +439,7 @@ function changeQtyProduct(eltSelect) {
 }
 
 //------------------------------------------------------------------
-// fonction: searchPdInServer
+// fonction: searchProductInServer
 //
 // Objet: recherche les infos du produit dans le serveur
 //
@@ -450,11 +451,12 @@ function changeQtyProduct(eltSelect) {
 //  Utilise fetch pour joinde le serveur et attend la promesse
 //  Mets à jour les infos du produit
 //-------------------------------------------------------------------
-function searchPdInServer(paramId) {
-  let productPanier = new paramPanier();
+
+var searchProductInServer = async function (paramId) {
+  let newItemPanier = new paramPanier();
   try {
-    productPanier.id = paramId;
-    serverPd = C_serverGET + "/" + paramId;
+    newItemPanier.id = paramId;
+    serverPd = C_serverGET + "/" + paramId; //Route server du produit
     // Recherche data du produit sur le serveur
     let response = await fetch(serverPd);
     if (response.ok) {
@@ -462,26 +464,23 @@ function searchPdInServer(paramId) {
       let product = await response.json();
       //On complète avec les infos du server
 
-      productPanier.prix = product.price; //prix
-      productPanier.nom = product.name; //nom
-      productPanier.imageUrl = product.imageUrl;
-      productPanier.altTxt = product.altTxt;
-      productPanier.description = product.description;
+      newItemPanier.prix = product.price; //prix
+      newItemPanier.nom = product.name; //nom
+      newItemPanier.imageUrl = product.imageUrl;
+      newItemPanier.altTxt = product.altTxt;
+      newItemPanier.description = product.description;
 
-      console.log("prix produit= " + productPanier.prix);
-      console.log("nom du canape= " + productPanier.nom);
-
-      // stockage nouveau produit dans le local storage
-      //addItemInLocalStorage(productId);
+      console.log("prix produit= " + newItemPanier.prix);
+      console.log("nom du canape= " + newItemPanier.nom);
     } else {
       console.error("Retour du serveur:", response.status);
     }
   } catch (e) {
-    console.log("searchPdInServer  " + e);
+    console.log("searchProductInServer  " + e);
   }
   // retourne le produit avec les infos du serveur
-  return productPanier;
-}
+  return newItemPanier;
+};
 
 //------------------------------------------------------------------
 // fonction: waitClickOnNbElt()
@@ -793,23 +792,23 @@ function affichePanier() {
   try {
     //on récupère les infos du produit passé dans l'URL
 
-    let productId = getInfoInURL();
+    let newItemPanier = getInfoInURL();
 
-    console.log("id produit= " + productId.id);
+    console.log("id produit= " + newItemPanier.id);
 
     //Construction de la route du produit  si on a passé un nouveau produit dans le panier
     if (
-      productId.id !== null &&
-      productId.nb !== null &&
-      productId.couleur !== null
+      newItemPanier.id !== 0 &&
+      newItemPanier.nb !== 0 &&
+      newItemPanier.couleur !== ""
     ) {
       // DEBUG: affichage pd dans la console
 
-      console.log("nb produits=" + productId.nb);
-      console.log("couleur produit = " + productId.couleur);
+      console.log("nb produits=" + newItemPanier.nb);
+      console.log("couleur produit = " + newItemPanier.couleur);
 
       // stockage nouveau produit dans le local storage
-      addItemInLocalStorage(productId);
+      addItemInLocalStorage(newItemPanier);
     }
 
     //Affichage du panier dans le HTML
