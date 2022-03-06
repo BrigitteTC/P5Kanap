@@ -120,10 +120,17 @@ function getInfoInURL() {
     // format chaine extraite = id=xxx&nb=1234&color=azerty
 
     //récupération de chaque param
+    if (searchParams.has("id")) {
+      newParamPanier.id = searchParams.get("id");
+    }
 
-    newParamPanier.id = searchParams.get("id");
-    newParamPanier.couleur = searchParams.get("color");
-    newParamPanier.nb = searchParams.get("nb");
+    if (searchParams.has("color")) {
+      newParamPanier.couleur = searchParams.get("color");
+    }
+
+    if (searchParams.has("nb")) {
+      newParamPanier.nb = searchParams.get("nb");
+    }
 
     console.log("id=" + newParamPanier.id);
     console.log("couleur=" + newParamPanier.couleur);

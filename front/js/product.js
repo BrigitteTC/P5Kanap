@@ -19,7 +19,7 @@ function getNbProduct() {
   let eltQty = 0; //nombre de produits
   try {
     // Valeur rentrée
-    eltQty = document.getElementById("quantity");
+    eltQty = document.getElementById(C_quantityClass);
 
     // Valeur rentrée
     console.log(eltQty);
