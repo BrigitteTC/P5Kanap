@@ -746,8 +746,10 @@ function waitFillForm() {
     );
 
     //First name
-    let firstNameForm = document.getElementById("firstName");
-    let firstNameError = document.getElementById("firstNameErrorMsg");
+    let firstNameForm = document.getElementById(C_formfirstName);
+    let firstNameError = document.getElementById(
+      C_formfirstName + C_formErrorMsg
+    );
     firstNameForm.addEventListener("change", function () {
       // Chaque fois que l'utilisateur saisit quelque chose
       verifFieldForm(firstNameForm, firstNameError, expressionRegName);
@@ -755,8 +757,10 @@ function waitFillForm() {
 
     //LastName
     //    id = "lastName";  type text
-    let lastNameForm = document.getElementById("lastName");
-    let lastNameError = document.getElementById("lastNameErrorMsg");
+    let lastNameForm = document.getElementById(C_formlastName);
+    let lastNameError = document.getElementById(
+      C_formlastName + C_formErrorMsg
+    );
     lastNameForm.addEventListener("change", function () {
       // Chaque fois que l'utilisateur saisit quelque chose
       verifFieldForm(lastNameForm, lastNameError, expressionRegName);
@@ -764,16 +768,16 @@ function waitFillForm() {
     //Adresse:
     //    id = "addres";   type text
     // pour l'adresse on accepte tous les caractères mais on vérifie que le champ n'est pas nul
-    let addressForm = document.getElementById("address");
-    let addressError = document.getElementById("addressErrorMsg");
+    let addressForm = document.getElementById(C_formaddress);
+    let addressError = document.getElementById(C_formaddress + C_formErrorMsg);
     addressForm.addEventListener("change", function () {
       // Chaque fois que l'utilisateur saisit quelque chose
       verifFieldForm(addressForm, addressError, expressionRegAdress);
     });
     //City
     //    id = "city";      type text
-    let CityNameForm = document.getElementById("City");
-    let CityNameError = document.getElementById("CityErrorMsg");
+    let CityNameForm = document.getElementById(C_formcity);
+    let CityNameError = document.getElementById(C_formcity + C_formErrorMsg);
     lastNameForm.addEventListener("change", function () {
       // Chaque fois que l'utilisateur saisit quelque chose
       verifFieldForm(CityNameForm, CityNameError, expressionRegAdress);
@@ -781,8 +785,8 @@ function waitFillForm() {
     //email
     //    id = "email";     type email
 
-    let emailForm = document.getElementById("email");
-    let emailError = document.getElementById("emailErrorMsg");
+    let emailForm = document.getElementById(C_formemail);
+    let emailError = document.getElementById(C_formemail + C_formErrorMsg);
     emailForm.addEventListener("change", function () {
       verifFieldForm(emailForm, emailError, expressionEmailName);
     });
@@ -821,13 +825,13 @@ function verifFieldForm(paramIdElt, paramErrorIdElt, patern) {
         paramErrorIdElt.innerHTML = ""; // On réinitialise le contenu
         console.log("entrée  " + paramIdElt.value + " OK");
       } else {
-        paramErrorIdElt.innerHTML = "entrée invalide";
+        paramErrorIdElt.innerHTML = C_msgForm_invalid;
         console.log("entrée  " + paramIdElt.value + " KO");
         B_paramVerif = false;
       }
     } else {
       //entrée vide
-      paramErrorIdElt.innerHTML = "valeur obligatoire requise";
+      paramErrorIdElt.innerHTML = C_msgForm_vide;
       console.log("entrée  " + "vide");
       B_paramVerif = false;
     }
@@ -852,13 +856,69 @@ function verifFieldForm(paramIdElt, paramErrorIdElt, patern) {
 //-----------------------------------------------------------------------------
 function waitClickOrder() {
   try {
-    const eltButton = document.getElementById("order");
+    const eltButton = document.getElementById(C_formorder);
     eltButton.addEventListener("click", function () {
       console.log("on a cliqué sur le bouton commander");
       // Envoi des infos vers page confirmation
     });
   } catch (e) {
     console.log("waitClickOrder  " + e);
+  }
+}
+
+//------------------------------------------------------------------------------
+// function: initMsgForm
+// Objet: initialise les messages d'erreur sous chaque champ du formulaire
+//
+
+function initMsgForm(label) {
+  try {
+    let labelErrorMsg = label + C_formErrorMsg;
+    let eltLabel = document.getElementById(labelErrorMsg);
+    eltLabel.innerHTML = C_msgForm_vide;
+  } catch (e) {
+    console.log("initMsgForm  " + e);
+  }
+}
+
+//------------------------------------------------------------------------------
+// function: displayForm();
+//
+// Objet: Affiche les messages de requis en dessous les champs du formulaire
+//
+// Parametres: aucun
+//
+// Algo:
+//  Affiche un message sous chaque ligne du formulaire avec les consignes
+//  Invalide le bouton "commander"
+//------------------------------------------------------------------------------
+function displayForm() {
+  try {
+    //First name
+    initMsgForm(C_formfirstName);
+
+    //LastName
+    //    id = "lastName";  type text
+    initMsgForm(C_formlastName);
+
+    //Adresse:
+    //    id = "addres";   type text
+
+    initMsgForm(C_formaddress);
+
+    //City
+    //    id = "city";      type text
+    initMsgForm(C_formcity);
+
+    //email
+    //    id = "email";     type email
+    initMsgForm(C_formemail);
+
+    //invalide le bouton "commander"
+    const eltButton = document.getElementById(C_formorder);
+    eltButton.disabled = "disabled";
+  } catch (e) {
+    console.log("displayForm  " + e);
   }
 }
 
@@ -916,11 +976,8 @@ async function affichePanier() {
     //Affichage du panier dans le HTML
     await displayLocalStorageInHtml();
 
-    //Attente click sur les boutons <supprimer> des elts du panier
-    //waitClickOnSupprimer();
-
-    //Attente changement nombre d'elts
-    //waitChangeOnNbElt();
+    //Affichage msg pour remplir le formulaire
+    displayForm();
 
     //Validation des entrées dans le formulaire
     waitFillForm();

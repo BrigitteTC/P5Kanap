@@ -47,6 +47,16 @@ const C_msgAlert_Entier =
 
 //Messagesd'erreur du formulaire
 const C_msgForm_vide = "Valeur obligatoire requise";
+const C_msgForm_invalid = "Entrée invalide";
+
+//Formulaire: les id des champs
+const C_formfirstName = "firstName";
+const C_formlastName = "lastName";
+const C_formaddress = "address";
+const C_formcity = "city";
+const C_formemail = "email";
+const C_formorder = "order";
+const C_formErrorMsg = "ErrorMsg";
 
 //----------------------------------------------------------------
 //Class
