@@ -5,7 +5,13 @@ auteur: BTC
 
 Script pour mettre à jour la page panier
 
-Les donnees sont stockees dan sle local storage.
+Les donnees spécifiques des produits:
+  - id
+  - nombre
+  - couleur
+   sont stockees dans le local storage.
+
+Les autres infos sont à chercher sur le server
 *******************************************************************/
 //----------------------------------------------------------------
 //Definition local storage
@@ -939,8 +945,6 @@ function updateUserforOrder() {
     //email
     //    id = "email";     type email
     newUserCoord.email = document.getElementById(C_formemail).value;
-
-    //maj param
   } catch (e) {
     console.log("updateUserforOrder  " + e);
   }
