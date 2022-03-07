@@ -827,18 +827,20 @@ function waitFillForm() {
     let eltButton = document.getElementById(C_formorder);
     eltButton.addEventListener("click", function () {
       console.log("on a cliqué sur le bouton commander");
-      B_verifField =
-        newUserCoordCheck.userName &
-        newUserCoordCheck.lastName &
-        newUserCoordCheck.address &
-        newUserCoordCheck.city &
-        newUserCoordCheck.email;
-      if (B_verifField) {
+      if (
+        newUserCoordCheck.userName === true &&
+        newUserCoordCheck.lastName === true &&
+        newUserCoordCheck.address === true &&
+        newUserCoordCheck.city === true &&
+        newUserCoordCheck.email === true
+      ) {
         //Tous les champs sont corrects, on peut envoyer la confirmation
         userCoord = updateUserforOrder(); //Maj objet avec les coordonnées de l'utilisateur
         products = updateProductforOrder(); //maj du tableau avec les produits
 
         console.log("envoi confirmation");
+        event.preventDefault();
+
         sendOrder();
       }
       // Envoi des infos vers page confirmation
@@ -1067,7 +1069,7 @@ function displayForm() {
 
     //invalide le bouton "commander"
     const eltButton = document.getElementById(C_formorder);
-    eltButton.disabled = true;
+    //eltButton.disabled = true;
   } catch (e) {
     console.log("displayForm  " + e);
   }
