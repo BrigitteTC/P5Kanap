@@ -745,14 +745,23 @@ function waitFillForm() {
       "^([a-zA-Z0-9_-])+([.]?[a-zA-Z0-9_-]{1,})*@([a-zA-Z0-9-_]{2,}[.])+[a-zA-Z]{2,3}$"
     );
 
+    let B_checkFormFields = false; //boolean pour vérifier les champs du formulaire
+    //Sera true quand tous les champs seront OK
+
     //First name
     let firstNameForm = document.getElementById(C_formfirstName);
     let firstNameError = document.getElementById(
       C_formfirstName + C_formErrorMsg
     );
     firstNameForm.addEventListener("change", function () {
-      // Chaque fois que l'utilisateur saisit quelque chose
-      verifFieldForm(firstNameForm, firstNameError, expressionRegName);
+      // Vérif valeur entrée
+      let B_verifField = false;
+      B_verifField = verifFieldverifFieldForm(
+        firstNameForm,
+        firstNameError,
+        expressionRegName
+      );
+      B_checkFormFields = B_checkFormFields && B_verifField;
     });
 
     //LastName
@@ -762,8 +771,14 @@ function waitFillForm() {
       C_formlastName + C_formErrorMsg
     );
     lastNameForm.addEventListener("change", function () {
-      // Chaque fois que l'utilisateur saisit quelque chose
-      verifFieldForm(lastNameForm, lastNameError, expressionRegName);
+      // Vérif valeur entrée
+      let B_verifField = false;
+      B_verifField = verifFieldForm(
+        lastNameForm,
+        lastNameError,
+        expressionRegName
+      );
+      B_checkFormFields = B_checkFormFields && B_verifField;
     });
     //Adresse:
     //    id = "addres";   type text
@@ -771,16 +786,28 @@ function waitFillForm() {
     let addressForm = document.getElementById(C_formaddress);
     let addressError = document.getElementById(C_formaddress + C_formErrorMsg);
     addressForm.addEventListener("change", function () {
-      // Chaque fois que l'utilisateur saisit quelque chose
-      verifFieldForm(addressForm, addressError, expressionRegAdress);
+      // Vérif valeur entrée
+      let B_verifField = false;
+      B_verifField = verifFieldForm(
+        addressForm,
+        addressError,
+        expressionRegAdress
+      );
+      B_checkFormFields = B_checkFormFields && B_verifField;
     });
     //City
     //    id = "city";      type text
-    let CityNameForm = document.getElementById(C_formcity);
-    let CityNameError = document.getElementById(C_formcity + C_formErrorMsg);
-    lastNameForm.addEventListener("change", function () {
-      // Chaque fois que l'utilisateur saisit quelque chose
-      verifFieldForm(CityNameForm, CityNameError, expressionRegAdress);
+    let cityNameForm = document.getElementById(C_formcity);
+    let cityNameError = document.getElementById(C_formcity + C_formErrorMsg);
+    cityNameForm.addEventListener("change", function () {
+      // Vérif valeur entrée
+      let B_verifField = false;
+      B_verifField = verifFieldForm(
+        cityNameForm,
+        cityNameError,
+        expressionRegAdress
+      );
+      B_checkFormFields = B_checkFormFields && B_verifField;
     });
     //email
     //    id = "email";     type email
@@ -788,13 +815,59 @@ function waitFillForm() {
     let emailForm = document.getElementById(C_formemail);
     let emailError = document.getElementById(C_formemail + C_formErrorMsg);
     emailForm.addEventListener("change", function () {
-      verifFieldForm(emailForm, emailError, expressionEmailName);
+      // Vérif valeur entrée
+      let B_verifField = false;
+      B_verifField = verifFieldForm(emailForm, emailError, expressionEmailName);
+      B_checkFormFields = B_checkFormFields && B_verifField;
+    });
+
+    //bouton commander
+    let eltButton = document.getElementById(C_formorder);
+    eltButton.addEventListener("click", function () {
+      console.log("on a cliqué sur le bouton commander");
+      if (B_verifField) {
+        //Tous les champs sont corrects, on peut envoyer la confirmation
+        console.log("envoi confirmation");
+      }
+      // Envoi des infos vers page confirmation
     });
   } catch (e) {
     console.log("waitFillForm  " + e);
   }
 }
 
+//--------------------------------------------------------------------------------
+//sendOrder
+//
+//Format du message
+//{
+//  contact: {
+//    firstName: string,
+//    lastName: string,
+//    address: string,
+//    city: string,
+//    email: string
+// }
+//  products: [string]
+//}
+//L'objet est en deux parties :
+//
+//1) contact, qui contient tous les champs du formulaire
+// (prénom, nom, adresse, ville et email) préalablement vérifiés.
+//L'ordre n'a pas d'importance.
+//
+//2) products, qui est un tableau regroupant les identifiants des canapés dans la panier.
+//Il n' y a pas de notions de couleurs ou de quantités à mettre dedans, comme je t'en ai parlé hier.
+//
+//  Normalement, avec ça, tu devrais avoir des réponses(positives) de l'API. D'ailleurs, tu peux toujours regarder le code de l'API, cela peut toujours éventuellement te donner des idées.
+//-------------------------------------------------------------------------------
+function sendOrder() {
+  try {
+    MessageChannel.log("envoi de la commande");
+  } catch (e) {
+    console.log("waitFillForm  " + e);
+  }
+}
 //-------------------------------------------------------------------------------
 //function:    verifFieldForm()
 //
@@ -916,7 +989,7 @@ function displayForm() {
 
     //invalide le bouton "commander"
     const eltButton = document.getElementById(C_formorder);
-    eltButton.disabled = "disabled";
+    eltButton.disabled = true;
   } catch (e) {
     console.log("displayForm  " + e);
   }
