@@ -418,6 +418,53 @@ async function changeQtyProduct(eltSelect) {
   }
 }
 
+//--------------------------------------------------------------------------------
+// searchInfoOneProductInServer
+// nom: searchInfoOneProductInServer
+// Objet: Cherche les infos d'un produit sur le serveur
+//
+// Paramètres:
+//  Entrée: itemdu local storage
+//  Sortie: Produit class paramPanier avec infos du serveur
+//
+// Algo:
+//    Fetch sur route du produit pour récupérer les infos
+//--------------------------------------------------------------------------------
+async function searchInfoOneProductInServer(itemLocalStorage) {
+  let newItemPanier = new paramPanier(0, "", 0, "", 0, "", "", ""); //produit à mettre à jour
+  try {
+    newItemPanier.id = itemLocalStorage.id;
+    serverPd = C_serverGET + "/" + itemLocalStorage.id; //Route server du produit
+    // Recherche data du produit sur le serveur
+    let response = await fetch(serverPd);
+    if (response.ok) {
+      //le produit à afficher
+      let product = await response.json();
+      //On complète avec les infos du server
+
+      newItemPanier.prix = product.price; //prix
+      newItemPanier.nom = product.name; //nom
+      newItemPanier.imageUrl = product.imageUrl;
+      newItemPanier.altTxt = product.altTxt;
+      newItemPanier.description = product.description;
+    } //fin if (response.ok)
+    else {
+      console.error("Retour du serveur:", response.status);
+    }
+
+    // on complete avec les infos du local storage
+    newItemPanier.nb = itemLocalStorage.nb;
+    newItemPanier.couleur = itemLocalStorage.couleur;
+
+    console.log("prix produit= " + newItemPanier.prix);
+    console.log("nom du canape= " + newItemPanier.nom);
+  } catch (e) {
+    console.log("searchInfoOneProductInServer  " + e);
+  }
+
+  return newItemPanier;
+}
+
 //------------------------------------------------------------------
 // fonction: displayLocalStorageInHtml
 //
@@ -453,62 +500,33 @@ async function displayLocalStorageInHtml() {
         let itemLocalStorageJSON = localStorage.getItem(localStorage.key(i));
         let itemLocalStorage = JSON.parse(itemLocalStorageJSON);
 
-        //cherche les infos de l'article sur le server et les affiche
-        //searchProductInServer(itemPanier); //infos supplementaires sur le server
+        //cherche les infos de l'article sur le server
+        let newItemPanier = new paramPanier();
+
+        //Recherche infos sur le serveur
+        newItemPanier = await searchInfoOneProductInServer(itemLocalStorage);
+
+        //Affiche l'item dans le HTML
+        displayItemInHtml(newItemPanier);
 
         //calcule prix total
-        //prixTotal = Number(prixTotal) + Number(prixItemPanier);
+        prixTotal =
+          Number(prixTotal) +
+          Number(Number(newItemPanier.prix) * Number(newItemPanier.nb));
 
         //calcule quantité totale:
-        //qtyTotal = Number(qtyTotal) + Number(itemPanier.nb);
-        let newItemPanier = new paramPanier();
-        newItemPanier.id = itemLocalStorage.id;
-        serverPd = C_serverGET + "/" + itemLocalStorage.id; //Route server du produit
-        // Recherche data du produit sur le serveur
-        let response = await fetch(serverPd);
-        if (response.ok) {
-          //le produit à afficher
-          let product = await response.json();
-          //On complète avec les infos du server
-
-          newItemPanier.prix = product.price; //prix
-          newItemPanier.nom = product.name; //nom
-          newItemPanier.imageUrl = product.imageUrl;
-          newItemPanier.altTxt = product.altTxt;
-          newItemPanier.description = product.description;
-
-          // on complete avec les infos du local storage
-          newItemPanier.nb = itemLocalStorage.nb;
-          newItemPanier.couleur = itemLocalStorage.couleur;
-
-          console.log("prix produit= " + newItemPanier.prix);
-          console.log("nom du canape= " + newItemPanier.nom);
-
-          //Affiche l'item dans le HTML
-          displayItemInHtml(newItemPanier);
-
-          //calcule prix total
-          prixTotal =
-            Number(prixTotal) +
-            Number(Number(newItemPanier.prix) * Number(newItemPanier.nb));
-
-          //calcule quantité totale:
-          qtyTotal = Number(qtyTotal) + Number(newItemPanier.nb);
-
-          //Affiche  qty et prix total dans l'ecran
-          displayPrixTotal(qtyTotal, prixTotal);
-
-          //Attente click sur les boutons <supprimer> des elts du panier
-          waitClickOnSupprimer();
-
-          //Attente changement nombre d'elts
-          waitChangeOnNbElt();
-        } //fin if (response.ok)
-        else {
-          console.error("Retour du serveur:", response.status);
-        }
+        qtyTotal = Number(qtyTotal) + Number(newItemPanier.nb);
       } //fin if (localStorage.key(i) != C_totalElt)
     } // fin boucle for
+
+    //Affiche  qty et prix total dans l'ecran
+    displayPrixTotal(qtyTotal, prixTotal);
+
+    //Attente click sur les boutons <supprimer> des elts du panier
+    waitClickOnSupprimer();
+
+    //Attente changement nombre d'elts
+    waitChangeOnNbElt();
   } catch (e) {
     console.log("displayLocalStorageInHtml  " + e);
   }
@@ -550,29 +568,7 @@ async function searchProductsInServer() {
         let itemLocalStorage = JSON.parse(itemLocalStorageJSON);
 
         //cherche les infos de l'article sur le server
-
-        newItemPanier.id = itemLocalStorage.id;
-        serverPd = C_serverGET + "/" + itemLocalStorage.id; //Route server du produit
-        // Recherche data du produit sur le serveur
-        let response = await fetch(serverPd);
-        if (response.ok) {
-          //le produit à afficher
-          let product = await response.json();
-          //On complète avec les infos du server
-
-          newItemPanier.prix = product.price; //prix
-          newItemPanier.nom = product.name; //nom
-          newItemPanier.imageUrl = product.imageUrl;
-          newItemPanier.altTxt = product.altTxt;
-          newItemPanier.description = product.description;
-
-          // on complete avec les infos du local storage
-          newItemPanier.nb = itemLocalStorage.nb;
-          newItemPanier.couleur = itemLocalStorage.couleur;
-        } //fin if (response.ok)
-        else {
-          console.error("Retour du serveur:", response.status);
-        }
+        newItemPanier = await searchInfoOneProductInServer(itemLocalStorage);
       } //fin if (localStorage.key(i) != C_totalElt)
       //calcule prix total
       prixTotal =
