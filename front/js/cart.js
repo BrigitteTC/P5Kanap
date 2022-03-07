@@ -748,6 +748,14 @@ function waitFillForm() {
     let B_checkFormFields = false; //boolean pour vérifier les champs du formulaire
     //Sera true quand tous les champs seront OK
 
+    let newUserCoordCheck = new userCoordCheck(
+      false,
+      false,
+      false,
+      false,
+      false
+    );
+    let newuserCoord = new userCoord("", "", "", "", "");
     //First name
     let firstNameForm = document.getElementById(C_formfirstName);
     let firstNameError = document.getElementById(
@@ -755,13 +763,11 @@ function waitFillForm() {
     );
     firstNameForm.addEventListener("change", function () {
       // Vérif valeur entrée
-      let B_verifField = false;
-      B_verifField = verifFieldverifFieldForm(
+      newUserCoordCheck.firstName = verifFieldForm(
         firstNameForm,
         firstNameError,
         expressionRegName
       );
-      B_checkFormFields = B_checkFormFields && B_verifField;
     });
 
     //LastName
@@ -772,13 +778,11 @@ function waitFillForm() {
     );
     lastNameForm.addEventListener("change", function () {
       // Vérif valeur entrée
-      let B_verifField = false;
-      B_verifField = verifFieldForm(
+      newUserCoordCheck.lastName = verifFieldForm(
         lastNameForm,
         lastNameError,
         expressionRegName
       );
-      B_checkFormFields = B_checkFormFields && B_verifField;
     });
     //Adresse:
     //    id = "addres";   type text
@@ -787,13 +791,11 @@ function waitFillForm() {
     let addressError = document.getElementById(C_formaddress + C_formErrorMsg);
     addressForm.addEventListener("change", function () {
       // Vérif valeur entrée
-      let B_verifField = false;
-      B_verifField = verifFieldForm(
+      newUserCoordCheck.address = verifFieldForm(
         addressForm,
         addressError,
         expressionRegAdress
       );
-      B_checkFormFields = B_checkFormFields && B_verifField;
     });
     //City
     //    id = "city";      type text
@@ -801,13 +803,11 @@ function waitFillForm() {
     let cityNameError = document.getElementById(C_formcity + C_formErrorMsg);
     cityNameForm.addEventListener("change", function () {
       // Vérif valeur entrée
-      let B_verifField = false;
-      B_verifField = verifFieldForm(
+      newUserCoordCheck.city = verifFieldForm(
         cityNameForm,
         cityNameError,
         expressionRegAdress
       );
-      B_checkFormFields = B_checkFormFields && B_verifField;
     });
     //email
     //    id = "email";     type email
@@ -816,18 +816,30 @@ function waitFillForm() {
     let emailError = document.getElementById(C_formemail + C_formErrorMsg);
     emailForm.addEventListener("change", function () {
       // Vérif valeur entrée
-      let B_verifField = false;
-      B_verifField = verifFieldForm(emailForm, emailError, expressionEmailName);
-      B_checkFormFields = B_checkFormFields && B_verifField;
+      newUserCoordCheck.email = verifFieldForm(
+        emailForm,
+        emailError,
+        expressionEmailName
+      );
     });
 
     //bouton commander
     let eltButton = document.getElementById(C_formorder);
     eltButton.addEventListener("click", function () {
       console.log("on a cliqué sur le bouton commander");
+      B_verifField =
+        newUserCoordCheck.userName &
+        newUserCoordCheck.lastName &
+        newUserCoordCheck.address &
+        newUserCoordCheck.city &
+        newUserCoordCheck.email;
       if (B_verifField) {
         //Tous les champs sont corrects, on peut envoyer la confirmation
+        userCoord = updateUserforOrder(); //Maj objet avec les coordonnées de l'utilisateur
+        products = updateProductforOrder(); //maj du tableau avec les produits
+
         console.log("envoi confirmation");
+        sendOrder();
       }
       // Envoi des infos vers page confirmation
     });
@@ -864,10 +876,76 @@ function waitFillForm() {
 function sendOrder() {
   try {
     MessageChannel.log("envoi de la commande");
+    function send(e) {
+      e.preventDefault();
+      fetch(C_serverGET, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ value: document.getElementById("value").value }),
+      })
+        .then(function (res) {
+          if (res.ok) {
+            return res.json();
+          }
+        })
+        .then(function (value) {
+          document.getElementById("result").innerText = value.postData.text;
+        });
+    }
+
+    document.getElementById("form").addEventListener("submit", send);
   } catch (e) {
-    console.log("waitFillForm  " + e);
+    console.log("sendOrder  " + e);
   }
 }
+
+//-------------------------------------------------------------------------------
+//function: updateUserforOrder;
+//Objet: Mise à jour de l'objet avec les coordonnées de l'utilisateur à envoyer dans la requete POST
+//
+// Parametres:
+//  Entrée: aucun
+//  Sortie: parametre de class Coord mis à jour
+//
+// Algo:
+//  Va chercher les elements retrés dans le formulaire en ft des ids
+//---------------------------------------------------------------------------------------------
+function updateUserforOrder() {
+  newUserCoord = new userCoord("", "", "", "", "");
+
+  try {
+    //First name
+
+    newUserCoord.firstName = document.getElementById(C_formfirstName).value;
+
+    //LastName
+    //    id = "lastName";  type text
+    newUserCoord.lasttName = document.getElementById(C_formlastName).value;
+
+    //Adresse:
+    //    id = "addres";   type text
+
+    newUserCoord.address = document.getElementById(C_formaddress).value;
+
+    //City
+    //    id = "city";      type text
+    newUserCoord.city = document.getElementById(C_formcity).value;
+
+    //email
+    //    id = "email";     type email
+    newUserCoord.email = document.getElementById(C_formemail).value;
+
+    //maj param
+  } catch (e) {
+    console.log("updateUserforOrder  " + e);
+  }
+
+  return newUserCoord;
+}
+
 //-------------------------------------------------------------------------------
 //function:    verifFieldForm()
 //
@@ -1056,7 +1134,7 @@ async function affichePanier() {
     waitFillForm();
 
     // Traitement du click sur le bouton commander
-    waitClickOrder();
+    //waitClickOrder();
   } catch (e) {
     console.log("affichePanier: " + e);
   }

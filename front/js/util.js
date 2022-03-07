@@ -82,6 +82,29 @@ class localStoragePanier {
     this.couleur = couleur;
   }
 }
+
+//class pour les coordonnées de l'utilisateur
+class userCoord {
+  constructor(firstName, lastName, address, city, email) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.address = address;
+    this.city = city;
+    this.email = email;
+  }
+}
+
+//class pour vérifier les valeurs du formulaire
+//tous les champs sont des booleens
+class userCoordCheck {
+  constructor(firstName, lastName, address, city, email) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.address = address;
+    this.city = city;
+    this.email = email;
+  }
+}
 //----------------------------------------
 // Fonctions
 //----------------------------------------
