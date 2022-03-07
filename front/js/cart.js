@@ -286,9 +286,12 @@ function displayPrixTotal(qtyTotal, prixTotal) {
     //id prix
     let prixTotalElt = document.getElementById("totalPrice");
 
-    //maj elt
+    //maj elt dan sHTML
     qtyTotalElt.innerHTML = Number(qtyTotal);
     prixTotalElt.innerHTML = Number(prixTotal);
+
+    //Maj elt dans local storage
+    localStorage.setItem(C_totalElt, JSON.stringify(Number(qtyTotal)));
   } catch (e) {
     console.log("displayPrixTotal" + e);
   }
@@ -431,7 +434,7 @@ async function changeQtyProduct(eltSelect) {
       qtyTotal = Number(qtyTotal) - Number(oldEltNb) + Number(newEltNb);
 
       //maj  nb elt total dans local storage
-      localStorage.setItem(C_totalElt, JSON.stringify(qtyTotal));
+      //localStorage.setItem(C_totalElt, JSON.stringify(qtyTotal));
 
       //maj produit dans local storage
       ProductSelected.nb = Number(newEltNb);
