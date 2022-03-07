@@ -828,7 +828,7 @@ function waitFillForm() {
     eltButton.addEventListener("click", function () {
       console.log("on a cliqué sur le bouton commander");
       if (
-        newUserCoordCheck.userName === true &&
+        newUserCoordCheck.firstName === true &&
         newUserCoordCheck.lastName === true &&
         newUserCoordCheck.address === true &&
         newUserCoordCheck.city === true &&
