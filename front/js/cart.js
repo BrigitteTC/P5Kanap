@@ -90,10 +90,10 @@ function addItemInLocalStorage(newItemPanier) {
 
         //maj prix total
 
-        let prixNouveauPd = Number(
-          Number(newItemPanier.nb) * Number(newItemPanier.prix)
-        );
-        totalPrix = Number(totalPrix) + Number(prixNouveauPd);
+        //let prixNouveauPd = Number(
+        //  Number(newItemPanier.nb) * Number(newItemPanier.prix)
+        //);
+        //totalPrix = Number(totalPrix) + Number(prixNouveauPd);
       }
     }
   } catch (e) {
@@ -148,7 +148,7 @@ function OlddisplayLocalStorageInHtml() {
     }
 
     //Affiche le prix dans l'ecran
-    //displayPrixTotal(prixTotal, qtyTotal);
+    //displayPrixTotal(qtyTotal,prixTotal);
   } catch (e) {
     console.log("displayLocalStorageInHtml " + e);
   }
@@ -280,10 +280,10 @@ function displayItemInHtml(itemPanier) {
 //------------------------------------------------------------
 function displayPrixTotal(qtyTotal, prixTotal) {
   try {
-    // quantité:
+    // id quantité:
     let qtyTotalElt = document.getElementById("totalQuantity");
 
-    //prix
+    //id prix
     let prixTotalElt = document.getElementById("totalPrice");
 
     //maj elt
@@ -419,7 +419,7 @@ function changeQtyProduct(eltSelect) {
 
   let ProductSelected = JSON.parse(localStorage.getItem(cle)); //elt selectionné
   let oldEltNb = Number(ProductSelected.nb); //nb d'elt actuel dans le local storage
-  let eltPrix = Number(ProductSelected.prix); //prix du produit selectionné
+
   //nouveau nombre pour l'article selectionné
   let newEltNb = eltSelect.value;
 
@@ -429,17 +429,14 @@ function changeQtyProduct(eltSelect) {
   if (verifNewQty(Number(newEltNb), Number(qtyTotal))) {
     qtyTotal = Number(qtyTotal) - Number(oldEltNb) + Number(newEltNb);
 
-    //maj prix et nb elt total dans local storage
+    //maj  nb elt total dans local storage
     localStorage.setItem(C_totalElt, JSON.stringify(qtyTotal));
 
     //maj produit dans local storage
     ProductSelected.nb = Number(newEltNb);
     localStorage.setItem(cle, JSON.stringify(ProductSelected));
     //Affiche nouveau prix dans l'ecran
-    displayPrixTotal(prixTotal, qtyTotal);
-  } else {
-    //on remet le nombre de produits à da  valeur initiale
-    eltSelect.value = oldEltNb;
+    displayPrixTotal(qtyTotal, prixTotal);
   }
 }
 
@@ -520,8 +517,8 @@ async function displayLocalStorageInHtml() {
           //calcule quantité totale:
           qtyTotal = Number(qtyTotal) + Number(newItemPanier.nb);
 
-          //Affiche le prix et qty total dans l'ecran
-          displayPrixTotal(prixTotal, qtyTotal);
+          //Affiche  qty et prix total dans l'ecran
+          displayPrixTotal(qtyTotal, prixTotal);
 
           //Attente click sur les boutons <supprimer> des elts du panier
           waitClickOnSupprimer();
@@ -561,15 +558,14 @@ async function displayLocalStorageInHtml() {
 async function searchProductsInServer() {
   let qtyTotal = 0;
   let prixTotal = 0;
-  let newItemPanier = new paramPanier();
 
   try {
     // Boucle sur tous les produits du local storage
     // localstorage.forEach ( element => elemnt)
     for (let i = 0; i < localStorage.length; i++) {
       let cle = localStorage.key(i);
-      console.log("cle " + cle);
-
+      console.log("cle " + i + " " + localStorage.key(i));
+      let newItemPanier = new paramPanier(0, "", 0, "", 0, "", "", "");
       if (cle != C_totalElt) {
         //recupere le produit dans le local storage
         let itemLocalStorageJSON = localStorage.getItem(cle);
@@ -607,10 +603,9 @@ async function searchProductsInServer() {
 
       //calcule quantité totale:
       qtyTotal = Number(qtyTotal) + Number(newItemPanier.nb);
-
-      //Affiche le prix et qty total dans l'ecran
-      displayPrixTotal(prixTotal, qtyTotal);
     } // fin boucle for
+    //Affiche le prix et qty total dans l'ecran
+    displayPrixTotal(qtyTotal, prixTotal);
   } catch (e) {
     console.log("searchProductsInServer  " + e);
   }
@@ -681,7 +676,7 @@ function waitClickOnNbElt() {
           ProductSelected.nb = Number(newEltNb);
           localStorage.setItem(cle, JSON.stringify(ProductSelected));
           //Affiche nouveau prix dans l'ecran
-          displayPrixTotal(prixTotal, qtyTotal);
+          displayPrixTotal(qtyTotal, prixTotal);
         }
       });
     }
