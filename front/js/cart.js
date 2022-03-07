@@ -392,12 +392,8 @@ async function changeQtyProduct(eltSelect) {
     //nouveau nombre pour l'article selectionné
     let newEltNb = eltSelect.value;
 
-    let qtyTotal = JSON.parse(localStorage.getItem(C_totalElt)); //qty total ds localstorage
-
     //Teste le nouveau nombre rentré par l'utilisateur
-    if (verifNewQty(Number(newEltNb), Number(qtyTotal))) {
-      qtyTotal = Number(qtyTotal) - Number(oldEltNb) + Number(newEltNb);
-
+    if (verifNewQty(Number(newEltNb))) {
       //maj  nb elt total dans local storage
       //localStorage.setItem(C_totalElt, JSON.stringify(qtyTotal));
 
@@ -405,10 +401,17 @@ async function changeQtyProduct(eltSelect) {
       ProductSelected.nb = Number(newEltNb);
       localStorage.setItem(cle, JSON.stringify(ProductSelected));
 
-      //REcherche infos dans le serveur pour calcul qty et prix total
+      //Recherche infos dans le serveur pour calcul qty et prix total
       await searchProductsInServer();
-      //Affiche nouveau prix dans l'ecran
-      //displayPrixTotal(qtyTotal, prixTotal);
+    } else {
+      //Affiche de nouveau le panier apres avoir effacé le noeud foireux
+      //Parmet d'afficher de façon propre et remet les anciennes valeurs valides
+      eltSelect.removeChild(eltSelect);
+      debug;
+
+      await displayLocalStorageInHtml();
+
+      //eltSelect.innerHTML = Number(oldEltNb);  Ne ft pas ???
     }
   } catch (e) {
     console.log("changeQtyProduct  " + e);
