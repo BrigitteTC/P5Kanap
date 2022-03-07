@@ -60,9 +60,14 @@ function addItemInLocalStorage(newItemPanier) {
 
       //complete avec le nouveau produit
       newItemPanier.nb = Number(newItemPanier.nb) + Number(currentPanier.nb);
+
+      //Si la quantité dépasse 100, on force à 100
+      if (newItemPanier.nb > 100) {
+        newItemPanier.nb = 100;
+      }
     }
     //Verif quantité à ajouter
-    if (verifNewQty) {
+    if (verifNewQty(newItemPanier.nb)) {
       //Ajoute le nouveau produit
       // mets le  nouveau produit en string et le range dans le local storage
       let newItemPanierString = JSON.stringify(newItemPanier);
