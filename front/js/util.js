@@ -28,12 +28,25 @@ const C_totalElt = "totalElt"; // cle dans local storage pour nb elt total
 const C_totalPrix = "totalPrix"; // cle dans local storage pour prix total
 //
 
-//Const utilisées dan sles classes css
+//Const utilisées dans les classes css
 const C_cart__itemsClass = "cart__items";
 const C_cart__itemClass = "cart__item";
 const C_itemQuantityClass = "itemQuantity";
 const C_deleteItemClass = "deleteItem";
 const C_quantityClass = "quantity";
+
+//Messages d'erreur à afficher dans les messages d'alerte
+const C_msgAlert_Max100 =
+  "Nombre d'articles: Vous ne pouvez pas acheter plus de 100 canapés de même type";
+const C_msgAlert_MaxCart100 =
+  "Nombre d'articles: Le nombre d'articles de votre panier dépasse 100";
+const C_msgAlert_Min1 =
+  "Nombre d'articles: Vous devez acheter au moins 1 produit";
+const C_msgAlert_Entier =
+  "Nombre d'articles: Vous devez rentrer un nombre entier";
+
+//Messagesd'erreur du formulaire
+const C_msgForm_vide = "Valeur obligatoire requise";
 
 //----------------------------------------------------------------
 //Class
@@ -153,6 +166,7 @@ function getInfoInURL() {
 // function: verifNewQty(newEltNb)
 // Objet:
 //  Vérifie le nombre d'elt rentré par l'utilisateur.
+//    et que ce nombre est un nombre entier
 //  Parametres:
 //    Entrée:
 //      nombre d'elt de l'article
@@ -161,32 +175,26 @@ function getInfoInURL() {
 //    Sortie: true si OK false sinon
 //---------------------------------------------------------------------------
 
-function verifNewQty(eltQty, TotalQty) {
+function verifNewQty(eltQty) {
   var returnBool = true; //valeur de retour initialisée à true
   try {
     //
     //teste valeur saisie est un nombre entier
     if (Number.isInteger(eltQty) === false) {
-      alerteMsg("Nombre d'articles: rentrez un nombre entier");
+      alerteMsg(C_msgAlert_Entier);
       returnBool = false;
     }
     //teste qty>1
     else {
       if (eltQty < 1) {
-        alerteMsg("Nombre d'articles: Il faut au moins 1 canapé");
+        alerteMsg(C_msgAlert_Min1);
         returnBool = false;
       }
       //teste qté rentrée <=100
       else {
         if (eltQty > 100) {
-          alerteMsg("Nombre d'articles: pas plus de 100 canapés");
+          alerteMsg(C_msgAlert_Max100);
           returnBool = false;
-        } else {
-          //Teste qty totale <=100
-          if (eltQty + TotalQty > 100) {
-            alerteMsg("La combre d'articles de votre panier dépasse 100");
-            returnBool = false;
-          }
         }
       }
     }

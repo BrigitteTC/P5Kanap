@@ -30,15 +30,12 @@ Les donnees sont stockees dan sle local storage.
 //  construit la clé = id+couleur
 //  lit le local storage pour cette cle
 //    si la cle existe, on va recuperer une valeur pour le couple canape couleur
-//    il faudra mettre à jour la quantité avec la nouvelle qte achetee
-//    verifier qu'on ne depasse pas 100 articles
+//    Mise à jour de la quantité avec la nouvelle qte achetee si on ne dépasse pas 100 articles
+//
 //---------------------------------------------------------------
 function addItemInLocalStorage(newItemPanier) {
   //init nb total d'elt à 0
   var totalElt = 0;
-
-  //init prix total à 0
-  var totalPrix = 0;
 
   var currentPanier; //panier du local storage pour le produit passé en param
   try {
@@ -57,44 +54,12 @@ function addItemInLocalStorage(newItemPanier) {
       //complete avec le nouveau produit
       newItemPanier.nb = Number(newItemPanier.nb) + Number(currentPanier.nb);
     }
-    //Verif nb <=100
-    if (newItemPanier.nb > 100) {
-      alerteMsg(
-        "Vous ne pouvez pas acheter plus de 100 canapés de même type"
-
-        // ATTENTION il faut faire ici la verif nb total <=100 pour ne pas ajouter le prosuit
-      );
-      //productId.nb = Number(currentPanier.nb); //nb remis a valeur initiale
-    } else {
-      //Mets à jour nb elt total et prix total dans le local storage
-      if (C_totalElt in localStorage) {
-        //la cle total elt existe on récupère la valeur
-        let totalEltJson = localStorage.getItem(C_totalElt);
-        totalElt = Number(JSON.parse(totalEltJson));
-      }
-
-      //nouveau total d'elt
-      totalElt = Number(newItemPanier.nb) + Number(totalElt);
-
-      //Teste total elt <100
-      if (Number(totalElt > 100)) {
-        alerteMsg("Vous ne pouvez pas acheter plus de 100 canapés ");
-      } else {
-        //Ajoute le nouveau produit
-        // mets le  nouveau produit en string et le range dans le local storage
-        let newItemPanierString = JSON.stringify(newItemPanier);
-        localStorage.setItem(cleElt, newItemPanierString);
-
-        // range elt total dans local storage
-        localStorage.setItem(C_totalElt, JSON.stringify(Number(totalElt)));
-
-        //maj prix total
-
-        //let prixNouveauPd = Number(
-        //  Number(newItemPanier.nb) * Number(newItemPanier.prix)
-        //);
-        //totalPrix = Number(totalPrix) + Number(prixNouveauPd);
-      }
+    //Verif quantité à ajouter
+    if (verifNewQty) {
+      //Ajoute le nouveau produit
+      // mets le  nouveau produit en string et le range dans le local storage
+      let newItemPanierString = JSON.stringify(newItemPanier);
+      localStorage.setItem(cleElt, newItemPanierString);
     }
   } catch (e) {
     console.log("addItemInLocalStorage:" + e);
