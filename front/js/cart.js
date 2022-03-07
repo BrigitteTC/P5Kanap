@@ -17,13 +17,14 @@ Les autres infos sont à chercher sur le server
 //Definition local storage
 //
 //  "totaItems", nombre total d'items
-//  ""prixTotal", Prix total
 // tous les articles de même modele et même couleur
 //  "cle", elt
 //avec:
 // clé:id du canapé_couleur
 //      exemple:034707184e8e4eefb46400b5a3774b5f_Pink
-//  elt: elt de classe paramPanier avec tous les parametres du canapé
+//  id
+//  nombre
+//  couleur
 //----------------------------------------------------------------
 
 //----------------------------------------------------------------
@@ -831,7 +832,7 @@ function waitFillForm() {
 
     //bouton commander
     let eltButton = document.getElementById(C_formorder);
-    eltButton.addEventListener("click", function () {
+    eltButton.addEventListener("click", function (event) {
       console.log("on a cliqué sur le bouton commander");
       if (
         newUserCoordCheck.firstName === true &&
@@ -847,7 +848,11 @@ function waitFillForm() {
         console.log("envoi confirmation");
         event.preventDefault();
 
-        sendOrder();
+        sendOrder(event, userCoord, products);
+      } else {
+        alerteMsg(
+          "Remplissez correctement tous les champs du formulaire avant de cliquer sur Commander"
+        );
       }
       // Envoi des infos vers page confirmation
     });
@@ -881,7 +886,9 @@ function waitFillForm() {
 //
 //  Normalement, avec ça, tu devrais avoir des réponses(positives) de l'API. D'ailleurs, tu peux toujours regarder le code de l'API, cela peut toujours éventuellement te donner des idées.
 //-------------------------------------------------------------------------------
-function sendOrder() {
+
+//send: exemple de requete POST
+function send() {
   try {
     MessageChannel.log("envoi de la commande");
     function send(e) {
@@ -905,6 +912,31 @@ function sendOrder() {
     }
 
     document.getElementById("form").addEventListener("submit", send);
+  } catch (e) {
+    console.log("send  " + e);
+  }
+}
+
+function sendOrder(e, userCoord, productsList) {
+  try {
+    console.log("envoi de la commande");
+    e.preventDefault();
+    fetch(C_serverGET, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ contact: userCoord }, { products: productsList }),
+    })
+      .then(function (res) {
+        if (res.ok) {
+          return res.json();
+        }
+      })
+      .then(function (value) {
+        document.getElementById("orderId").innerText = value.postData.text;
+      });
   } catch (e) {
     console.log("sendOrder  " + e);
   }
@@ -950,6 +982,29 @@ function updateUserforOrder() {
   }
 
   return newUserCoord;
+}
+
+//-------------------------------------------------------------------------------
+//function: updateProductforOrder;
+//Objet: Mise à jour de la liste des id des produits commandés à partir du local storage
+//
+// Parametres:
+//  Entrée: aucun
+//  Sortie: tableau avec liste des id
+//
+// Algo:
+//  Boucle sur le local storage poru récupérer tous les ids
+//---------------------------------------------------------------------------------------------
+function updateProductforOrder() {
+  //Def tableau de produits
+
+  try {
+    //boucle sur le local storage
+  } catch (e) {
+    console.log("updateProductforOrder  " + e);
+  }
+
+  return productList;
 }
 
 //-------------------------------------------------------------------------------
@@ -1107,7 +1162,6 @@ function displayForm() {
 //    -> Dans ce cas, on aura un produit passé dans l'URL
 //-------------------------------------------------------------
 async function affichePanier() {
-  let data; //données récupérées par la ft
   try {
     //on récupère les infos du produit passé dans l'URL
 
