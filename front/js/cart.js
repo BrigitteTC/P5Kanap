@@ -713,7 +713,7 @@ function waitClickOnNbElt() {
 //
 //
 //----------------------------------------------------------------
-function waitChangeOnNbElt() {
+async function waitChangeOnNbElt() {
   try {
     //recherche de ts les elts qui ont la classe deleteItem
     //à l'intérieur d'un elt ayant l'ID "cart__items"
@@ -726,7 +726,7 @@ function waitChangeOnNbElt() {
       // Ecoute evt: Utilisation de input par rapport à change car le input réagit tout de suite
       // le change ne réagit qu'après un retour chariot.
 
-      eltsClass[i].addEventListener("input", function () {
+      eltsClass[i].addEventListener("input", async function () {
         changeQtyProduct(eltsClass[i]);
       });
     }
