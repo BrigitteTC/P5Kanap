@@ -511,11 +511,11 @@ async function displayLocalStorageInHtml() {
 //  Sortie: rien
 //
 // Algo:
-//  Boucle sur tous les elts du local serveur et pour chaque elt
+//  Boucle sur tous les elts du local storage et pour chaque elt
 //
-//    Utilise fetch pour joinde le serveur et attend la promesse
+//    REcherche les infos du produit sur le serveur
 //    Mets à jour les infos du produit
-//    Affiche prix total et quantité totale.
+//    Maj et Affiche prix total et quantité totale.
 //-------------------------------------------------------------------
 
 async function searchProductsInServer() {
@@ -695,7 +695,7 @@ async function waitChangeOnNbElt() {
 // ou minuscules, un tiret, une apostrophe ou une espace.
 // et aussi les e i et o accentués
 //-----------------------------------------------------------------------------
-function waitFillForm() {
+async function waitFillForm() {
   try {
     // class de blleans poru verif champs du formulaire
     let newUserCoordCheck = new userCoordCheck(
@@ -706,8 +706,6 @@ function waitFillForm() {
       false
     );
 
-    // coordonnées utilisateur
-    let newuserCoord = new userCoord("", "", "", "", "");
     //First name
     let firstNameForm = document.getElementById(C_formfirstName);
     let firstNameError = document.getElementById(
@@ -780,31 +778,97 @@ function waitFillForm() {
     //bouton commander
     let eltButton = document.getElementById(C_formorder);
     eltButton.addEventListener("click", function (event) {
-      console.log("on a cliqué sur le bouton commander");
-      if (
-        newUserCoordCheck.firstName === true &&
-        newUserCoordCheck.lastName === true &&
-        newUserCoordCheck.address === true &&
-        newUserCoordCheck.city === true &&
-        newUserCoordCheck.email === true
-      ) {
-        //Tous les champs sont corrects, on peut envoyer la confirmation
-        userCoord = updateUserforOrder(); //Maj objet avec les coordonnées de l'utilisateur
-        products = updateProductforOrder(); //maj du tableau avec les produits
-
-        console.log("envoi confirmation");
-        event.preventDefault();
-
-        sendOrder(event, userCoord, products);
-      } else {
-        alerteMsg(
-          "Remplissez correctement tous les champs du formulaire avant de cliquer sur Commander"
-        );
-      }
-      // Envoi des infos vers page confirmation
+      boutonCommanderFt(event, newUserCoordCheck);
     });
   } catch (e) {
     console.log("waitFillForm  " + e);
+  }
+}
+
+//--------------------------------------------------------------------------------
+// function: boutonCommanderFt(event, newUserCoordCheck);
+// Objet: traite le click sur le bouton commander
+//
+// Parametres:
+//  Entrée: event : evennement cliqué
+//    newUserCoordCheck: class de booleens avec tous les champs du formulaire
+//
+// Algo:
+//    Mets à jour les coordonnées et ft des données saisies dans le formulaire
+//    mets à jour la liste des produits dan sle local storage
+//    Mets en forme un objet à envoyer à l'API avec les coordonnées et le tableau des produits.
+//    Envoi la commande à l'API
+//
+//  Format de l'objet à envoyer:
+//      dataToPost={
+//        contact: {
+//          firstName: string,
+//          lastName: string,
+//          address: string,
+//          city: string,
+//          email: string
+//      }
+//          products: [string]
+//      }
+//---------------------------------------------------------------------------------------------
+
+async function boutonCommanderFt(event, newUserCoordCheck) {
+  try {
+    console.log("on a cliqué sur le bouton commander");
+
+    event.preventDefault(); //evite le rechargt de la page
+
+    //test champs du formulaire corrects
+    if (
+      newUserCoordCheck.firstName === true &&
+      newUserCoordCheck.lastName === true &&
+      newUserCoordCheck.address === true &&
+      newUserCoordCheck.city === true &&
+      newUserCoordCheck.email === true
+    ) {
+      //Tous les champs sont corrects, on peut envoyer la confirmation
+      var newUserCoord = new userCoord();
+      newUserCoord = updateUserforOrder(); //Maj objet avec les coordonnées de l'utilisateur
+      let products = updateProductforOrder(); //maj du tableau avec les produits
+
+      let firstName = newUserCoord.firstName;
+
+      let lastName = newUserCoord.lastName;
+      let address = newUserCoord.address;
+      let city = newUserCoord.city;
+      let email = newUserCoord.email;
+
+      //Objet à envoyer
+
+      dataToPost = {
+        contact: {
+          firstName,
+          lastName,
+          address,
+          city,
+          email,
+        },
+        products,
+      };
+      console.log("dataToPost = " + dataToPost.contact);
+
+      //Envoi la commande à l'API
+      //let response = await sendOrder(C_serverPOST, dataToPost).then(
+      await sendOrder(C_serverPOST, dataToPost).then((dataToPost) => {
+        console.log("numero de commande= " + dataToPost.orderId); // JSON data parsed by `data.json()` call
+        //   console.log(response);
+      });
+
+      //Envoi id commande dans l'URL et
+      //Appelle la page confirmation
+    } else {
+      //Au moins un des champs du formulaire n'est pas connrect
+      alerteMsg(
+        "Remplissez correctement tous les champs du formulaire avant de cliquer sur Commander"
+      );
+    }
+  } catch (e) {
+    console.log("boutonCommanderFt  " + e);
   }
 }
 
@@ -831,62 +895,27 @@ function waitFillForm() {
 //2) products, qui est un tableau regroupant les identifiants des canapés dans la panier.
 //Il n' y a pas de notions de couleurs ou de quantités à mettre dedans, comme je t'en ai parlé hier.
 //
-//  Normalement, avec ça, tu devrais avoir des réponses(positives) de l'API. D'ailleurs, tu peux toujours regarder le code de l'API, cela peut toujours éventuellement te donner des idées.
+
 //-------------------------------------------------------------------------------
 
-//send: exemple de requete POST
-function send() {
-  try {
-    MessageChannel.log("envoi de la commande");
-    function send(e) {
-      e.preventDefault();
-      fetch(C_serverGET, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ value: document.getElementById("value").value }),
-      })
-        .then(function (res) {
-          if (res.ok) {
-            return res.json();
-          }
-        })
-        .then(function (value) {
-          document.getElementById("result").innerText = value.postData.text;
-        });
-    }
-
-    document.getElementById("form").addEventListener("submit", send);
-  } catch (e) {
-    console.log("send  " + e);
-  }
-}
-
-function sendOrder(e, userCoord, productsList) {
+async function sendOrder(url = "", data = {}) {
+  let response;
   try {
     console.log("envoi de la commande");
-    e.preventDefault();
-    fetch(C_serverGET, {
+
+    response = await fetch(url, {
       method: "POST",
       headers: {
-        Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ contact: userCoord }, { products: productsList }),
-    })
-      .then(function (res) {
-        if (res.ok) {
-          return res.json();
-        }
-      })
-      .then(function (value) {
-        document.getElementById("orderId").innerText = value.postData.text;
-      });
+      body: JSON.stringify(data),
+    });
   } catch (e) {
     console.log("sendOrder  " + e);
   }
+
+  console.log("sendOrder response.json=" + response.json);
+  return response.json();
 }
 
 //-------------------------------------------------------------------------------
@@ -910,7 +939,7 @@ function updateUserforOrder() {
 
     //LastName
     //    id = "lastName";  type text
-    newUserCoord.lasttName = document.getElementById(C_formlastName).value;
+    newUserCoord.lastName = document.getElementById(C_formlastName).value;
 
     //Adresse:
     //    id = "addres";   type text
@@ -944,9 +973,23 @@ function updateUserforOrder() {
 //---------------------------------------------------------------------------------------------
 function updateProductforOrder() {
   //Def tableau de produits
+  let productList = [];
 
   try {
     //boucle sur le local storage
+
+    for (let i = 0; i < localStorage.length; i++) {
+      console.log("cle " + i + " " + localStorage.key(i));
+
+      if (localStorage.key(i) != C_totalElt) {
+        //recupere le produit dans le local storage
+        let itemLocalStorageJSON = localStorage.getItem(localStorage.key(i));
+        let itemLocalStorage = JSON.parse(itemLocalStorageJSON);
+
+        // on l'ajoute à la fin du tableau
+        productList.push(itemLocalStorage.id);
+      } //fin if (localStorage.key(i) != C_totalElt)
+    } // fin boucle for
   } catch (e) {
     console.log("updateProductforOrder  " + e);
   }

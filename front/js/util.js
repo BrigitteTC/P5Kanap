@@ -8,6 +8,7 @@
 
 //server avec la liste des produits
 const C_serverGET = "http://localhost:3000/api/products";
+const C_serverPOST = C_serverGET + "/order";
 
 // choix d'option: msg pour demander à l'uitlisateur de choisir la couleur
 const C_choixOption = "--SVP, choisissez une couleur --";
