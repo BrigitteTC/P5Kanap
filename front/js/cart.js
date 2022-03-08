@@ -393,12 +393,13 @@ async function changeQtyProduct(eltSelect) {
     // on remonte la filiere pour avoir l'article correspondant
     //Article est 3 niveaux au dessus du bouton input
 
-    //DEBUG BTC  7 mars  SI le nombre rentré dépasse 100, on le force à 100
+    //SI le nombre rentré dépasse 100, on le force à 100
     if (eltSelect.value > 100) {
       eltSelect.value = 100;
       alerteMsg(C_msgAlert_Max100);
     }
-    //fin  DEBUG 7 mars
+
+    //
     let eltArticle = eltSelect.parentNode.parentNode.parentNode;
     console.log("waitChangeOnNbElt: change nb elt" + eltArticle.id);
 
@@ -749,24 +750,7 @@ async function waitChangeOnNbElt() {
 //-----------------------------------------------------------------------------
 function waitFillForm() {
   try {
-    //let expressionReg = /^[A-Za-z]+$/;
-    //let expressionReg = [A-Za-z]+$/;
-    const expressionRegName = /^[A-Za-zé'ïöëè -]+$/;
-    const expressionRegAdress = /^[A-Za-z0-9é'ïöëè -]+$/; //tous les caracteres
-    //const expressionEmailName = /(@)(. +)$/; //xxx@dd.xx doit avoir un @
-    //const expressionEmailName =
-    //  /^[a-zA-Z0-9_-]+@[a-zA-Z0-9-]{2,}[.][a-zA-Z]{2,3}$/;
-    ///^[a-zA-Z0-9_-\.]+@[a-zA-Z0-9-]{2,}[.][a-zA-Z]{2,3}$/;
-    // Attention brigittetc.pub@hotmail.fr n'est pas valide.
-
-    //nouvelle regex pour le mail
-    var expressionEmailName = RegExp(
-      "^([a-zA-Z0-9_-])+([.]?[a-zA-Z0-9_-]{1,})*@([a-zA-Z0-9-_]{2,}[.])+[a-zA-Z]{2,3}$"
-    );
-
-    let B_checkFormFields = false; //boolean pour vérifier les champs du formulaire
-    //Sera true quand tous les champs seront OK
-
+    // class de blleans poru verif champs du formulaire
     let newUserCoordCheck = new userCoordCheck(
       false,
       false,
@@ -774,12 +758,16 @@ function waitFillForm() {
       false,
       false
     );
+
+    // coordonnées utilisateur
     let newuserCoord = new userCoord("", "", "", "", "");
     //First name
     let firstNameForm = document.getElementById(C_formfirstName);
     let firstNameError = document.getElementById(
       C_formfirstName + C_formErrorMsg
     );
+
+    //Listener sur les champs du formulaire
     firstNameForm.addEventListener("change", function () {
       // Vérif valeur entrée
       newUserCoordCheck.firstName = verifFieldForm(

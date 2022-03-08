@@ -58,6 +58,16 @@ const C_formemail = "email";
 const C_formorder = "order";
 const C_formErrorMsg = "ErrorMsg";
 
+//Regex pour verif champs des formulaires
+
+const expressionRegName = /^[A-Za-zé'ïöëè -]+$/; // nom lettres pas de chiffres
+const expressionRegAdress = /^[A-Za-z0-9é'ïöëè -]+$/; // adresse + ville lettres + chiffres
+
+// regex pour le mail
+const expressionEmailName = RegExp(
+  "^([a-zA-Z0-9_-])+([.]?[a-zA-Z0-9_-]{1,})*@([a-zA-Z0-9-_]{2,}[.])+[a-zA-Z]{2,3}$"
+);
+
 //----------------------------------------------------------------
 //Class
 //----------------------------------------------------------------
