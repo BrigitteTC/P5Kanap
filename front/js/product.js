@@ -13,7 +13,7 @@ Script pour mettre à jour la page du canapé sur la page html correspondante
 //
 // algo: vérifie nb min et max selectionné
 // retourne le nombre select
-// message d'alerte si la quantité est <1 ou > 1000 ou nb decimal
+// message d'alerte si la quantité est <1 ou > 100 ou nb decimal
 //---------------------------------------------------------------
 function getNbProduct() {
   let eltQty = 0; //nombre de produits
@@ -26,13 +26,13 @@ function getNbProduct() {
 
     // test valeur comprise entre min et max
     // On rentre les valeurs en dur 1 et 100 pour éviter qu'un utilisateur
-    // ne modifie le code de min et max
+    // ne modifie le code de min et max dans le HTML
 
     // et tester nombre entier (on ne veut pas de nombre décimal)
 
     let qtyTotal = JSON.parse(localStorage.getItem(C_totalElt)); //qty total ds localstorage
 
-    if (verifNewQty(Number(eltQty.value), Number(qtyTotal)) === false) {
+    if (verifNewQty(Number(eltQty.value)) === false) {
       //On remet à 0 le nombre selectionné
       eltQty.value = 0;
     }

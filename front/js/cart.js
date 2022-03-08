@@ -67,7 +67,7 @@ function addItemInLocalStorage(newItemPanier) {
       }
     }
     //Verif quantité à ajouter
-    if (verifNewQty(newItemPanier.nb)) {
+    if (verifNewQty(Number(newItemPanier.nb))) {
       //Ajoute le nouveau produit
       // mets le  nouveau produit en string et le range dans le local storage
       let newItemPanierString = JSON.stringify(newItemPanier);
@@ -392,6 +392,12 @@ async function changeQtyProduct(eltSelect) {
     //on a cliqué sur l'elt input de l'article
     // on remonte la filiere pour avoir l'article correspondant
     //Article est 3 niveaux au dessus du bouton input
+
+    //DEBUG BTC  7 mars
+    if (eltSelect.value > 100) {
+      eltSelect.value = 100;
+    }
+    //fin  DEBUG 7 mars
     let eltArticle = eltSelect.parentNode.parentNode.parentNode;
     console.log("waitChangeOnNbElt: change nb elt" + eltArticle.id);
 
