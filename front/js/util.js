@@ -66,6 +66,7 @@ const C_orderId = "orderId";
 
 const expressionRegName = /^[A-Za-zé'ïöëè -]+$/; // nom lettres pas de chiffres
 const expressionRegAdress = /^[A-Za-z0-9é'ïöëè -]+$/; // adresse + ville lettres + chiffres
+const expressionRegCity = /^[A-Za-z0-9é'ïöëè -]+$/; // adresse + ville lettres + chiffres
 
 // regex pour le mail
 const expressionEmailName = RegExp(

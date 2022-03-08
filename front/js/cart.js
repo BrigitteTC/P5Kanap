@@ -783,7 +783,7 @@ async function waitFillForm() {
       newUserCoordCheck.city = verifFieldForm(
         cityNameForm,
         cityNameError,
-        expressionRegAdress
+        expressionRegCity
       );
     });
     //email
@@ -1190,7 +1190,7 @@ async function affichePanier() {
 
     console.log("id produit= " + newItemPanier.id);
 
-    //Construction de la route du produit  si on a passé un nouveau produit dans le panier
+    //Verif params de l'URL valides
     if (
       newItemPanier.id != 0 &&
       newItemPanier.nb != 0 &&
