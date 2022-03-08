@@ -78,6 +78,31 @@ function addItemInLocalStorage(newItemPanier) {
   }
 }
 
+//-------------------------------------------------------------------------
+//callConfirmation(orderId);
+//
+// Objet: appelle la page confirmation avec le numéro de commande
+//
+// Parametres:
+//  Entréé: numéro de commande
+//  Sortie: rien
+//
+// Algo
+//  maj le HTML pour ajouter un lien sur la page confirmation avec le numéro de commande
+//-----------------------------------------------------------------
+function callConfirmation(orderId) {
+  try {
+    //url de destination
+    let url = "../html/confirmation.html";
+
+    //On va sur la page confirmation
+    window.location.href =
+      url + C_separatorURLFirst + "orderId" + C_egal + orderId;
+  } catch (e) {
+    console.log("callConfirmation:" + e);
+  }
+}
+
 //-------------------------------------------
 // ft displayItemInHtml(itemPanier);
 // Objet: construit la structure html pour l'affichage du produit
@@ -857,10 +882,9 @@ async function boutonCommanderFt(event, newUserCoordCheck) {
       await sendOrder(C_serverPOST, dataToPost).then((dataToPost) => {
         console.log("numero de commande= " + dataToPost.orderId); // JSON data parsed by `data.json()` call
         //   console.log(response);
+        //Envoi id commande dans l'URL et Appelle la page confirmation
+        callConfirmation(dataToPost.orderId);
       });
-
-      //Envoi id commande dans l'URL et
-      //Appelle la page confirmation
     } else {
       //Au moins un des champs du formulaire n'est pas connrect
       alerteMsg(
@@ -899,7 +923,8 @@ async function boutonCommanderFt(event, newUserCoordCheck) {
 //-------------------------------------------------------------------------------
 
 async function sendOrder(url = "", data = {}) {
-  let response;
+  let response; //réponse du fetch
+  let orderIdJson = ""; //réponse du serveur
   try {
     console.log("envoi de la commande");
 
@@ -910,12 +935,18 @@ async function sendOrder(url = "", data = {}) {
       },
       body: JSON.stringify(data),
     });
+
+    if (response.ok) {
+      orderIdJson = response.json();
+    } else {
+      console.error("REtour du serveur:", response.status);
+    }
   } catch (e) {
     console.log("sendOrder  " + e);
   }
 
-  console.log("sendOrder response.json=" + response.json);
-  return response.json();
+  console.log("sendOrder response.json=" + orderIdJson);
+  return orderIdJson;
 }
 
 //-------------------------------------------------------------------------------
