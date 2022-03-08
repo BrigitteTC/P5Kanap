@@ -36,8 +36,6 @@ const C_itemQuantityClass = "itemQuantity";
 const C_deleteItemClass = "deleteItem";
 const C_quantityClass = "quantity";
 
-const C_orderId = "orderId";
-
 //Messages d'erreur à afficher dans les messages d'alerte
 const C_msgAlert_Max100 =
   "Nombre d'articles: Vous ne pouvez pas acheter plus de 100 canapés de même type";
@@ -60,6 +58,9 @@ const C_formcity = "city";
 const C_formemail = "email";
 const C_formorder = "order";
 const C_formErrorMsg = "ErrorMsg";
+
+//Id de la commande
+const C_orderId = "orderId";
 
 //Regex pour verif champs des formulaires
 
