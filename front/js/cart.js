@@ -393,9 +393,10 @@ async function changeQtyProduct(eltSelect) {
     // on remonte la filiere pour avoir l'article correspondant
     //Article est 3 niveaux au dessus du bouton input
 
-    //DEBUG BTC  7 mars
+    //DEBUG BTC  7 mars  SI le nombre rentré dépasse 100, on le force à 100
     if (eltSelect.value > 100) {
       eltSelect.value = 100;
+      alerteMsg(C_msgAlert_Max100);
     }
     //fin  DEBUG 7 mars
     let eltArticle = eltSelect.parentNode.parentNode.parentNode;
