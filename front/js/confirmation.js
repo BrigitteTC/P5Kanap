@@ -42,6 +42,9 @@ function afficheConfirmation() {
       let newp = document.createElement("p");
       eltId.appendChild(newp);
       newp.innerHTML = paramURL;
+
+      //Vide le panier = le local storage
+      localStorage.clear();
     }
   } catch (e) {
     console.log("afficheConfirmation: " + e);
