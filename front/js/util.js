@@ -36,6 +36,8 @@ const C_itemQuantityClass = "itemQuantity";
 const C_deleteItemClass = "deleteItem";
 const C_quantityClass = "quantity";
 
+const C_orderId = "orderId";
+
 //Messages d'erreur à afficher dans les messages d'alerte
 const C_msgAlert_Max100 =
   "Nombre d'articles: Vous ne pouvez pas acheter plus de 100 canapés de même type";
@@ -137,6 +139,35 @@ function alerteMsg(Message) {
   }
 }
 
+//---------------------------------------------------
+//fonction getOneParamInURL
+// objet: retourne un param de l'URL donné par son identifiant
+//
+//  Parametres:
+//  Entrée: identifiant du parametre
+//  Sortie: parametre correspondant
+//
+// Algo:
+//  cherche l'identifiant dans l'URL avec URLSearchParams
+//  REtourne le parametre correspondant si il existe.
+//------------------------------------------------
+
+function getOneParamInURL(paramId) {
+  var param; //param à retournerparamId
+  try {
+    let str = window.location.href;
+    console.log(str);
+    let url = new URL(str);
+    let searchParams = new URLSearchParams(url.search);
+    if (searchParams.has(paramId)) {
+      param = searchParams.get(paramId);
+      console.log("param extrait de l'URL pour = " + paramId + " = " + param);
+    }
+  } catch (e) {
+    console.log("getOneParamInURL " + e);
+  }
+  return param;
+}
 //---------------------------------------------------
 //fonction getId
 // Retourne l'id du produit de la page

@@ -16,7 +16,7 @@ et taper la commande >node server
 // ft getProducts
 // nom: getProduct
 // Paramètres:
-//  server: adresse duserveur avec les données à récupérer
+//  server: adresse du serveur avec les données à récupérer
 // retour: data: données récupérées
 //
 // algo:
