@@ -78,59 +78,6 @@ function addItemInLocalStorage(newItemPanier) {
   }
 }
 
-//--------------------------------------------------------------
-// ft: displayLocalStorageInHtml();
-// nom: displayLocalStorageInHtml();
-// Objet: maj de la page html avec les infos d'un produit du panier
-//
-// Parametres:
-//  Entrée: rien
-//  Sortie: rien
-//
-// algo:
-//  Parcours toutes les clés du local storage pour insérer les objets
-//  correspondants dansla page html
-//  calcule le nombre total d'elts
-//  calcule le prix total
-//  Affiche le prix total et nb d'elt total dans la page html
-//
-//--------------------------------------------------------------
-function OlddisplayLocalStorageInHtml() {
-  try {
-    //init prix et quantité total à 0
-    let prixTotal = 0;
-    let qtyTotal = 0;
-
-    //Parcours de toutes les clés du local storage
-    // on commence la boucle à 0
-    // Attention ne pas afficher les cles "nb elt" et "prix total"
-
-    for (let i = 0; i < localStorage.length; i++) {
-      console.log("cle " + i + " " + localStorage.key(i));
-
-      if (localStorage.key(i) != C_totalElt) {
-        //affichage de tous les articles
-        let itemPanierJSON = localStorage.getItem(localStorage.key(i));
-        let itemPanier = JSON.parse(itemPanierJSON);
-
-        //cherche les infos de l'article sur le server et les affiche
-        searchProductInServer(itemPanier); //infos supplementaires sur le server
-
-        //calcule prix total
-        //prixTotal = Number(prixTotal) + Number(prixItemPanier);
-
-        //calcule quantité totale:
-        //qtyTotal = Number(qtyTotal) + Number(itemPanier.nb);
-      }
-    }
-
-    //Affiche le prix dans l'ecran
-    //displayPrixTotal(qtyTotal,prixTotal);
-  } catch (e) {
-    console.log("displayLocalStorageInHtml " + e);
-  }
-}
-
 //-------------------------------------------
 // ft displayItemInHtml(itemPanier);
 // Objet: construit la structure html pour l'affichage du produit
