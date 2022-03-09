@@ -288,43 +288,6 @@ function changePrixTotal(newQty, oldQty, prix) {
   }
 }
 
-//-----------------------------------------------------------------------------
-// function: removeProduct
-//
-// Objet: supprime un objet du panier
-//
-// Parametres:
-//  Entrée: event supprimer ou input quantité=0
-//  Sortie: rien
-//
-//  Algo:
-//    Trouve l'élement parent
-//    Supprime le noeud HTML
-//    Supprime l'elt dans le local storage
-//    Affiche la page panier
-//------------------------------------------------------------------------------
-async function removeProduct(event) {
-  try {
-    let eltArticle = event.parentNode.parentNode.parentNode;
-    console.log("supprimer un elt =");
-
-    //HTML: supprime le noeud avec l'article supprimé
-    eltSection.removeChild(eltArticle);
-
-    //recupere les infos du local storage avant de supprimer l'elt
-
-    let cle = eltArticle.id; //cle du local storage
-
-    //supprime la cle dans le local storage
-    localStorage.removeItem(cle);
-
-    //Calcule et affiche nouveau prix total et nb elt
-    await searchProductsInServer();
-  } catch (e) {
-    console.log("changePrixTotal" + e);
-  }
-}
-
 //-----------------------------------------------------------
 //Fonction: waitClickOnSupprimer();
 // Objet: Attend le click sur le bouton "supprimer" d'un elt
