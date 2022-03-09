@@ -377,6 +377,11 @@ async function changeQtyProduct(eltSelect) {
       alerteMsg(C_msgAlert_Min1 + C_msgAlert_Suppr);
     }
 
+    if (Number.isInteger(eltSelect.value) === false) {
+      alerteMsg(C_msgAlert_Entier);
+      eltSelect.value = 1;
+    }
+
     //
     let eltArticle = eltSelect.parentNode.parentNode.parentNode;
     console.log("waitChangeOnNbElt: change nb elt" + eltArticle.id);
