@@ -377,7 +377,7 @@ async function changeQtyProduct(eltSelect) {
       alerteMsg(C_msgAlert_Min1 + C_msgAlert_Suppr);
     }
 
-    if (Number.isInteger(eltSelect.value) === false) {
+    if (Number.isInteger(Number(eltSelect.value)) === false) {
       alerteMsg(C_msgAlert_Entier);
       eltSelect.value = 1;
     }
