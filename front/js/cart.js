@@ -853,42 +853,46 @@ async function boutonCommanderFt(event, newUserCoordCheck) {
       newUserCoordCheck.city === true &&
       newUserCoordCheck.email === true
     ) {
+      //Verif il y a des elts dans le local stotage
+
       //Tous les champs sont corrects, on peut envoyer la confirmation
       var newUserCoord = new userCoord();
       newUserCoord = updateUserforOrder(); //Maj objet avec les coordonnées de l'utilisateur
       let products = updateProductforOrder(); //maj du tableau avec les produits
+      if (products.length > 0) {
+        // le panier n'est pas vide on envoie la commande
+        let firstName = newUserCoord.firstName;
 
-      let firstName = newUserCoord.firstName;
+        let lastName = newUserCoord.lastName;
+        let address = newUserCoord.address;
+        let city = newUserCoord.city;
+        let email = newUserCoord.email;
 
-      let lastName = newUserCoord.lastName;
-      let address = newUserCoord.address;
-      let city = newUserCoord.city;
-      let email = newUserCoord.email;
+        //Objet à envoyer
 
-      //Objet à envoyer
+        dataToPost = {
+          contact: {
+            firstName,
+            lastName,
+            address,
+            city,
+            email,
+          },
+          products,
+        };
+        console.log("dataToPost = " + dataToPost.contact);
 
-      dataToPost = {
-        contact: {
-          firstName,
-          lastName,
-          address,
-          city,
-          email,
-        },
-        products,
-      };
-      console.log("dataToPost = " + dataToPost.contact);
-
-      //Envoi la commande à l'API
-      //let response = await sendOrder(C_serverPOST, dataToPost).then(
-      await sendOrder(C_serverPOST, dataToPost).then((dataToPost) => {
-        console.log("numero de commande= " + dataToPost.orderId); // JSON data parsed by `data.json()` call
-        //   console.log(response);
-        //Envoi id commande dans l'URL et Appelle la page confirmation
-        callConfirmation(dataToPost.orderId);
-      });
+        //Envoi la commande à l'API
+        //let response = await sendOrder(C_serverPOST, dataToPost).then(
+        await sendOrder(C_serverPOST, dataToPost).then((dataToPost) => {
+          console.log("numero de commande= " + dataToPost.orderId); // JSON data parsed by `data.json()` call
+          //   console.log(response);
+          //Envoi id commande dans l'URL et Appelle la page confirmation
+          callConfirmation(dataToPost.orderId);
+        });
+      }
     } else {
-      //Au moins un des champs du formulaire n'est pas connrect
+      //Au moins un des champs du formulaire n'est pas conrrect
       alerteMsg(
         "Remplissez correctement tous les champs du formulaire avant de cliquer sur Commander"
       );
