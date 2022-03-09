@@ -42,9 +42,12 @@ const C_msgAlert_Max100 =
 const C_msgAlert_MaxCart100 =
   "Nombre d'articles: Le nombre d'articles de votre panier dépasse 100";
 const C_msgAlert_Min1 =
-  "Nombre d'articles: Vous devez acheter au moins 1 produit";
+  "Nombre d'articles: Vous devez acheter au moins 1 produit  ";
 const C_msgAlert_Entier =
   "Nombre d'articles: Vous devez rentrer un nombre entier";
+
+const C_msgAlert_Suppr =
+  "Pour supprimer un article, utilisez le bouton supprimer  ";
 
 //Messagesd'erreur du formulaire
 const C_msgForm_vide = "Valeur obligatoire requise";
